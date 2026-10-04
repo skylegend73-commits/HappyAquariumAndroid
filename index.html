@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Aquarium</title>
+
+<style>
+body {
+    margin: 0;
+    background: #87ceeb;
+    font-family: Arial;
+    text-align: center;
+}
+
+#game {
+    width: 100%;
+    max-width: 600px;
+    height: 500px;
+    margin: auto;
+    background: linear-gradient(#55c9ed, #0879a8);
+    position: relative;
+    overflow: hidden;
+    border: 5px solid #8b5a2b;
+    box-sizing: border-box;
+}
+
+.fish {
+    position: absolute;
+    font-size: 55px;
+    animation: swim 8s linear infinite;
+}
+
+.fish2 {
+    position: absolute;
+    font-size: 45px;
+    animation: swim2 11s linear infinite;
+}
+
+@keyframes swim {
+    from { left: -80px; }
+    to { left: 100%; }
+}
+
+@keyframes swim2 {
+    from { right: -80px; }
+    to { right: 100%; }
+}
+
+#ui {
+    background: #fff;
+    padding: 12px;
+    font-size: 20px;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 18px;
+    border-radius: 10px;
+    border: 0;
+    background: #ffd43b;
+}
+</style>
+</head>
+
+<body>
+
+<h2>🐠 Happy Aquarium 🐠</h2>
+
+<div id="ui">
+    🪙 Coins: <span id="coins">100</span>
+    <br><br>
+    <button onclick="feedFish()">🍖 Beri Makan</button>
+</div>
+
+<div id="game">
+
+    <div class="fish" style="top:100px;">🐠</div>
+    <div class="fish2" style="top:200px;">🐟</div>
+    <div class="fish" style="top:320px; animation-delay:3s;">🐡</div>
+
+</div>
+
+<script>
+
+let coins = 100;
+
+function feedFish() {
+
+    if (coins >= 5) {
+
+        coins -= 5;
+
+        document.getElementById("coins").innerText = coins;
+
+        alert("🐟 Ikan dah makan! ❤️");
+
+    } else {
+
+        alert("Tak cukup coin!");
+
+    }
+
+}
+
+</script>
+
+</body>
+</html>
