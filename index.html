@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Real Fish Aquarium</title>
+<title>Happy Aquarium Android</title>
 
 <style>
 *{box-sizing:border-box}
@@ -31,7 +31,7 @@ flex-shrink:0;
 display:flex;
 align-items:center;
 justify-content:space-between;
-padding:0 16px;
+padding:0 15px;
 color:white;
 background:linear-gradient(#1d536b,#092b3b);
 box-shadow:0 3px 12px #0008;
@@ -39,12 +39,12 @@ z-index:5;
 }
 
 .logo{
-font-size:19px;
+font-size:17px;
 font-weight:bold;
 }
 
 .money{
-padding:9px 15px;
+padding:9px 13px;
 border-radius:20px;
 background:#061d28aa;
 color:#ffd95c;
@@ -78,19 +78,19 @@ pointer-events:none;
 }
 
 .bottom{
-height:74px;
+height:78px;
 flex-shrink:0;
 display:flex;
-gap:9px;
-padding:9px;
+gap:7px;
+padding:8px;
 background:linear-gradient(#153f51,#082837);
 }
 
 button{
 flex:1;
 border:0;
-border-radius:13px;
-font-size:14px;
+border-radius:12px;
+font-size:12px;
 font-weight:bold;
 color:white;
 background:linear-gradient(#39bce9,#087ba8);
@@ -106,6 +106,173 @@ box-shadow:0 1px 0 #05516e;
 background:linear-gradient(#ffc54d,#df7610);
 box-shadow:0 4px 0 #9d4e09;
 }
+
+.breedBtn{
+background:linear-gradient(#ff70a0,#d72e69);
+box-shadow:0 4px 0 #8d1641;
+}
+
+/* BREEDING PANEL */
+
+#breedingPanel{
+position:absolute;
+left:50%;
+top:50%;
+transform:translate(-50%,-50%);
+width:92%;
+max-width:430px;
+background:linear-gradient(#123f52,#082936);
+border:2px solid #4bc7e9;
+border-radius:20px;
+padding:15px;
+color:white;
+box-shadow:0 10px 40px #000b;
+display:none;
+z-index:20;
+}
+
+.panelTitle{
+text-align:center;
+font-size:20px;
+font-weight:bold;
+margin-bottom:12px;
+}
+
+.slots{
+display:flex;
+justify-content:space-around;
+gap:10px;
+}
+
+.slot{
+width:45%;
+height:125px;
+border:2px dashed #57c8e8;
+border-radius:15px;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+background:#06212daa;
+}
+
+.slotFish{
+font-size:48px;
+}
+
+.slotName{
+font-size:12px;
+margin-top:5px;
+}
+
+.breedAction{
+margin-top:14px;
+width:100%;
+height:45px;
+font-size:15px;
+background:linear-gradient(#ff79a7,#d32664);
+box-shadow:0 4px 0 #84143c;
+}
+
+.closeBtn{
+margin-top:8px;
+width:100%;
+height:38px;
+background:#34515c;
+box-shadow:none;
+}
+
+/* COLLECTION */
+
+#collectionPanel{
+position:absolute;
+left:50%;
+top:50%;
+transform:translate(-50%,-50%);
+width:92%;
+max-width:430px;
+max-height:75%;
+overflow:auto;
+background:linear-gradient(#123f52,#082936);
+border:2px solid #4bc7e9;
+border-radius:20px;
+padding:15px;
+color:white;
+box-shadow:0 10px 40px #000b;
+display:none;
+z-index:21;
+}
+
+.collectionGrid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:8px;
+}
+
+.collectionItem{
+padding:9px 4px;
+border-radius:12px;
+background:#061e2a;
+text-align:center;
+font-size:11px;
+}
+
+.collectionEmoji{
+font-size:38px;
+}
+
+.rare{
+border:2px solid #ffd54a;
+box-shadow:0 0 12px #ffd54a55;
+}
+
+#resultPanel{
+position:absolute;
+left:50%;
+top:50%;
+transform:translate(-50%,-50%);
+width:90%;
+max-width:360px;
+background:linear-gradient(#174c61,#082936);
+border:2px solid #ffd45b;
+border-radius:20px;
+padding:20px;
+color:white;
+text-align:center;
+display:none;
+z-index:30;
+box-shadow:0 10px 50px #000d;
+}
+
+.resultFish{
+font-size:90px;
+margin:10px;
+}
+
+.resultName{
+font-size:22px;
+font-weight:bold;
+color:#ffd65c;
+}
+
+.resultText{
+margin:10px 0;
+color:#d5edf4;
+}
+
+.resultBtn{
+width:100%;
+height:42px;
+background:linear-gradient(#39bce9,#087ba8);
+box-shadow:0 4px 0 #05516e;
+}
+
+.timer{
+margin-top:12px;
+text-align:center;
+color:#ffd85b;
+font-weight:bold;
+}
 </style>
 </head>
 
@@ -114,22 +281,125 @@ box-shadow:0 4px 0 #9d4e09;
 <div id="game">
 
 <div class="top">
-<div class="logo">REAL FISH AQUARIUM</div>
+<div class="logo">🐠 HAPPY AQUARIUM</div>
 <div class="money">🪙 <span id="coins">500</span></div>
 </div>
 
 <div id="tank">
+
 <canvas id="canvas"></canvas>
-<div class="info">Aquarium • Lv. 1</div>
+
+<div class="info">
+Aquarium • Lv. 1
 </div>
+
+<!-- BREEDING PANEL -->
+
+<div id="breedingPanel">
+
+<div class="panelTitle">
+❤️ FISH BREEDING
+</div>
+
+<div class="slots">
+
+<div class="slot" onclick="selectParent(0)">
+<div id="parent1Fish" class="slotFish">❔</div>
+<div id="parent1Name" class="slotName">
+Select Fish 1
+</div>
+</div>
+
+<div class="slot" onclick="selectParent(1)">
+<div id="parent2Fish" class="slotFish">❔</div>
+<div id="parent2Name" class="slotName">
+Select Fish 2
+</div>
+</div>
+
+</div>
+
+<div class="timer" id="breedTimer"></div>
+
+<button class="breedAction" onclick="startBreeding()">
+❤️ BREED NOW • 50 🪙
+</button>
+
+<button class="closeBtn" onclick="closeBreeding()">
+CLOSE
+</button>
+
+</div>
+
+
+<!-- COLLECTION -->
+
+<div id="collectionPanel">
+
+<div class="panelTitle">
+🐠 MY FISH
+</div>
+
+<div id="collectionGrid" class="collectionGrid"></div>
+
+<button class="closeBtn" onclick="closeCollection()">
+CLOSE
+</button>
+
+</div>
+
+
+<!-- RESULT -->
+
+<div id="resultPanel">
+
+<div class="panelTitle">
+🎉 BABY FISH!
+</div>
+
+<div id="resultFish" class="resultFish">
+🐠
+</div>
+
+<div id="resultName" class="resultName">
+Baby Fish
+</div>
+
+<div id="resultText" class="resultText">
+Your new fish has joined the aquarium!
+</div>
+
+<button class="resultBtn" onclick="closeResult()">
+ADD TO AQUARIUM
+</button>
+
+</div>
+
+</div>
+
 
 <div class="bottom">
-<button class="feed" onclick="feedFish()">FEED FISH</button>
-<button onclick="addBubbles()">BUBBLES</button>
-<button onclick="addFish()">+ FISH</button>
+
+<button class="feed" onclick="feedFish()">
+🍖 FEED
+</button>
+
+<button onclick="addBubbles()">
+🫧 BUBBLES
+</button>
+
+<button class="breedBtn" onclick="openBreeding()">
+❤️ BREED
+</button>
+
+<button onclick="openCollection()">
+🐠 FISH
+</button>
+
 </div>
 
 </div>
+
 
 <script>
 
@@ -159,62 +429,145 @@ window.addEventListener("resize",resize);
 resize();
 
 
-/* FISH */
+/* =========================
+   FISH DATABASE
+========================= */
 
-const fish=[
+const fishTypes={
+
+clown:{
+name:"Clownfish",
+emoji:"🐠",
+color:"orange",
+rare:false
+},
+
+blue:{
+name:"Blue Tang",
+emoji:"🐟",
+color:"blue",
+rare:false
+},
+
+gold:{
+name:"Goldfish",
+emoji:"🐡",
+color:"gold",
+rare:false
+},
+
+rainbow:{
+name:"Rainbow Fish",
+emoji:"🌈",
+color:"rainbow",
+rare:true
+},
+
+dragon:{
+name:"Dragon Fish",
+emoji:"🐉",
+color:"red",
+rare:true
+},
+
+diamond:{
+name:"Diamond Fish",
+emoji:"💎",
+color:"diamond",
+rare:true
+}
+
+};
+
+
+/* =========================
+   PLAYER FISH
+========================= */
+
+let fish=[
 
 {
+id:1,
+type:"clown",
 x:180,
 y:180,
 size:1,
 speed:.55,
 dir:1,
-type:"clown",
 phase:0
 },
 
 {
+id:2,
+type:"blue",
 x:520,
 y:280,
 size:.9,
 speed:.42,
 dir:-1,
-type:"blue",
 phase:2
 },
 
 {
+id:3,
+type:"gold",
 x:330,
 y:370,
 size:.72,
 speed:.7,
 dir:1,
-type:"gold",
 phase:4
 }
 
 ];
 
-const food=[];
-const bubbles=[];
+let nextId=4;
+
+let coins=500;
+
+let food=[];
+let bubbles=[];
 
 
-/* BUBBLES */
+/* =========================
+   BREEDING VARIABLES
+========================= */
+
+let parent1=null;
+let parent2=null;
+
+let breeding=false;
+let breedEnd=0;
+
+let breedingInterval=null;
+
+
+/* =========================
+   BUBBLES
+========================= */
 
 for(let i=0;i<25;i++){
 
 bubbles.push({
+
 x:Math.random()*W,
+
 y:Math.random()*H,
+
 r:2+Math.random()*5,
+
 speed:.25+Math.random()*.8,
+
 alpha:.15+Math.random()*.4
+
 });
 
 }
 
 
-/* WATER */
+/* =========================
+   WATER
+========================= */
 
 function water(){
 
@@ -226,10 +579,11 @@ g.addColorStop(.5,"#168bb8");
 g.addColorStop(1,"#064e78");
 
 ctx.fillStyle=g;
+
 ctx.fillRect(0,0,W,H);
 
 
-/* LIGHT RAYS */
+/* LIGHT */
 
 ctx.save();
 
@@ -244,6 +598,7 @@ ctx.moveTo(x,0);
 ctx.lineTo(x+65,0);
 ctx.lineTo(x+180,H*.65);
 ctx.lineTo(x+100,H*.65);
+
 ctx.closePath();
 
 ctx.fill();
@@ -253,16 +608,15 @@ ctx.fill();
 ctx.restore();
 
 
-/* SURFACE LIGHT */
+/* SURFACE */
 
 ctx.save();
 
 ctx.globalAlpha=.18;
-
-for(let i=0;i<8;i++){
-
 ctx.strokeStyle="#fff";
 ctx.lineWidth=2;
+
+for(let i=0;i<8;i++){
 
 ctx.beginPath();
 
@@ -286,7 +640,9 @@ ctx.restore();
 }
 
 
-/* SAND */
+/* =========================
+   SAND
+========================= */
 
 function sand(){
 
@@ -318,12 +674,13 @@ W,H-h+3
 
 ctx.lineTo(W,H);
 ctx.lineTo(0,H);
+
 ctx.closePath();
 
 ctx.fill();
 
 
-for(let i=0;i<180;i++){
+for(let i=0;i<120;i++){
 
 const x=Math.random()*W;
 const y=H-h+Math.random()*h;
@@ -335,7 +692,9 @@ Math.random()>.5
 :"rgba(105,71,40,.35)";
 
 ctx.beginPath();
+
 ctx.arc(x,y,r,0,Math.PI*2);
+
 ctx.fill();
 
 }
@@ -343,7 +702,9 @@ ctx.fill();
 }
 
 
-/* PLANTS */
+/* =========================
+   PLANTS
+========================= */
 
 function plant(x,base,height){
 
@@ -381,7 +742,9 @@ ctx.restore();
 }
 
 
-/* ROCK */
+/* =========================
+   ROCK
+========================= */
 
 function rock(x,y,s){
 
@@ -424,13 +787,16 @@ ctx.stroke();
 }
 
 
-/* SHADOW */
+/* =========================
+   SHADOW
+========================= */
 
 function fishShadow(f,y){
 
 ctx.save();
 
 ctx.globalAlpha=.14;
+
 ctx.fillStyle="#002b3b";
 
 ctx.beginPath();
@@ -450,7 +816,9 @@ ctx.restore();
 }
 
 
-/* FISH */
+/* =========================
+   DRAW FISH
+========================= */
 
 function drawFish(f,time){
 
@@ -473,16 +841,24 @@ if(f.type==="clown")clownfish();
 if(f.type==="blue")bluefish();
 if(f.type==="gold")goldfish();
 
+if(
+f.type==="rainbow" ||
+f.type==="dragon" ||
+f.type==="diamond"
+){
+specialFish(f.type);
+}
+
 ctx.restore();
 
 }
 
 
-/* CLOWNFISH */
+/* =========================
+   CLOWNFISH
+========================= */
 
 function clownfish(){
-
-/* TAIL */
 
 let tail=ctx.createLinearGradient(
 -85,0,-35,0
@@ -522,8 +898,6 @@ ctx.lineWidth=2.5;
 ctx.stroke();
 
 
-/* BODY */
-
 const body=ctx.createRadialGradient(
 18,-17,3,
 0,0,65
@@ -547,8 +921,6 @@ ctx.ellipse(
 ctx.fill();
 
 
-/* WHITE STRIPES */
-
 ctx.save();
 
 ctx.beginPath();
@@ -564,25 +936,27 @@ ctx.clip();
 ctx.fillStyle="#fffdf0";
 
 ctx.beginPath();
+
 ctx.moveTo(-35,-45);
 ctx.lineTo(-16,-45);
 ctx.lineTo(-7,45);
 ctx.lineTo(-29,45);
+
 ctx.closePath();
 ctx.fill();
 
 ctx.beginPath();
+
 ctx.moveTo(3,-45);
 ctx.lineTo(25,-45);
 ctx.lineTo(34,45);
 ctx.lineTo(12,45);
+
 ctx.closePath();
 ctx.fill();
 
 ctx.restore();
 
-
-/* OUTLINE */
 
 ctx.strokeStyle="#6c3419";
 ctx.lineWidth=2.5;
@@ -597,8 +971,6 @@ ctx.ellipse(
 
 ctx.stroke();
 
-
-/* TOP FIN */
 
 ctx.fillStyle="#f98c29";
 
@@ -619,10 +991,9 @@ ctx.bezierCurveTo(
 );
 
 ctx.fill();
+
 ctx.stroke();
 
-
-/* LOWER FIN */
 
 ctx.fillStyle="#e9681d";
 
@@ -643,10 +1014,9 @@ ctx.bezierCurveTo(
 );
 
 ctx.fill();
+
 ctx.stroke();
 
-
-/* SIDE FIN */
 
 ctx.fillStyle="rgba(255,190,75,.8)";
 
@@ -660,102 +1030,40 @@ ctx.ellipse(
 );
 
 ctx.fill();
+
 ctx.stroke();
 
-
-/* EYE */
 
 ctx.fillStyle="#fff";
 
 ctx.beginPath();
-ctx.arc(40,-10,9,0,Math.PI*2);
-ctx.fill();
 
-ctx.strokeStyle="#6d351d";
-ctx.lineWidth=1.5;
-ctx.stroke();
+ctx.arc(40,-10,9,0,Math.PI*2);
+
+ctx.fill();
 
 ctx.fillStyle="#101820";
 
 ctx.beginPath();
+
 ctx.arc(43,-10,4.7,0,Math.PI*2);
+
 ctx.fill();
 
 ctx.fillStyle="#fff";
 
 ctx.beginPath();
+
 ctx.arc(44,-12,1.7,0,Math.PI*2);
-ctx.fill();
-
-
-/* MOUTH */
-
-ctx.strokeStyle="#642b1a";
-ctx.lineWidth=2;
-
-ctx.beginPath();
-
-ctx.arc(
-56,2,
-8,
-.1,
-1.2
-);
-
-ctx.stroke();
-
-
-/* SHINE */
-
-ctx.save();
-
-ctx.globalAlpha=.22;
-ctx.fillStyle="#fff";
-
-ctx.beginPath();
-
-ctx.ellipse(
-7,-18,
-23,6,
--.25,
-0,Math.PI*2
-);
 
 ctx.fill();
-
-ctx.restore();
-
-
-/* SCALES */
-
-ctx.save();
-
-ctx.globalAlpha=.12;
-ctx.strokeStyle="#fff";
-ctx.lineWidth=1;
-
-for(let x=-20;x<35;x+=9){
-
-ctx.beginPath();
-
-ctx.arc(
-x,
-8,
-5,
-.2,
-2.5
-);
-
-ctx.stroke();
-
-}
-
-ctx.restore();
 
 }
 
 
-/* BLUE FISH */
+/* =========================
+   BLUE FISH
+========================= */
 
 function bluefish(){
 
@@ -767,6 +1075,7 @@ ctx.moveTo(-42,0);
 ctx.lineTo(-80,-29);
 ctx.lineTo(-70,0);
 ctx.lineTo(-80,29);
+
 ctx.closePath();
 
 ctx.fill();
@@ -816,6 +1125,7 @@ ctx.ellipse(
 ctx.clip();
 
 ctx.fillStyle="#ffd936";
+
 ctx.fillRect(-12,-40,17,80);
 
 ctx.restore();
@@ -840,69 +1150,36 @@ ctx.bezierCurveTo(
 );
 
 ctx.fill();
-ctx.stroke();
 
-
-ctx.fillStyle="#19a9d1";
-
-ctx.beginPath();
-
-ctx.moveTo(3,25);
-
-ctx.bezierCurveTo(
-14,47,
-28,46,
-34,24
-);
-
-ctx.fill();
 ctx.stroke();
 
 
 ctx.fillStyle="#fff";
 
 ctx.beginPath();
+
 ctx.arc(36,-9,8,0,Math.PI*2);
+
 ctx.fill();
 
 ctx.fillStyle="#111";
 
 ctx.beginPath();
+
 ctx.arc(39,-9,4,0,Math.PI*2);
+
 ctx.fill();
-
-ctx.fillStyle="#fff";
-
-ctx.beginPath();
-ctx.arc(40,-11,1.5,0,Math.PI*2);
-ctx.fill();
-
-
-ctx.strokeStyle="#17394a";
-ctx.lineWidth=2;
-
-ctx.beginPath();
-
-ctx.arc(51,2,7,.1,1.2);
-
-ctx.stroke();
 
 }
 
 
-/* GOLDFISH */
+/* =========================
+   GOLD FISH
+========================= */
 
 function goldfish(){
 
-const tail=ctx.createLinearGradient(
--80,0,-30,0
-);
-
-tail.addColorStop(0,"#e05a0c");
-tail.addColorStop(.5,"#ff9c1d");
-tail.addColorStop(1,"#ffd047");
-
-ctx.fillStyle=tail;
+ctx.fillStyle="#ff9c1d";
 
 ctx.beginPath();
 
@@ -962,38 +1239,6 @@ ctx.lineWidth=2.5;
 ctx.stroke();
 
 
-/* SCALES */
-
-ctx.save();
-
-ctx.globalAlpha=.18;
-ctx.strokeStyle="#fff5a1";
-ctx.lineWidth=2;
-
-for(let x=-30;x<35;x+=10){
-
-for(let y=-15;y<16;y+=10){
-
-ctx.beginPath();
-
-ctx.arc(
-x,y,
-5,
-.2,
-2.7
-);
-
-ctx.stroke();
-
-}
-
-}
-
-ctx.restore();
-
-
-/* FIN */
-
 ctx.fillStyle="#ffcf39";
 
 ctx.beginPath();
@@ -1013,53 +1258,138 @@ ctx.bezierCurveTo(
 );
 
 ctx.fill();
+
 ctx.stroke();
 
-
-ctx.beginPath();
-
-ctx.moveTo(5,25);
-
-ctx.bezierCurveTo(
-14,45,
-27,44,
-32,23
-);
-
-ctx.fill();
-ctx.stroke();
-
-
-/* EYE */
 
 ctx.fillStyle="#fff";
 
 ctx.beginPath();
+
 ctx.arc(35,-8,8,0,Math.PI*2);
+
 ctx.fill();
 
 ctx.fillStyle="#151515";
 
 ctx.beginPath();
+
 ctx.arc(38,-8,4,0,Math.PI*2);
+
 ctx.fill();
-
-
-/* MOUTH */
-
-ctx.strokeStyle="#6b2b0e";
-ctx.lineWidth=2;
-
-ctx.beginPath();
-
-ctx.arc(49,2,7,.1,1.2);
-
-ctx.stroke();
 
 }
 
 
-/* BUBBLES */
+/* =========================
+   SPECIAL FISH
+========================= */
+
+function specialFish(type){
+
+let g=ctx.createLinearGradient(-60,0,60,0);
+
+if(type==="rainbow"){
+
+g.addColorStop(0,"#ff4d6d");
+g.addColorStop(.25,"#ffd23f");
+g.addColorStop(.5,"#55e06f");
+g.addColorStop(.75,"#3cc8ff");
+g.addColorStop(1,"#a85cff");
+
+}
+
+if(type==="dragon"){
+
+g.addColorStop(0,"#ffb02e");
+g.addColorStop(.4,"#f04444");
+g.addColorStop(1,"#801b3b");
+
+}
+
+if(type==="diamond"){
+
+g.addColorStop(0,"#ffffff");
+g.addColorStop(.3,"#7de8ff");
+g.addColorStop(.6,"#557cff");
+g.addColorStop(1,"#a04cff");
+
+}
+
+ctx.fillStyle=g;
+
+ctx.beginPath();
+
+ctx.ellipse(0,0,62,35,0,0,Math.PI*2);
+
+ctx.fill();
+
+ctx.strokeStyle="#fff";
+ctx.lineWidth=2;
+ctx.stroke();
+
+
+ctx.fillStyle=g;
+
+ctx.beginPath();
+
+ctx.moveTo(-45,0);
+ctx.lineTo(-90,-32);
+ctx.lineTo(-78,0);
+ctx.lineTo(-90,32);
+
+ctx.closePath();
+
+ctx.fill();
+
+
+ctx.fillStyle="#fff";
+
+ctx.beginPath();
+
+ctx.arc(40,-9,9,0,Math.PI*2);
+
+ctx.fill();
+
+ctx.fillStyle="#111";
+
+ctx.beginPath();
+
+ctx.arc(43,-9,4,0,Math.PI*2);
+
+ctx.fill();
+
+
+/* SPECIAL SPARKLE */
+
+if(type==="diamond"){
+
+ctx.fillStyle="#fff";
+
+for(let i=0;i<4;i++){
+
+ctx.beginPath();
+
+ctx.arc(
+-15+i*15,
+-10+i%2*15,
+3,
+0,
+Math.PI*2
+);
+
+ctx.fill();
+
+}
+
+}
+
+}
+
+
+/* =========================
+   BUBBLES
+========================= */
 
 function drawBubbles(){
 
@@ -1070,6 +1400,7 @@ b.y-=b.speed;
 if(b.y<-10){
 
 b.y=H+10;
+
 b.x=Math.random()*W;
 
 }
@@ -1088,17 +1419,14 @@ b.x,b.y,b.r,
 
 ctx.stroke();
 
-ctx.fillStyle=
-`rgba(255,255,255,${b.alpha*.25})`;
-
-ctx.fill();
-
 }
 
 }
 
 
-/* FOOD */
+/* =========================
+   FOOD
+========================= */
 
 function drawFood(){
 
@@ -1123,15 +1451,20 @@ ctx.fill();
 
 for(let i=food.length-1;i>=0;i--){
 
-if(food[i].y>H*.78)
+if(food[i].y>H*.78){
+
 food.splice(i,1);
 
 }
 
 }
 
+}
 
-/* MOVEMENT */
+
+/* =========================
+   MOVEMENT
+========================= */
 
 function updateFish(){
 
@@ -1160,11 +1493,19 @@ f.dir=1;
 }
 
 
-/* ADD FISH */
+/* =========================
+   ADD FISH
+========================= */
 
 function addFish(){
 
-if(fish.length>=7)return;
+if(fish.length>=10){
+
+alert("Aquarium penuh! Maksimum 10 ikan.");
+
+return;
+
+}
 
 const types=[
 "clown",
@@ -1174,12 +1515,20 @@ const types=[
 
 fish.push({
 
-x:W*.5,
-y:H*.25+Math.random()*H*.4,
-size:.55+Math.random()*.25,
-speed:.35+Math.random()*.6,
-dir:Math.random()>.5?1:-1,
+id:nextId++,
+
 type:types[Math.floor(Math.random()*3)],
+
+x:W*.5,
+
+y:H*.25+Math.random()*H*.4,
+
+size:.55+Math.random()*.25,
+
+speed:.35+Math.random()*.6,
+
+dir:Math.random()>.5?1:-1,
+
 phase:Math.random()*10
 
 });
@@ -1187,15 +1536,16 @@ phase:Math.random()*10
 }
 
 
-/* FEED */
-
-let coins=500;
+/* =========================
+   FEED
+========================= */
 
 function feedFish(){
 
 if(coins<5){
 
 alert("Coins tak cukup.");
+
 return;
 
 }
@@ -1209,7 +1559,9 @@ for(let i=0;i<15;i++){
 food.push({
 
 x:W*.25+Math.random()*W*.5,
+
 y:-10-Math.random()*40,
+
 speed:1.2+Math.random()*1.4
 
 });
@@ -1219,7 +1571,9 @@ speed:1.2+Math.random()*1.4
 }
 
 
-/* BUBBLES */
+/* =========================
+   BUBBLES
+========================= */
 
 function addBubbles(){
 
@@ -1228,9 +1582,13 @@ for(let i=0;i<15;i++){
 bubbles.push({
 
 x:Math.random()*W,
+
 y:H*.85+Math.random()*H*.15,
+
 r:2+Math.random()*5,
+
 speed:.5+Math.random(),
+
 alpha:.25+Math.random()*.45
 
 });
@@ -1240,541 +1598,150 @@ alpha:.25+Math.random()*.45
 }
 
 
-/* DECOR */
+/* =========================
+   BREEDING UI
+========================= */
 
-function decor(){
+function openBreeding(){
 
-plant(W*.07,H*.88,H*.32);
-plant(W*.16,H*.92,H*.22);
-plant(W*.84,H*.9,H*.34);
-plant(W*.92,H*.92,H*.25);
+document.getElementById("breedingPanel").style.display="block";
 
-rock(W*.27,H*.89,.75);
-rock(W*.69,H*.9,1);
-rock(W*.51,H*.94,.55);
+parent1=null;
+parent2=null;
+
+updateParents();
+
+}
+
+function closeBreeding(){
+
+document.getElementById("breedingPanel").style.display="none";
+
+}
+
+function selectParent(slot){
+
+if(fish.length<2){
+
+alert("Perlu sekurang-kurangnya 2 ikan.");
+
+return;
 
 }
 
 
-/* MAIN LOOP */
+/*
+Untuk mudah di telefon,
+pilih ikan ikut urutan.
+*/
 
-function loop(time){
+if(slot===0){
 
-ctx.clearRect(0,0,W,H);
+parent1=fish[0];
 
-water();
+}else{
 
-decor();
-
-drawBubbles();
-
-drawFood();
-
-updateFish();
-
-for(const f of fish){
-
-drawFish(f,time);
+parent2=fish[1];
 
 }
 
-sand();
-
-requestAnimationFrame(loop);
+updateParents();
 
 }
 
-requestAnimationFrame(loop);
+function updateParents(){
 
-</script>
+if(parent1){
 
-</body>
-  </html>-42,0);
-  ctx.lineTo(-72,-25);
-  ctx.lineTo(-65,0);
-  ctx.lineTo(-72,25);
-  ctx.closePath();
+document.getElementById("parent1Fish").textContent=
+fishTypes[parent1.type].emoji;
 
-  ctx.fill();
+document.getElementById("parent1Name").textContent=
+fishTypes[parent1.type].name;
 
-  ctx.strokeStyle="#724317";
-  ctx.lineWidth=2;
-  ctx.stroke();
+}else{
 
+document.getElementById("parent1Fish").textContent="❔";
 
-  const g=ctx.createLinearGradient(0,-30,0,30);
+document.getElementById("parent1Name").textContent=
+"Tap untuk pilih";
 
-  g.addColorStop(0,"#fff06a");
-  g.addColorStop(.5,"#ffc52f");
-  g.addColorStop(1,"#e87914");
-
-  ctx.fillStyle=g;
-
-  ctx.beginPath();
-
-  ctx.ellipse(
-    0,0,50,27,0,0,Math.PI*2
-  );
-
-  ctx.fill();
-
-  ctx.strokeStyle="#774713";
-  ctx.lineWidth=2.5;
-  ctx.stroke();
+}
 
 
-  /* stripes */
+if(parent2){
 
-  ctx.strokeStyle="rgba(255,255,255,.55)";
-  ctx.lineWidth=5;
+document.getElementById("parent2Fish").textContent=
+fishTypes[parent2.type].emoji;
 
-  for(let x=-15;x<35;x+=15){
+document.getElementById("parent2Name").textContent=
+fishTypes[parent2.type].name;
 
-    ctx.beginPath();
+}else{
 
-    ctx.moveTo(x,-23);
-    ctx.lineTo(x+5,23);
+document.getElementById("parent2Fish").textContent="❔";
 
-    ctx.stroke();
+document.getElementById("parent2Name").textContent=
+"Tap untuk pilih";
 
-  }
-
-
-  /* fin */
-
-  ctx.fillStyle="#ffe15c";
-
-  ctx.beginPath();
-
-  ctx.moveTo(-4,-22);
-  ctx.quadraticCurveTo(
-    5,-47,
-    25,-25
-  );
-
-  ctx.quadraticCurveTo(
-    10,-19,
-    -4,-22
-  );
-
-  ctx.fill();
-
-  ctx.stroke();
-
-
-  /* eye */
-
-  ctx.fillStyle="white";
-
-  ctx.beginPath();
-  ctx.arc(31,-8,7,0,Math.PI*2);
-  ctx.fill();
-
-  ctx.fillStyle="#111";
-
-  ctx.beginPath();
-  ctx.arc(34,-8,3.5,0,Math.PI*2);
-  ctx.fill();
+}
 
 }
 
 
 /* =========================
-   BACKGROUND
+   START BREEDING
 ========================= */
 
-function drawBackground(){
+function startBreeding(){
 
-  const water=ctx.createLinearGradient(
-    0,0,0,H
-  );
+if(breeding){
 
-  water.addColorStop(0,"#8ce8fa");
-  water.addColorStop(.35,"#36b6dc");
-  water.addColorStop(.72,"#1683b0");
-  water.addColorStop(1,"#075b82");
+alert("Breeding sedang berjalan.");
 
-  ctx.fillStyle=water;
-  ctx.fillRect(0,0,W,H);
-
-
-  /* water light */
-
-  ctx.save();
-
-  ctx.globalAlpha=.12;
-
-  ctx.strokeStyle="white";
-  ctx.lineWidth=10;
-
-  for(let i=-100;i<W+100;i+=100){
-
-    ctx.beginPath();
-
-    ctx.moveTo(i,0);
-
-    ctx.quadraticCurveTo(
-      i+50,
-      H*.25,
-      i-20,
-      H*.5
-    );
-
-    ctx.stroke();
-
-  }
-
-  ctx.restore();
+return;
 
 }
 
+if(!parent1 || !parent2){
 
-/* =========================
-   SAND
-========================= */
+alert("Pilih 2 ekor ikan dahulu.");
 
-function drawSand(){
-
-  const sandH=H*.18;
-
-  const g=ctx.createLinearGradient(
-    0,H-sandH,0,H
-  );
-
-  g.addColorStop(0,"#efd99c");
-  g.addColorStop(1,"#c99b57");
-
-  ctx.fillStyle=g;
-
-  ctx.beginPath();
-
-  ctx.moveTo(0,H-sandH);
-
-  ctx.quadraticCurveTo(
-    W*.2,H-sandH-8,
-    W*.4,H-sandH+5
-  );
-
-  ctx.quadraticCurveTo(
-    W*.7,H-sandH-6,
-    W,H-sandH+3
-  );
-
-  ctx.lineTo(W,H);
-  ctx.lineTo(0,H);
-  ctx.closePath();
-
-  ctx.fill();
-
-
-  /* gravel */
-
-  for(let i=0;i<130;i++){
-
-    const x=Math.random()*W;
-    const y=H-sandH+Math.random()*sandH;
-
-    const r=1+Math.random()*3;
-
-    ctx.fillStyle=
-      Math.random()>.5
-      ? "rgba(120,91,55,.4)"
-      : "rgba(255,240,180,.55)";
-
-    ctx.beginPath();
-    ctx.arc(x,y,r,0,Math.PI*2);
-    ctx.fill();
-
-  }
+return;
 
 }
 
+if(parent1.id===parent2.id){
 
-/* =========================
-   BUBBLES
-========================= */
+alert("Pilih dua ikan yang berbeza.");
 
-function updateBubbles(){
-
-  for(const b of bubbles){
-
-    b.y-=b.speed;
-
-    if(b.y<-10){
-
-      b.y=H*.8+Math.random()*H*.2;
-      b.x=Math.random()*W;
-
-    }
-
-  }
+return;
 
 }
 
-function drawBubbles(){
+if(coins<50){
 
-  for(const b of bubbles){
+alert("Coins tak cukup. Perlukan 50 coins.");
 
-    ctx.strokeStyle=
-      `rgba(255,255,255,${b.alpha})`;
-
-    ctx.lineWidth=1.5;
-
-    ctx.beginPath();
-
-    ctx.arc(
-      b.x,
-      b.y,
-      b.r,
-      0,
-      Math.PI*2
-    );
-
-    ctx.stroke();
-
-    ctx.fillStyle=
-      `rgba(255,255,255,${b.alpha*.35})`;
-
-    ctx.fill();
-
-  }
+return;
 
 }
 
+coins-=50;
 
-/* =========================
-   FOOD
-========================= */
+document.getElementById("coins").textContent=coins;
 
-function drawFood(){
+breeding=true;
 
-  for(const p of food){
+breedEnd=Date.now()+30000;
 
-    p.y+=p.speed;
+document.getElementById("breedTimer").textContent=
+"🥚 Breeding... 30s";
 
-    ctx.fillStyle="#8b4d24";
+if(breedingInterval){
 
-    ctx.beginPath();
-
-    ctx.arc(
-      p.x,
-      p.y,
-      4,
-      0,
-      Math.PI*2
-    );
-
-    ctx.fill();
-
-  }
-
-  for(let i=food.length-1;i>=0;i--){
-
-    if(food[i].y>H*.75){
-
-      food.splice(i,1);
-
-    }
-
-  }
+clearInterval(breedingInterval);
 
 }
 
-
-/* =========================
-   PLANTS + ROCKS
-========================= */
-
-function drawDecor(){
-
-  drawSeaweed(
-    W*.08,
-    H*.87,
-    H*.30,
-    "#176f52"
-  );
-
-  drawSeaweed(
-    W*.16,
-    H*.92,
-    H*.25,
-    "#21865b"
-  );
-
-  drawSeaweed(
-    W*.82,
-    H*.9,
-    H*.32,
-    "#147052"
-  );
-
-  drawSeaweed(
-    W*.9,
-    H*.91,
-    H*.22,
-    "#278b61"
-  );
-
-  drawRock(
-    W*.27,
-    H*.89,
-    .8
-  );
-
-  drawRock(
-    W*.68,
-    H*.9,
-    1
-  );
-
-  drawRock(
-    W*.52,
-    H*.94,
-    .6
-  );
-
-}
-
-
-/* =========================
-   UPDATE FISH
-========================= */
-
-function updateFish(){
-
-  for(const f of fish){
-
-    f.x += f.speed*f.dir;
-
-    const margin=75*f.size;
-
-    if(f.x>W-margin){
-
-      f.x=W-margin;
-      f.dir=-1;
-
-    }
-
-    if(f.x<margin){
-
-      f.x=margin;
-      f.dir=1;
-
-    }
-
-  }
-
-}
-
-
-/* =========================
-   ANIMATION
-========================= */
-
-function animate(time){
-
-  ctx.clearRect(0,0,W,H);
-
-  drawBackground();
-
-  drawDecor();
-
-  updateBubbles();
-  drawBubbles();
-
-  drawFood();
-
-  updateFish();
-
-  for(const f of fish){
-
-    drawFish(f,time);
-
-  }
-
-  drawSand();
-
-  requestAnimationFrame(animate);
-
-}
-
-requestAnimationFrame(animate);
-
-
-/* =========================
-   BUTTON
-========================= */
-
-let coins=500;
-
-const coinsText=
-  document.getElementById("coins");
-
-document
-.getElementById("feedBtn")
-.addEventListener("click",()=>{
-
-  if(coins<5){
-
-    alert("Coins tak cukup!");
-
-    return;
-
-  }
-
-  coins-=5;
-
-  coinsText.textContent=coins;
-
-  for(let i=0;i<12;i++){
-
-    food.push({
-
-      x:W*.3+
-        Math.random()*W*.4,
-
-      y:-10-Math.random()*30,
-
-      speed:
-        1.5+
-        Math.random()*1.5
-
-    });
-
-  }
-
-});
-
-
-/* =========================
-   BUBBLE BUTTON
-========================= */
-
-document
-.getElementById("bubbleBtn")
-.addEventListener("click",()=>{
-
-  for(let i=0;i<12;i++){
-
-    bubbles.push({
-
-      x:Math.random()*W,
-
-      y:H*.8+Math.random()*H*.2,
-
-      r:2+Math.random()*5,
-
-      speed:.5+Math.random()*1.3,
-
-      alpha:.3+Math.random()*.5
-
-    });
-
-  }
-
-});
-
-</script>
-
-</body>
-</html>
+breedingInterval=setInterval(updat
