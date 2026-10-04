@@ -3,156 +3,262 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Happy Aquarium</title>
 
 <style>
-* {
-    box-sizing: border-box;
+
+*{
+box-sizing:border-box;
 }
 
-body {
-    margin: 0;
-    background: #dff6ff;
-    font-family: Arial, sans-serif;
-    text-align: center;
+body{
+margin:0;
+background:#dff6ff;
+font-family:Arial,sans-serif;
+text-align:center;
 }
 
-h2 {
-    margin: 10px 0;
-    color: #145b7d;
+h2{
+margin:10px;
+color:#145b7d;
 }
 
-#ui {
-    width: 95%;
-    max-width: 650px;
-    margin: auto;
-    background: white;
-    padding: 10px;
-    border-radius: 12px 12px 0 0;
-    font-size: 18px;
+#ui{
+width:95%;
+max-width:650px;
+margin:auto;
+background:white;
+padding:12px;
+border-radius:12px 12px 0 0;
+font-size:18px;
 }
 
-button {
-    border: 0;
-    border-radius: 10px;
-    padding: 10px 18px;
-    background: #ffd43b;
-    font-size: 17px;
-    font-weight: bold;
+button{
+border:0;
+border-radius:10px;
+padding:10px 18px;
+background:#ffd43b;
+font-size:17px;
+font-weight:bold;
 }
 
-#aquarium {
-    position: relative;
-    width: 95%;
-    max-width: 650px;
-    height: 480px;
-    margin: auto;
-    overflow: hidden;
-    border: 8px solid #8b5a2b;
-    border-radius: 0 0 15px 15px;
-    background: linear-gradient(
-        #43c6ed 0%,
-        #159bc5 65%,
-        #08779e 100%
-    );
+#aquarium{
+position:relative;
+width:95%;
+max-width:650px;
+height:480px;
+margin:auto;
+overflow:hidden;
+border:8px solid #7b4a20;
+border-radius:0 0 18px 18px;
+background:linear-gradient(
+#55d5f2,
+#159fc7 65%,
+#08799e
+);
+}
+
+/* cahaya air */
+
+.light{
+position:absolute;
+top:-50px;
+width:120px;
+height:500px;
+background:rgba(255,255,255,.10);
+transform:rotate(15deg);
 }
 
 /* pasir */
-#sand {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    height: 65px;
-    background:
-        radial-gradient(circle, #d8b36a 2px, transparent 3px);
-    background-size: 18px 18px;
-    background-color: #e6c27a;
+
+#sand{
+position:absolute;
+bottom:0;
+width:100%;
+height:65px;
+background-color:#e7c67d;
+background-image:
+radial-gradient(circle,#c9a45e 2px,transparent 3px);
+background-size:18px 18px;
 }
 
 /* tumbuhan */
-.plant {
-    position: absolute;
-    bottom: 45px;
-    font-size: 60px;
+
+.plant{
+position:absolute;
+bottom:50px;
+font-size:65px;
+}
+
+/* batu */
+
+.rock{
+position:absolute;
+bottom:48px;
+width:60px;
+height:35px;
+background:#777;
+border-radius:50%;
 }
 
 /* bubble */
-.bubble {
-    position: absolute;
-    border: 2px solid white;
-    border-radius: 50%;
-    opacity: .65;
-    animation: bubble 5s infinite;
+
+.bubble{
+position:absolute;
+border:2px solid white;
+border-radius:50%;
+opacity:.7;
+animation:bubble 5s infinite;
 }
 
-.b1 {
-    width: 12px;
-    height: 12px;
-    left: 25%;
-    bottom: 80px;
+.b1{
+width:12px;
+height:12px;
+left:25%;
+bottom:80px;
 }
 
-.b2 {
-    width: 8px;
-    height: 8px;
-    left: 70%;
-    bottom: 100px;
-    animation-delay: 1s;
+.b2{
+width:8px;
+height:8px;
+left:70%;
+bottom:100px;
+animation-delay:1s;
 }
 
-.b3 {
-    width: 15px;
-    height: 15px;
-    left: 50%;
-    bottom: 70px;
-    animation-delay: 2s;
+.b3{
+width:15px;
+height:15px;
+left:50%;
+bottom:70px;
+animation-delay:2s;
 }
 
-@keyframes bubble {
-    from {
-        transform: translateY(0);
-        opacity: .7;
-    }
+@keyframes bubble{
 
-    to {
-        transform: translateY(-350px);
-        opacity: 0;
-    }
+0%{
+transform:translateY(0);
+opacity:.7;
+}
+
+100%{
+transform:translateY(-380px);
+opacity:0;
+}
+
 }
 
 /* ikan */
-.fish {
-    position: absolute;
-    width: 120px;
-    height: 70px;
-    animation: swim 10s linear infinite;
+
+.fish{
+position:absolute;
+width:130px;
+height:75px;
 }
 
-.fish svg {
-    width: 100%;
-    height: 100%;
+.fish1{
+top:120px;
+animation:fishMove1 12s linear infinite;
 }
 
-.fish1 {
-    top: 120px;
-    left: -140px;
+.fish2{
+top:270px;
+animation:fishMove2 15s linear infinite;
 }
 
-.fish2 {
-    top: 270px;
-    left: -160px;
-    animation-delay: 4s;
+@keyframes fishMove1{
+
+0%{
+left:-150px;
+transform:scaleX(1);
 }
 
-@keyframes swim {
-    0% {
-        transform: translateX(-150px);
-    }
-
-    100% {
-        transform: translateX(800px);
-    }
+45%{
+left:65%;
+transform:scaleX(1);
 }
+
+50%{
+left:65%;
+transform:scaleX(-1);
+}
+
+95%{
+left:-150px;
+transform:scaleX(-1);
+}
+
+100%{
+left:-150px;
+transform:scaleX(1);
+}
+
+}
+
+@keyframes fishMove2{
+
+0%{
+right:-150px;
+transform:scaleX(-1);
+}
+
+45%{
+right:60%;
+transform:scaleX(-1);
+}
+
+50%{
+right:60%;
+transform:scaleX(1);
+}
+
+95%{
+right:-150px;
+transform:scaleX(1);
+}
+
+100%{
+right:-150px;
+transform:scaleX(-1);
+}
+
+}
+
+/* makanan */
+
+.food{
+position:absolute;
+font-size:22px;
+animation:foodFall 2s linear forwards;
+}
+
+@keyframes foodFall{
+
+0%{
+top:10px;
+}
+
+100%{
+top:390px;
+}
+
+}
+
+/* notifikasi */
+
+#message{
+position:absolute;
+top:15px;
+left:50%;
+transform:translateX(-50%);
+background:rgba(255,255,255,.9);
+padding:8px 15px;
+border-radius:15px;
+display:none;
+font-weight:bold;
+}
+
 </style>
 </head>
 
@@ -161,174 +267,241 @@ button {
 <h2>🐠 Happy Aquarium</h2>
 
 <div id="ui">
-    🪙 Coins: <span id="coins">100</span>
-    <br><br>
-    <button onclick="feedFish()">🍖 Beri Makan</button>
+
+🪙 Coins:
+<span id="coins">100</span>
+
+<br><br>
+
+<button onclick="feedFish()">
+🍖 Beri Makan
+</button>
+
 </div>
 
 <div id="aquarium">
 
-    <!-- IKAN KARTUN 1 -->
-    <div class="fish fish1">
-        <svg viewBox="0 0 160 90">
+<div class="light" style="left:100px"></div>
+<div class="light" style="left:400px"></div>
 
-            <!-- badan -->
-            <ellipse
-                cx="85"
-                cy="45"
-                rx="50"
-                ry="30"
-                fill="#ff9f43"
-                stroke="#8a4b08"
-                stroke-width="3"
-            />
+<div id="message">
+🐟 Ikan sedang makan!
+</div>
 
-            <!-- ekor -->
-            <polygon
-                points="35,45 5,15 5,75"
-                fill="#ff7f27"
-                stroke="#8a4b08"
-                stroke-width="3"
-            />
+<!-- IKAN OREN -->
 
-            <!-- sirip -->
-            <polygon
-                points="85,18 105,3 110,25"
-                fill="#ff7f27"
-                stroke="#8a4b08"
-                stroke-width="3"
-            />
+<div class="fish fish1">
 
-            <polygon
-                points="85,72 105,87 110,65"
-                fill="#ff7f27"
-                stroke="#8a4b08"
-                stroke-width="3"
-            />
+<svg viewBox="0 0 160 90">
 
-            <!-- mata -->
-            <circle
-                cx="115"
-                cy="35"
-                r="7"
-                fill="white"
-            />
+<ellipse
+cx="85"
+cy="45"
+rx="50"
+ry="30"
+fill="#ff9f43"
+stroke="#8a4b08"
+stroke-width="3"
+/>
 
-            <circle
-                cx="117"
-                cy="35"
-                r="3"
-                fill="black"
-            />
+<polygon
+points="35,45 5,15 5,75"
+fill="#ff7f27"
+stroke="#8a4b08"
+stroke-width="3"
+/>
 
-            <!-- mulut -->
-            <path
-                d="M128 50 Q138 55 128 60"
-                fill="none"
-                stroke="#6b2d00"
-                stroke-width="3"
-            />
+<polygon
+points="85,18 105,3 110,25"
+fill="#ff7f27"
+stroke="#8a4b08"
+stroke-width="3"
+/>
 
-            <!-- sisik -->
-            <path
-                d="M65 30 Q75 40 65 50
-                   M75 30 Q85 40 75 50"
-                fill="none"
-                stroke="#e66d18"
-                stroke-width="3"
-            />
+<polygon
+points="85,72 105,87 110,65"
+fill="#ff7f27"
+stroke="#8a4b08"
+stroke-width="3"
+/>
 
-        </svg>
-    </div>
+<circle
+cx="115"
+cy="35"
+r="7"
+fill="white"
+/>
 
-    <!-- IKAN KARTUN 2 -->
-    <div class="fish fish2">
-        <svg viewBox="0 0 160 90">
+<circle
+cx="117"
+cy="35"
+r="3"
+fill="black"
+/>
 
-            <ellipse
-                cx="85"
-                cy="45"
-                rx="50"
-                ry="30"
-                fill="#6c8cff"
-                stroke="#283d91"
-                stroke-width="3"
-            />
+<path
+d="M128 50 Q138 55 128 60"
+fill="none"
+stroke="#6b2d00"
+stroke-width="3"
+/>
 
-            <polygon
-                points="35,45 5,15 5,75"
-                fill="#536fe0"
-                stroke="#283d91"
-                stroke-width="3"
-            />
+<circle cx="70" cy="40" r="3" fill="#e66d18"/>
+<circle cx="80" cy="48" r="3" fill="#e66d18"/>
+<circle cx="70" cy="56" r="3" fill="#e66d18"/>
 
-            <polygon
-                points="85,18 105,3 110,25"
-                fill="#536fe0"
-                stroke="#283d91"
-                stroke-width="3"
-            />
+</svg>
 
-            <circle
-                cx="115"
-                cy="35"
-                r="7"
-                fill="white"
-            />
+</div>
 
-            <circle
-                cx="117"
-                cy="35"
-                r="3"
-                fill="black"
-            />
+<!-- IKAN BIRU -->
 
-            <path
-                d="M128 50 Q138 55 128 60"
-                fill="none"
-                stroke="#283d91"
-                stroke-width="3"
-            />
+<div class="fish fish2">
 
-        </svg>
-    </div>
+<svg viewBox="0 0 160 90">
 
-    <!-- tumbuhan -->
-    <div class="plant" style="left:30px;">🌿</div>
-    <div class="plant" style="right:35px;">🌿</div>
+<ellipse
+cx="85"
+cy="45"
+rx="50"
+ry="30"
+fill="#6c8cff"
+stroke="#283d91"
+stroke-width="3"
+/>
 
-    <!-- bubbles -->
-    <div class="bubble b1"></div>
-    <div class="bubble b2"></div>
-    <div class="bubble b3"></div>
+<polygon
+points="35,45 5,15 5,75"
+fill="#536fe0"
+stroke="#283d91"
+stroke-width="3"
+/>
 
-    <!-- pasir -->
-    <div id="sand"></div>
+<polygon
+points="85,18 105,3 110,25"
+fill="#536fe0"
+stroke="#283d91"
+stroke-width="3"
+/>
+
+<circle
+cx="115"
+cy="35"
+r="7"
+fill="white"
+/>
+
+<circle
+cx="117"
+cy="35"
+r="3"
+fill="black"
+/>
+
+<path
+d="M128 50 Q138 55 128 60"
+fill="none"
+stroke="#283d91"
+stroke-width="3"
+/>
+
+</svg>
+
+</div>
+
+<!-- TUMBUHAN -->
+
+<div class="plant" style="left:25px;">
+🌿
+</div>
+
+<div class="plant" style="right:25px;">
+🌿
+</div>
+
+<!-- BATU -->
+
+<div class="rock" style="left:120px;"></div>
+
+<div class="rock"
+style="right:120px;width:45px;height:28px;">
+</div>
+
+<!-- BUBBLE -->
+
+<div class="bubble b1"></div>
+<div class="bubble b2"></div>
+<div class="bubble b3"></div>
+
+<!-- PASIR -->
+
+<div id="sand"></div>
 
 </div>
 
 <script>
 
-let coins = 100;
+let coins=100;
 
-function feedFish() {
+function feedFish(){
 
-    if (coins >= 5) {
+if(coins<5){
 
-        coins -= 5;
+showMessage("❌ Coin tak cukup!");
 
-        document.getElementById("coins").innerText = coins;
+return;
 
-        alert("🐟 Ikan dah makan!");
+}
 
-    } else {
+coins-=5;
 
-        alert("Coin tak cukup!");
+document.getElementById("coins").innerText=coins;
 
-    }
+showMessage("🐟 Ikan sedang makan!");
+
+/* makanan jatuh */
+
+for(let i=0;i<5;i++){
+
+let food=document.createElement("div");
+
+food.className="food";
+
+food.innerHTML="🍖";
+
+food.style.left=(30+Math.random()*40)+"%";
+
+food.style.animationDelay=(i*0.2)+"s";
+
+document.getElementById("aquarium").appendChild(food);
+
+setTimeout(function(){
+
+food.remove();
+
+},2500);
+
+}
+
+}
+
+function showMessage(text){
+
+let message=document.getElementById("message");
+
+message.innerText=text;
+
+message.style.display="block";
+
+setTimeout(function(){
+
+message.style.display="none";
+
+},1500);
+
 }
 
 </script>
 
 </body>
-                </html>
+    </html>
