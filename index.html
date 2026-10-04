@@ -3,505 +3,1226 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Happy Aquarium</title>
+<title>Fish Aquarium</title>
 
 <style>
-
 *{
-box-sizing:border-box;
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
 }
 
 body{
-margin:0;
-background:#dff6ff;
-font-family:Arial,sans-serif;
-text-align:center;
+  margin:0;
+  min-height:100vh;
+  background:
+    radial-gradient(circle at 50% 10%,#d9f7ff 0,#78cde8 35%,#12628c 100%);
+  font-family:Arial,sans-serif;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:15px;
 }
 
-h2{
-margin:10px;
-color:#145b7d;
+.game{
+  width:min(700px,100%);
+  background:#173e50;
+  border-radius:24px;
+  padding:10px;
+  box-shadow:
+    0 20px 50px rgba(0,0,0,.4),
+    inset 0 0 0 3px rgba(255,255,255,.18);
 }
 
-#ui{
-width:95%;
-max-width:650px;
-margin:auto;
-background:white;
-padding:12px;
-border-radius:12px 12px 0 0;
-font-size:18px;
+.header{
+  height:55px;
+  border-radius:17px 17px 8px 8px;
+  background:linear-gradient(#244f61,#102f3d);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 18px;
+  color:white;
+  font-weight:bold;
+}
+
+.title{
+  font-size:20px;
+  letter-spacing:.5px;
+}
+
+.coins{
+  background:rgba(255,255,255,.1);
+  border-radius:20px;
+  padding:9px 14px;
+  color:#ffe26b;
+}
+
+.aquarium{
+  position:relative;
+  width:100%;
+  aspect-ratio:4/3;
+  margin-top:8px;
+  overflow:hidden;
+  border-radius:13px;
+  border:4px solid #0b3549;
+  background:#5cc4e7;
+}
+
+canvas{
+  width:100%;
+  height:100%;
+  display:block;
+}
+
+.glass{
+  pointer-events:none;
+  position:absolute;
+  inset:0;
+  background:
+    linear-gradient(
+      115deg,
+      rgba(255,255,255,.24) 0%,
+      rgba(255,255,255,.05) 22%,
+      transparent 45%
+    );
+}
+
+.controls{
+  display:flex;
+  gap:10px;
+  padding:10px 2px 2px;
 }
 
 button{
-border:0;
-border-radius:10px;
-padding:10px 18px;
-background:#ffd43b;
-font-size:17px;
-font-weight:bold;
+  flex:1;
+  border:0;
+  border-radius:14px;
+  padding:15px 10px;
+  color:white;
+  font-weight:bold;
+  font-size:15px;
+  cursor:pointer;
+  background:linear-gradient(#42b7e8,#147ca9);
+  box-shadow:0 5px 0 #0b506e;
 }
 
-#aquarium{
-position:relative;
-width:95%;
-max-width:650px;
-height:480px;
-margin:auto;
-overflow:hidden;
-border:8px solid #7b4a20;
-border-radius:0 0 18px 18px;
-background:linear-gradient(
-#55d5f2,
-#159fc7 65%,
-#08799e
-);
+button:active{
+  transform:translateY(4px);
+  box-shadow:0 1px 0 #0b506e;
 }
 
-/* cahaya air */
-
-.light{
-position:absolute;
-top:-50px;
-width:120px;
-height:500px;
-background:rgba(255,255,255,.10);
-transform:rotate(15deg);
+.feed{
+  background:linear-gradient(#ffbd50,#e57c16);
+  box-shadow:0 5px 0 #a95708;
 }
 
-/* pasir */
-
-#sand{
-position:absolute;
-bottom:0;
-width:100%;
-height:65px;
-background-color:#e7c67d;
-background-image:
-radial-gradient(circle,#c9a45e 2px,transparent 3px);
-background-size:18px 18px;
+.hint{
+  color:#bce9f7;
+  text-align:center;
+  font-size:12px;
+  padding:5px 0 3px;
 }
-
-/* tumbuhan */
-
-.plant{
-position:absolute;
-bottom:50px;
-font-size:65px;
-}
-
-/* batu */
-
-.rock{
-position:absolute;
-bottom:48px;
-width:60px;
-height:35px;
-background:#777;
-border-radius:50%;
-}
-
-/* bubble */
-
-.bubble{
-position:absolute;
-border:2px solid white;
-border-radius:50%;
-opacity:.7;
-animation:bubble 5s infinite;
-}
-
-.b1{
-width:12px;
-height:12px;
-left:25%;
-bottom:80px;
-}
-
-.b2{
-width:8px;
-height:8px;
-left:70%;
-bottom:100px;
-animation-delay:1s;
-}
-
-.b3{
-width:15px;
-height:15px;
-left:50%;
-bottom:70px;
-animation-delay:2s;
-}
-
-@keyframes bubble{
-
-0%{
-transform:translateY(0);
-opacity:.7;
-}
-
-100%{
-transform:translateY(-380px);
-opacity:0;
-}
-
-}
-
-/* ikan */
-
-.fish{
-position:absolute;
-width:130px;
-height:75px;
-}
-
-.fish1{
-top:120px;
-animation:fishMove1 12s linear infinite;
-}
-
-.fish2{
-top:270px;
-animation:fishMove2 15s linear infinite;
-}
-
-@keyframes fishMove1{
-
-0%{
-left:-150px;
-transform:scaleX(1);
-}
-
-45%{
-left:65%;
-transform:scaleX(1);
-}
-
-50%{
-left:65%;
-transform:scaleX(-1);
-}
-
-95%{
-left:-150px;
-transform:scaleX(-1);
-}
-
-100%{
-left:-150px;
-transform:scaleX(1);
-}
-
-}
-
-@keyframes fishMove2{
-
-0%{
-right:-150px;
-transform:scaleX(-1);
-}
-
-45%{
-right:60%;
-transform:scaleX(-1);
-}
-
-50%{
-right:60%;
-transform:scaleX(1);
-}
-
-95%{
-right:-150px;
-transform:scaleX(1);
-}
-
-100%{
-right:-150px;
-transform:scaleX(-1);
-}
-
-}
-
-/* makanan */
-
-.food{
-position:absolute;
-font-size:22px;
-animation:foodFall 2s linear forwards;
-}
-
-@keyframes foodFall{
-
-0%{
-top:10px;
-}
-
-100%{
-top:390px;
-}
-
-}
-
-/* notifikasi */
-
-#message{
-position:absolute;
-top:15px;
-left:50%;
-transform:translateX(-50%);
-background:rgba(255,255,255,.9);
-padding:8px 15px;
-border-radius:15px;
-display:none;
-font-weight:bold;
-}
-
 </style>
 </head>
 
 <body>
 
-<h2>🐠 Happy Aquarium</h2>
+<div class="game">
 
-<div id="ui">
+  <div class="header">
+    <div class="title">🐠 Fish Aquarium</div>
+    <div class="coins">🪙 <span id="coins">500</span></div>
+  </div>
 
-🪙 Coins:
-<span id="coins">100</span>
+  <div class="aquarium">
+    <canvas id="tank"></canvas>
+    <div class="glass"></div>
+  </div>
 
-<br><br>
+  <div class="controls">
+    <button class="feed" id="feedBtn">🍤 BERI MAKAN</button>
+    <button id="bubbleBtn">💧 BUBBLE</button>
+  </div>
 
-<button onclick="feedFish()">
-🍖 Beri Makan
-</button>
-
-</div>
-
-<div id="aquarium">
-
-<div class="light" style="left:100px"></div>
-<div class="light" style="left:400px"></div>
-
-<div id="message">
-🐟 Ikan sedang makan!
-</div>
-
-<!-- IKAN OREN -->
-
-<div class="fish fish1">
-
-<svg viewBox="0 0 160 90">
-
-<ellipse
-cx="85"
-cy="45"
-rx="50"
-ry="30"
-fill="#ff9f43"
-stroke="#8a4b08"
-stroke-width="3"
-/>
-
-<polygon
-points="35,45 5,15 5,75"
-fill="#ff7f27"
-stroke="#8a4b08"
-stroke-width="3"
-/>
-
-<polygon
-points="85,18 105,3 110,25"
-fill="#ff7f27"
-stroke="#8a4b08"
-stroke-width="3"
-/>
-
-<polygon
-points="85,72 105,87 110,65"
-fill="#ff7f27"
-stroke="#8a4b08"
-stroke-width="3"
-/>
-
-<circle
-cx="115"
-cy="35"
-r="7"
-fill="white"
-/>
-
-<circle
-cx="117"
-cy="35"
-r="3"
-fill="black"
-/>
-
-<path
-d="M128 50 Q138 55 128 60"
-fill="none"
-stroke="#6b2d00"
-stroke-width="3"
-/>
-
-<circle cx="70" cy="40" r="3" fill="#e66d18"/>
-<circle cx="80" cy="48" r="3" fill="#e66d18"/>
-<circle cx="70" cy="56" r="3" fill="#e66d18"/>
-
-</svg>
-
-</div>
-
-<!-- IKAN BIRU -->
-
-<div class="fish fish2">
-
-<svg viewBox="0 0 160 90">
-
-<ellipse
-cx="85"
-cy="45"
-rx="50"
-ry="30"
-fill="#6c8cff"
-stroke="#283d91"
-stroke-width="3"
-/>
-
-<polygon
-points="35,45 5,15 5,75"
-fill="#536fe0"
-stroke="#283d91"
-stroke-width="3"
-/>
-
-<polygon
-points="85,18 105,3 110,25"
-fill="#536fe0"
-stroke="#283d91"
-stroke-width="3"
-/>
-
-<circle
-cx="115"
-cy="35"
-r="7"
-fill="white"
-/>
-
-<circle
-cx="117"
-cy="35"
-r="3"
-fill="black"
-/>
-
-<path
-d="M128 50 Q138 55 128 60"
-fill="none"
-stroke="#283d91"
-stroke-width="3"
-/>
-
-</svg>
-
-</div>
-
-<!-- TUMBUHAN -->
-
-<div class="plant" style="left:25px;">
-🌿
-</div>
-
-<div class="plant" style="right:25px;">
-🌿
-</div>
-
-<!-- BATU -->
-
-<div class="rock" style="left:120px;"></div>
-
-<div class="rock"
-style="right:120px;width:45px;height:28px;">
-</div>
-
-<!-- BUBBLE -->
-
-<div class="bubble b1"></div>
-<div class="bubble b2"></div>
-<div class="bubble b3"></div>
-
-<!-- PASIR -->
-
-<div id="sand"></div>
+  <div class="hint">
+    Tekan BERI MAKAN untuk jatuhkan makanan kepada ikan
+  </div>
 
 </div>
 
 <script>
 
-let coins=100;
+const canvas = document.getElementById("tank");
+const ctx = canvas.getContext("2d");
 
-function feedFish(){
+let W = 800;
+let H = 600;
+let scale = 1;
 
-if(coins<5){
+function resize(){
 
-showMessage("❌ Coin tak cukup!");
+  const rect = canvas.getBoundingClientRect();
 
-return;
+  scale = window.devicePixelRatio || 1;
+
+  W = rect.width;
+  H = rect.height;
+
+  canvas.width = W * scale;
+  canvas.height = H * scale;
+
+  ctx.setTransform(scale,0,0,scale,0,0);
+}
+
+window.addEventListener("resize",resize);
+resize();
+
+
+/* =========================
+   FISH
+========================= */
+
+const fish = [
+
+  {
+    x:180,
+    y:230,
+    size:1,
+    speed:.65,
+    dir:1,
+    type:"clown",
+    phase:0
+  },
+
+  {
+    x:560,
+    y:315,
+    size:.9,
+    speed:.48,
+    dir:-1,
+    type:"blue",
+    phase:2
+  },
+
+  {
+    x:350,
+    y:390,
+    size:.72,
+    speed:.8,
+    dir:1,
+    type:"yellow",
+    phase:4
+  }
+
+];
+
+
+/* =========================
+   BUBBLES
+========================= */
+
+const bubbles=[];
+
+for(let i=0;i<22;i++){
+
+  bubbles.push({
+    x:Math.random()*W,
+    y:Math.random()*H,
+    r:2+Math.random()*6,
+    speed:.3+Math.random()*1,
+    alpha:.2+Math.random()*.5
+  });
 
 }
 
-coins-=5;
 
-document.getElementById("coins").innerText=coins;
+/* =========================
+   FOOD
+========================= */
 
-showMessage("🐟 Ikan sedang makan!");
+const food=[];
 
-/* makanan jatuh */
 
-for(let i=0;i<5;i++){
+/* =========================
+   SEAWEED
+========================= */
 
-let food=document.createElement("div");
+function drawSeaweed(x,bottom,height,color){
 
-food.className="food";
+  ctx.save();
 
-food.innerHTML="🍖";
+  ctx.strokeStyle=color;
+  ctx.lineWidth=7;
+  ctx.lineCap="round";
 
-food.style.left=(30+Math.random()*40)+"%";
+  for(let i=0;i<4;i++){
 
-food.style.animationDelay=(i*0.2)+"s";
+    ctx.beginPath();
 
-document.getElementById("aquarium").appendChild(food);
+    ctx.moveTo(x+i*8,bottom);
 
-setTimeout(function(){
+    ctx.bezierCurveTo(
+      x-20+i*12,
+      bottom-height*.35,
+      x+25+i*8,
+      bottom-height*.65,
+      x+i*8,
+      bottom-height
+    );
 
-food.remove();
+    ctx.stroke();
+  }
 
-},2500);
+  ctx.restore();
+}
+
+
+/* =========================
+   ROCK
+========================= */
+
+function drawRock(x,y,s){
+
+  const g=ctx.createRadialGradient(
+    x-10*s,y-10*s,2,
+    x,y,45*s
+  );
+
+  g.addColorStop(0,"#89999b");
+  g.addColorStop(.5,"#52676c");
+  g.addColorStop(1,"#263d42");
+
+  ctx.fillStyle=g;
+
+  ctx.beginPath();
+
+  ctx.moveTo(x-45*s,y+15*s);
+  ctx.quadraticCurveTo(
+    x-42*s,y-30*s,
+    x-5*s,y-35*s
+  );
+
+  ctx.quadraticCurveTo(
+    x+35*s,y-28*s,
+    x+48*s,y+15*s
+  );
+
+  ctx.quadraticCurveTo(
+    x+15*s,y+35*s,
+    x-45*s,y+15*s
+  );
+
+  ctx.fill();
+
+  ctx.strokeStyle="rgba(20,35,40,.55)";
+  ctx.lineWidth=2;
+  ctx.stroke();
 
 }
 
+
+/* =========================
+   FISH SHADOW
+========================= */
+
+function fishShadow(f){
+
+  ctx.save();
+
+  ctx.globalAlpha=.13;
+
+  ctx.fillStyle="#002b3d";
+
+  ctx.beginPath();
+
+  ctx.ellipse(
+    f.x,
+    f.y+27*f.size,
+    45*f.size,
+    8*f.size,
+    0,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fill();
+
+  ctx.restore();
 }
 
-function showMessage(text){
 
-let message=document.getElementById("message");
+/* =========================
+   FISH
+========================= */
 
-message.innerText=text;
+function drawFish(f,time){
 
-message.style.display="block";
+  const bob =
+    Math.sin(time*.0015+f.phase)*8*f.size;
 
-setTimeout(function(){
+  const y=f.y+bob;
 
-message.style.display="none";
+  fishShadow({
+    x:f.x,
+    y:y,
+    size:f.size
+  });
 
-},1500);
+  ctx.save();
+
+  ctx.translate(f.x,y);
+
+  ctx.scale(
+    f.dir*f.size,
+    f.size
+  );
+
+
+  if(f.type==="clown"){
+    drawClownFish();
+  }
+
+  if(f.type==="blue"){
+    drawBlueFish();
+  }
+
+  if(f.type==="yellow"){
+    drawYellowFish();
+  }
+
+  ctx.restore();
+}
+
+
+/* =========================
+   CLOWNFISH
+========================= */
+
+function drawClownFish(){
+
+  /* tail */
+
+  const tailGrad=ctx.createLinearGradient(-70,0,-30,0);
+
+  tailGrad.addColorStop(0,"#f5a22c");
+  tailGrad.addColorStop(1,"#ffcf54");
+
+  ctx.fillStyle=tailGrad;
+
+  ctx.beginPath();
+
+  ctx.moveTo(-48,-2);
+  ctx.lineTo(-82,-30);
+  ctx.quadraticCurveTo(-72,0,-82,30);
+  ctx.lineTo(-48,10);
+  ctx.closePath();
+
+  ctx.fill();
+
+  ctx.strokeStyle="#7c4218";
+  ctx.lineWidth=2;
+  ctx.stroke();
+
+
+  /* body */
+
+  const body=ctx.createLinearGradient(0,-32,0,35);
+
+  body.addColorStop(0,"#ffd66a");
+  body.addColorStop(.35,"#ff9f31");
+  body.addColorStop(1,"#e95d19");
+
+  ctx.fillStyle=body;
+
+  ctx.beginPath();
+
+  ctx.ellipse(
+    0,
+    0,
+    58,
+    32,
+    0,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fill();
+
+
+  /* white stripes */
+
+  ctx.save();
+
+  ctx.beginPath();
+
+  ctx.ellipse(
+    0,
+    0,
+    58,
+    32,
+    0,
+    0,
+    Math.PI*2
+  );
+
+  ctx.clip();
+
+  ctx.fillStyle="#fff8e9";
+
+  ctx.beginPath();
+  ctx.moveTo(-32,-38);
+  ctx.lineTo(-15,-38);
+  ctx.lineTo(-7,38);
+  ctx.lineTo(-28,38);
+  ctx.closePath();
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.moveTo(7,-38);
+  ctx.lineTo(28,-38);
+  ctx.lineTo(35,38);
+  ctx.lineTo(14,38);
+  ctx.closePath();
+  ctx.fill();
+
+  ctx.restore();
+
+
+  /* body outline */
+
+  ctx.strokeStyle="#733714";
+  ctx.lineWidth=2.5;
+
+  ctx.beginPath();
+
+  ctx.ellipse(
+    0,0,58,32,0,0,Math.PI*2
+  );
+
+  ctx.stroke();
+
+
+  /* top fin */
+
+  const fin=ctx.createLinearGradient(0,-48,0,-15);
+
+  fin.addColorStop(0,"#ffcf5a");
+  fin.addColorStop(1,"#e66a20");
+
+  ctx.fillStyle=fin;
+
+  ctx.beginPath();
+
+  ctx.moveTo(-10,-25);
+  ctx.quadraticCurveTo(
+    0,-58,
+    22,-34
+  );
+
+  ctx.quadraticCurveTo(
+    5,-25,
+    -10,-25
+  );
+
+  ctx.fill();
+
+  ctx.stroke();
+
+
+  /* bottom fin */
+
+  ctx.beginPath();
+
+  ctx.moveTo(5,24);
+  ctx.quadraticCurveTo(
+    18,48,
+    30,25
+  );
+
+  ctx.quadraticCurveTo(
+    18,20,
+    5,24
+  );
+
+  ctx.fill();
+
+  ctx.stroke();
+
+
+  /* eye */
+
+  ctx.fillStyle="white";
+
+  ctx.beginPath();
+  ctx.arc(36,-9,8,0,Math.PI*2);
+  ctx.fill();
+
+  ctx.strokeStyle="#5b321f";
+  ctx.lineWidth=1.5;
+  ctx.stroke();
+
+  ctx.fillStyle="#111";
+
+  ctx.beginPath();
+  ctx.arc(39,-9,4,0,Math.PI*2);
+  ctx.fill();
+
+  ctx.fillStyle="white";
+
+  ctx.beginPath();
+  ctx.arc(40,-11,1.5,0,Math.PI*2);
+  ctx.fill();
+
+
+  /* mouth */
+
+  ctx.strokeStyle="#71331e";
+  ctx.lineWidth=2;
+
+  ctx.beginPath();
+
+  ctx.arc(53,2,7,.1,1.2);
+
+  ctx.stroke();
+
+
+  /* shine */
+
+  ctx.globalAlpha=.3;
+  ctx.fillStyle="white";
+
+  ctx.beginPath();
+
+  ctx.ellipse(
+    4,-17,20,6,-.2,0,Math.PI*2
+  );
+
+  ctx.fill();
+
+  ctx.globalAlpha=1;
 
 }
+
+
+/* =========================
+   BLUE FISH
+========================= */
+
+function drawBlueFish(){
+
+  /* tail */
+
+  ctx.fillStyle="#ffcf35";
+
+  ctx.beginPath();
+
+  ctx.moveTo(-42,0);
+  ctx.lineTo(-78,-28);
+  ctx.lineTo(-72,0);
+  ctx.lineTo(-78,28);
+  ctx.closePath();
+
+  ctx.fill();
+
+  ctx.strokeStyle="#754c13";
+  ctx.lineWidth=2;
+  ctx.stroke();
+
+
+  /* body */
+
+  const g=ctx.createLinearGradient(0,-35,0,35);
+
+  g.addColorStop(0,"#77e5ff");
+  g.addColorStop(.45,"#149ed2");
+  g.addColorStop(1,"#075d98");
+
+  ctx.fillStyle=g;
+
+  ctx.beginPath();
+
+  ctx.ellipse(
+    0,0,55,30,0,0,Math.PI*2
+  );
+
+  ctx.fill();
+
+
+  ctx.strokeStyle="#06466f";
+  ctx.lineWidth=2.5;
+  ctx.stroke();
+
+
+  /* yellow stripe */
+
+  ctx.save();
+
+  ctx.beginPath();
+
+  ctx.ellipse(
+    0,0,55,30,0,0,Math.PI*2
+  );
+
+  ctx.clip();
+
+  ctx.fillStyle="#ffd83d";
+
+  ctx.fillRect(-10,-35,16,70);
+
+  ctx.restore();
+
+
+  /* fin */
+
+  ctx.fillStyle="#5eddf5";
+
+  ctx.beginPath();
+
+  ctx.moveTo(-5,-25);
+  ctx.quadraticCurveTo(
+    5,-55,
+    28,-29
+  );
+
+  ctx.quadraticCurveTo(
+    10,-20,
+    -5,-25
+  );
+
+  ctx.fill();
+
+  ctx.stroke();
+
+
+  /* eye */
+
+  ctx.fillStyle="white";
+
+  ctx.beginPath();
+  ctx.arc(35,-8,8,0,Math.PI*2);
+  ctx.fill();
+
+  ctx.fillStyle="#111";
+
+  ctx.beginPath();
+  ctx.arc(38,-8,4,0,Math.PI*2);
+  ctx.fill();
+
+  ctx.fillStyle="white";
+
+  ctx.beginPath();
+  ctx.arc(39,-10,1.5,0,Math.PI*2);
+  ctx.fill();
+
+
+  /* mouth */
+
+  ctx.strokeStyle="#173c52";
+  ctx.lineWidth=2;
+
+  ctx.beginPath();
+  ctx.arc(51,1,7,.1,1.2);
+  ctx.stroke();
+
+}
+
+
+/* =========================
+   YELLOW FISH
+========================= */
+
+function drawYellowFish(){
+
+  ctx.fillStyle="#ef9e20";
+
+  ctx.beginPath();
+
+  ctx.moveTo(-42,0);
+  ctx.lineTo(-72,-25);
+  ctx.lineTo(-65,0);
+  ctx.lineTo(-72,25);
+  ctx.closePath();
+
+  ctx.fill();
+
+  ctx.strokeStyle="#724317";
+  ctx.lineWidth=2;
+  ctx.stroke();
+
+
+  const g=ctx.createLinearGradient(0,-30,0,30);
+
+  g.addColorStop(0,"#fff06a");
+  g.addColorStop(.5,"#ffc52f");
+  g.addColorStop(1,"#e87914");
+
+  ctx.fillStyle=g;
+
+  ctx.beginPath();
+
+  ctx.ellipse(
+    0,0,50,27,0,0,Math.PI*2
+  );
+
+  ctx.fill();
+
+  ctx.strokeStyle="#774713";
+  ctx.lineWidth=2.5;
+  ctx.stroke();
+
+
+  /* stripes */
+
+  ctx.strokeStyle="rgba(255,255,255,.55)";
+  ctx.lineWidth=5;
+
+  for(let x=-15;x<35;x+=15){
+
+    ctx.beginPath();
+
+    ctx.moveTo(x,-23);
+    ctx.lineTo(x+5,23);
+
+    ctx.stroke();
+
+  }
+
+
+  /* fin */
+
+  ctx.fillStyle="#ffe15c";
+
+  ctx.beginPath();
+
+  ctx.moveTo(-4,-22);
+  ctx.quadraticCurveTo(
+    5,-47,
+    25,-25
+  );
+
+  ctx.quadraticCurveTo(
+    10,-19,
+    -4,-22
+  );
+
+  ctx.fill();
+
+  ctx.stroke();
+
+
+  /* eye */
+
+  ctx.fillStyle="white";
+
+  ctx.beginPath();
+  ctx.arc(31,-8,7,0,Math.PI*2);
+  ctx.fill();
+
+  ctx.fillStyle="#111";
+
+  ctx.beginPath();
+  ctx.arc(34,-8,3.5,0,Math.PI*2);
+  ctx.fill();
+
+}
+
+
+/* =========================
+   BACKGROUND
+========================= */
+
+function drawBackground(){
+
+  const water=ctx.createLinearGradient(
+    0,0,0,H
+  );
+
+  water.addColorStop(0,"#8ce8fa");
+  water.addColorStop(.35,"#36b6dc");
+  water.addColorStop(.72,"#1683b0");
+  water.addColorStop(1,"#075b82");
+
+  ctx.fillStyle=water;
+  ctx.fillRect(0,0,W,H);
+
+
+  /* water light */
+
+  ctx.save();
+
+  ctx.globalAlpha=.12;
+
+  ctx.strokeStyle="white";
+  ctx.lineWidth=10;
+
+  for(let i=-100;i<W+100;i+=100){
+
+    ctx.beginPath();
+
+    ctx.moveTo(i,0);
+
+    ctx.quadraticCurveTo(
+      i+50,
+      H*.25,
+      i-20,
+      H*.5
+    );
+
+    ctx.stroke();
+
+  }
+
+  ctx.restore();
+
+}
+
+
+/* =========================
+   SAND
+========================= */
+
+function drawSand(){
+
+  const sandH=H*.18;
+
+  const g=ctx.createLinearGradient(
+    0,H-sandH,0,H
+  );
+
+  g.addColorStop(0,"#efd99c");
+  g.addColorStop(1,"#c99b57");
+
+  ctx.fillStyle=g;
+
+  ctx.beginPath();
+
+  ctx.moveTo(0,H-sandH);
+
+  ctx.quadraticCurveTo(
+    W*.2,H-sandH-8,
+    W*.4,H-sandH+5
+  );
+
+  ctx.quadraticCurveTo(
+    W*.7,H-sandH-6,
+    W,H-sandH+3
+  );
+
+  ctx.lineTo(W,H);
+  ctx.lineTo(0,H);
+  ctx.closePath();
+
+  ctx.fill();
+
+
+  /* gravel */
+
+  for(let i=0;i<130;i++){
+
+    const x=Math.random()*W;
+    const y=H-sandH+Math.random()*sandH;
+
+    const r=1+Math.random()*3;
+
+    ctx.fillStyle=
+      Math.random()>.5
+      ? "rgba(120,91,55,.4)"
+      : "rgba(255,240,180,.55)";
+
+    ctx.beginPath();
+    ctx.arc(x,y,r,0,Math.PI*2);
+    ctx.fill();
+
+  }
+
+}
+
+
+/* =========================
+   BUBBLES
+========================= */
+
+function updateBubbles(){
+
+  for(const b of bubbles){
+
+    b.y-=b.speed;
+
+    if(b.y<-10){
+
+      b.y=H*.8+Math.random()*H*.2;
+      b.x=Math.random()*W;
+
+    }
+
+  }
+
+}
+
+function drawBubbles(){
+
+  for(const b of bubbles){
+
+    ctx.strokeStyle=
+      `rgba(255,255,255,${b.alpha})`;
+
+    ctx.lineWidth=1.5;
+
+    ctx.beginPath();
+
+    ctx.arc(
+      b.x,
+      b.y,
+      b.r,
+      0,
+      Math.PI*2
+    );
+
+    ctx.stroke();
+
+    ctx.fillStyle=
+      `rgba(255,255,255,${b.alpha*.35})`;
+
+    ctx.fill();
+
+  }
+
+}
+
+
+/* =========================
+   FOOD
+========================= */
+
+function drawFood(){
+
+  for(const p of food){
+
+    p.y+=p.speed;
+
+    ctx.fillStyle="#8b4d24";
+
+    ctx.beginPath();
+
+    ctx.arc(
+      p.x,
+      p.y,
+      4,
+      0,
+      Math.PI*2
+    );
+
+    ctx.fill();
+
+  }
+
+  for(let i=food.length-1;i>=0;i--){
+
+    if(food[i].y>H*.75){
+
+      food.splice(i,1);
+
+    }
+
+  }
+
+}
+
+
+/* =========================
+   PLANTS + ROCKS
+========================= */
+
+function drawDecor(){
+
+  drawSeaweed(
+    W*.08,
+    H*.87,
+    H*.30,
+    "#176f52"
+  );
+
+  drawSeaweed(
+    W*.16,
+    H*.92,
+    H*.25,
+    "#21865b"
+  );
+
+  drawSeaweed(
+    W*.82,
+    H*.9,
+    H*.32,
+    "#147052"
+  );
+
+  drawSeaweed(
+    W*.9,
+    H*.91,
+    H*.22,
+    "#278b61"
+  );
+
+  drawRock(
+    W*.27,
+    H*.89,
+    .8
+  );
+
+  drawRock(
+    W*.68,
+    H*.9,
+    1
+  );
+
+  drawRock(
+    W*.52,
+    H*.94,
+    .6
+  );
+
+}
+
+
+/* =========================
+   UPDATE FISH
+========================= */
+
+function updateFish(){
+
+  for(const f of fish){
+
+    f.x += f.speed*f.dir;
+
+    const margin=75*f.size;
+
+    if(f.x>W-margin){
+
+      f.x=W-margin;
+      f.dir=-1;
+
+    }
+
+    if(f.x<margin){
+
+      f.x=margin;
+      f.dir=1;
+
+    }
+
+  }
+
+}
+
+
+/* =========================
+   ANIMATION
+========================= */
+
+function animate(time){
+
+  ctx.clearRect(0,0,W,H);
+
+  drawBackground();
+
+  drawDecor();
+
+  updateBubbles();
+  drawBubbles();
+
+  drawFood();
+
+  updateFish();
+
+  for(const f of fish){
+
+    drawFish(f,time);
+
+  }
+
+  drawSand();
+
+  requestAnimationFrame(animate);
+
+}
+
+requestAnimationFrame(animate);
+
+
+/* =========================
+   BUTTON
+========================= */
+
+let coins=500;
+
+const coinsText=
+  document.getElementById("coins");
+
+document
+.getElementById("feedBtn")
+.addEventListener("click",()=>{
+
+  if(coins<5){
+
+    alert("Coins tak cukup!");
+
+    return;
+
+  }
+
+  coins-=5;
+
+  coinsText.textContent=coins;
+
+  for(let i=0;i<12;i++){
+
+    food.push({
+
+      x:W*.3+
+        Math.random()*W*.4,
+
+      y:-10-Math.random()*30,
+
+      speed:
+        1.5+
+        Math.random()*1.5
+
+    });
+
+  }
+
+});
+
+
+/* =========================
+   BUBBLE BUTTON
+========================= */
+
+document
+.getElementById("bubbleBtn")
+.addEventListener("click",()=>{
+
+  for(let i=0;i<12;i++){
+
+    bubbles.push({
+
+      x:Math.random()*W,
+
+      y:H*.8+Math.random()*H*.2,
+
+      r:2+Math.random()*5,
+
+      speed:.5+Math.random()*1.3,
+
+      alpha:.3+Math.random()*.5
+
+    });
+
+  }
+
+});
 
 </script>
 
 </body>
-    </html>
+</html>
