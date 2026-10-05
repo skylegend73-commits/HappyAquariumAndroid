@@ -16,7 +16,7 @@ html,body{
   width:100%;
   height:100%;
   overflow:hidden;
-  background:#06131d;
+  background:#031c2b;
   font-family:Arial,sans-serif;
 }
 
@@ -44,16 +44,15 @@ canvas{
   right:10px;
   display:flex;
   justify-content:space-between;
-  align-items:center;
   z-index:10;
   pointer-events:none;
 }
 
 .logo,
 .money{
-  background:rgba(0,25,42,.78);
+  background:rgba(0,25,42,.82);
   border:1px solid rgba(255,255,255,.25);
-  color:white;
+  color:#fff;
   border-radius:18px;
   padding:9px 13px;
   box-shadow:0 5px 15px rgba(0,0,0,.35);
@@ -62,11 +61,11 @@ canvas{
 
 #notice{
   position:absolute;
-  top:72px;
+  top:68px;
   left:50%;
   transform:translateX(-50%);
-  background:rgba(0,20,30,.85);
-  color:#fff;
+  background:rgba(0,20,30,.9);
+  color:white;
   padding:9px 16px;
   border-radius:20px;
   opacity:0;
@@ -115,7 +114,7 @@ button:active{
   top:50%;
   left:50%;
   transform:translate(-50%,-50%);
-  width:min(360px,92vw);
+  width:min(370px,92vw);
   max-height:78vh;
   overflow:auto;
   padding:18px;
@@ -177,7 +176,7 @@ button:active{
   <button onclick="feed()">🍤 FEED</button>
   <button onclick="shop()">🐟 SHOP</button>
   <button onclick="breeding()">🥚 BREED</button>
-  <button onclick="clean()">🧽 CLEAN</button>
+  <button onclick="cleanTank()">🧽 CLEAN</button>
   <button onclick="decorShop()">🏰 DECOR</button>
 </div>
 
@@ -188,103 +187,99 @@ button:active{
 <script>
 "use strict";
 
-/* =========================================================
-   HAPPY AQUARIUM 3D STYLE
-   SINGLE FILE
-   NO THREE.JS
-   NO CDN
-   NO EXTERNAL ASSET
-========================================================= */
+/* =====================================================
+   HAPPY AQUARIUM
+   STANDALONE CANVAS GAME
+===================================================== */
 
-const canvas=document.getElementById("canvas");
-const ctx=canvas.getContext("2d");
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
 
-let W=window.innerWidth;
-let H=window.innerHeight;
-let DPR=Math.min(window.devicePixelRatio||1,2);
+let W = 0;
+let H = 0;
+let DPR = 1;
 
-let coins=100;
-let cleanliness=100;
-let frame=0;
+let coins = 100;
+let cleanliness = 100;
+let foodCount = 5;
 
-let fishes=[];
-let turtles=[];
-let plants=[];
-let rocks=[];
-let bubbles=[];
-let foods=[];
-let eggs=[];
-let decorations=[];
+let fishes = [];
+let turtles = [];
+let plants = [];
+let rocks = [];
+let bubbles = [];
+let foods = [];
+let eggs = [];
+let decorations = [];
 
-let cameraX=0;
-let dragging=false;
-let lastX=0;
+let time = 0;
+let cameraX = 0;
 
 
-/* =========================================================
-   BASIC
-========================================================= */
+/* =====================================================
+   UTILITIES
+===================================================== */
 
 function rand(a,b){
-  return Math.random()*(b-a)+a;
+  return Math.random() * (b-a) + a;
 }
 
 function clamp(v,a,b){
   return Math.max(a,Math.min(b,v));
 }
 
-function pick(a){
-  return a[Math.floor(Math.random()*a.length)];
+function pick(arr){
+  return arr[Math.floor(Math.random()*arr.length)];
 }
 
 function money(){
-  document.getElementById("coins").textContent=coins;
+  document.getElementById("coins").textContent = coins;
 }
 
-function message(t){
+function message(text){
 
-  const n=document.getElementById("notice");
+  const n = document.getElementById("notice");
 
-  n.textContent=t;
+  n.textContent = text;
   n.classList.add("show");
 
   clearTimeout(message.timer);
 
-  message.timer=setTimeout(()=>{
+  message.timer = setTimeout(()=>{
     n.classList.remove("show");
   },1800);
 }
 
-function spend(n){
+function spend(amount){
 
-  if(coins<n){
+  if(coins < amount){
     message("❌ Coin tak cukup");
     return false;
   }
 
-  coins-=n;
+  coins -= amount;
   money();
 
   return true;
 }
 
 
-/* =========================================================
+/* =====================================================
    RESIZE
-========================================================= */
+===================================================== */
 
 function resize(){
 
-  W=window.innerWidth;
-  H=window.innerHeight;
+  W = window.innerWidth;
+  H = window.innerHeight;
 
-  DPR=Math.min(window.devicePixelRatio||1,2);
+  DPR = Math.min(window.devicePixelRatio || 1,2);
 
-  canvas.width=W*DPR;
-  canvas.height=H*DPR;
+  canvas.width = W * DPR;
+  canvas.height = H * DPR;
 
-  canvas.style.width=W+"px";
-  canvas.style.height=H+"px";
+  canvas.style.width = W + "px";
+  canvas.style.height = H + "px";
 
   ctx.setTransform(DPR,0,0,DPR,0,0);
 }
@@ -292,177 +287,145 @@ function resize(){
 window.addEventListener("resize",resize);
 
 
-/* =========================================================
-   CREATE FISH
-========================================================= */
+/* =====================================================
+   FISH
+===================================================== */
 
-function fish(type,x,y,dir){
+function createFish(type,x,y,dir){
 
   return {
     type:type,
     x:x,
     y:y,
-    z:rand(.1,.9),
     dir:dir,
     size:
-      type==="baby" ? .48 :
+      type==="baby" ? .45 :
       type==="puffer" ? .85 :
       type==="gold" ? .9 : 1,
-    speed:rand(.00045,.0011),
+    speed:rand(.00018,.00042),
     phase:rand(0,100),
-    energy:100
+    wiggle:rand(0,10),
+    hungry:rand(0,100)
   };
 }
 
 
-/* =========================================================
-   CREATE TURTLE
-========================================================= */
+/* =====================================================
+   TURTLE
+===================================================== */
 
-function turtle(x,y){
+function createTurtle(x,y){
 
   return {
     x:x,
     y:y,
-    dir:Math.random()<.5?1:-1,
-    speed:.00025,
-    phase:rand(0,50)
+    dir:Math.random()<.5 ? 1 : -1,
+    speed:.00011,
+    phase:rand(0,10)
   };
 }
 
 
-/* =========================================================
+/* =====================================================
    WORLD
-========================================================= */
+===================================================== */
 
 function createWorld(){
 
-  fishes=[];
-  turtles=[];
-  plants=[];
-  rocks=[];
-  bubbles=[];
-  decorations=[];
+  fishes = [];
+  turtles = [];
+  plants = [];
+  rocks = [];
+  bubbles = [];
+  foods = [];
+  eggs = [];
+
+  decorations = [
+    {type:"castle",x:.20,y:.78},
+    {type:"chest",x:.73,y:.82}
+  ];
 
   fishes.push(
-    fish("clown",.22,.42,1),
-    fish("tang",.52,.54,-1),
-    fish("gold",.73,.36,1),
-    fish("puffer",.37,.67,1),
-    fish("clown",.80,.62,-1)
+    createFish("clown",.18,.42,1),
+    createFish("tang",.48,.53,-1),
+    createFish("gold",.73,.35,1),
+    createFish("puffer",.35,.66,1),
+    createFish("clown",.80,.60,-1),
+    createFish("blue",.60,.28,-1)
   );
 
   turtles.push(
-    turtle(.18,.73),
-    turtle(.82,.75)
+    createTurtle(.18,.72),
+    createTurtle(.82,.74)
   );
 
-  for(let i=0;i<18;i++){
+  for(let i=0;i<20;i++){
 
     plants.push({
-      x:rand(.08,.92),
-      height:rand(.12,.28),
-      width:rand(5,14),
+      x:rand(.04,.96),
+      height:rand(.10,.25),
+      width:rand(5,13),
       phase:rand(0,10),
-      speed:rand(.7,1.3),
       type:Math.floor(rand(0,3))
     });
   }
 
-  for(let i=0;i<16;i++){
+  for(let i=0;i<18;i++){
 
     rocks.push({
-      x:rand(.07,.93),
-      y:rand(.84,.90),
-      size:rand(12,34),
+      x:rand(.04,.96),
+      y:rand(.83,.91),
+      size:rand(10,30),
       rot:rand(0,Math.PI)
     });
   }
 
-  for(let i=0;i<40;i++){
+  for(let i=0;i<50;i++){
 
     bubbles.push({
-      x:rand(.08,.92),
-      y:rand(.18,.88),
+      x:rand(.04,.96),
+      y:rand(.20,.85),
       r:rand(1,4),
-      speed:rand(.00008,.00025),
+      speed:rand(.00005,.00015),
       phase:rand(0,10)
     });
   }
-
-  decorations=[
-    {
-      type:"castle",
-      x:.21,
-      y:.80
-    },
-    {
-      type:"chest",
-      x:.72,
-      y:.81
-    }
-  ];
 }
 
 
-/* =========================================================
-   3D PROJECTION
-========================================================= */
-
-function project(x,y,z){
-
-  const scale=.78+z*.38;
-
-  return {
-    x:
-      W*.06+
-      x*W*.88+
-      cameraX+
-      (x-.5)*z*18,
-
-    y:
-      H*.13+
-      y*H*.72-
-      z*22,
-
-    scale:scale
-  };
-}
-
-
-/* =========================================================
-   BACKGROUND
-========================================================= */
+/* =====================================================
+   AQUARIUM BACKGROUND
+===================================================== */
 
 function background(){
 
-  const top=H*.11;
-  const bottom=H*.92;
+  const top = H*.08;
+  const bottom = H*.93;
 
-  const g=ctx.createLinearGradient(0,top,0,bottom);
+  const g = ctx.createLinearGradient(0,top,0,bottom);
 
-  g.addColorStop(0,"#5cdbff");
-  g.addColorStop(.25,"#169dcc");
-  g.addColorStop(.60,"#08729e");
-  g.addColorStop(1,"#034566");
+  g.addColorStop(0,"#7de7ff");
+  g.addColorStop(.25,"#1aa8d5");
+  g.addColorStop(.60,"#08789f");
+  g.addColorStop(1,"#034663");
 
-  ctx.fillStyle=g;
+  ctx.fillStyle = g;
   ctx.fillRect(0,0,W,H);
 
-  /* sunlight */
+  /* light rays */
 
   ctx.save();
 
-  ctx.globalAlpha=.035;
+  ctx.globalAlpha = .06;
 
-  for(let i=0;i<8;i++){
+  for(let i=0;i<9;i++){
 
-    const x=W*(i*.14);
+    const x = W*(i/8);
 
     ctx.beginPath();
-    ctx.moveTo(x,top);
-    ctx.lineTo(x+W*.20,bottom);
-    ctx.lineTo(x+W*.27,bottom);
+    ctx.moveTo(x,H*.08);
+    ctx.lineTo(x+W*.15,H*.82);
+    ctx.lineTo(x+W*.22,H*.82);
     ctx.closePath();
 
     ctx.fillStyle="#fff";
@@ -471,31 +434,1299 @@ function background(){
 
   ctx.restore();
 
-  /* glow */
+  /* top glow */
 
-  const glow=ctx.createRadialGradient(
-    W*.5,H*.08,1,
-    W*.5,H*.2,W*.7
+  const glow = ctx.createRadialGradient(
+    W*.5,H*.05,1,
+    W*.5,H*.15,W*.65
   );
 
-  glow.addColorStop(0,"rgba(255,255,255,.17)");
+  glow.addColorStop(0,"rgba(255,255,255,.25)");
   glow.addColorStop(1,"rgba(255,255,255,0)");
 
-  ctx.fillStyle=glow;
+  ctx.fillStyle = glow;
   ctx.fillRect(0,0,W,H);
 }
 
 
-/* =========================================================
+/* =====================================================
+   GLASS
+===================================================== */
+
+function glass(){
+
+  ctx.save();
+
+  ctx.fillStyle="rgba(255,255,255,.025)";
+  ctx.fillRect(0,H*.08,W,H*.84);
+
+  ctx.strokeStyle="rgba(255,255,255,.12)";
+  ctx.lineWidth=3;
+
+  ctx.strokeRect(
+    4,
+    H*.08,
+    W-8,
+    H*.84
+  );
+
+  ctx.restore();
+}
+
+
+/* =====================================================
    SAND
-========================================================= */
+===================================================== */
 
 function sand(){
 
-  const y=H*.82;
+  const y = H*.80;
 
-  const g=ctx.createLinearGradient(0,y,0,H);
+  const g = ctx.createLinearGradient(0,y,0,H);
 
-  g.addColorStop(0,"#edd18b");
-  g.addColorStop(.45,"#cba664");
-  g.addColorStop(1,"#8c6536");
+  g.addColorStop(0,"#f5d992");
+  g.addColorStop(.5,"#d2ae66");
+  g.addColorStop(1,"#8d6335");
+
+  ctx.fillStyle=g;
+
+  ctx.beginPath();
+
+  ctx.moveTo(0,y);
+
+  for(let x=0;x<=W;x+=20){
+
+    const wave =
+      Math.sin(x*.018 + time*.001)*5 +
+      Math.sin(x*.041)*3;
+
+    ctx.lineTo(x,y+wave);
+  }
+
+  ctx.lineTo(W,H);
+  ctx.lineTo(0,H);
+
+  ctx.closePath();
+
+  ctx.fill();
+
+  /* sand dots */
+
+  ctx.fillStyle="rgba(255,255,255,.2)";
+
+  for(let i=0;i<80;i++){
+
+    const x=(i*97)%W;
+    const yy=y+((i*43)%Math.max(1,H-y));
+
+    ctx.beginPath();
+    ctx.arc(x,yy,rand(.5,1.5),0,Math.PI*2);
+    ctx.fill();
+  }
+}
+
+
+/* =====================================================
+   PLANTS
+===================================================== */
+
+function drawPlants(){
+
+  for(const p of plants){
+
+    const baseY = H*.84;
+    const height = H*p.height;
+
+    ctx.save();
+
+    ctx.translate(p.x*W,baseY);
+
+    for(let i=0;i<5;i++){
+
+      const sway =
+        Math.sin(time*.002*p.speed+p.phase+i)*12;
+
+      ctx.beginPath();
+
+      ctx.moveTo(0,0);
+
+      ctx.quadraticCurveTo(
+        sway,
+        -height*.5,
+        sway*.7,
+        -height
+      );
+
+      ctx.lineWidth = p.width;
+
+      ctx.strokeStyle =
+        p.type===0 ? "#167b46" :
+        p.type===1 ? "#20994e" :
+        "#0c633c";
+
+      ctx.stroke();
+    }
+
+    ctx.restore();
+  }
+}
+
+
+/* =====================================================
+   ROCKS
+===================================================== */
+
+function drawRocks(){
+
+  for(const r of rocks){
+
+    ctx.save();
+
+    ctx.translate(r.x*W,r.y*H);
+
+    ctx.rotate(r.rot);
+
+    const grad=ctx.createLinearGradient(
+      -r.size,
+      -r.size,
+      r.size,
+      r.size
+    );
+
+    grad.addColorStop(0,"#777");
+    grad.addColorStop(.5,"#4b5053");
+    grad.addColorStop(1,"#242b2d");
+
+    ctx.fillStyle=grad;
+
+    ctx.beginPath();
+
+    ctx.ellipse(
+      0,
+      0,
+      r.size,
+      r.size*.55,
+      0,
+      0,
+      Math.PI*2
+    );
+
+    ctx.fill();
+
+    ctx.restore();
+  }
+}
+
+
+/* =====================================================
+   BUBBLES
+===================================================== */
+
+function drawBubbles(){
+
+  for(const b of bubbles){
+
+    b.y -= b.speed * 2;
+
+    if(b.y < .08){
+      b.y=.86;
+      b.x=rand(.05,.95);
+    }
+
+    const x=b.x*W;
+    const y=b.y*H;
+
+    ctx.beginPath();
+
+    ctx.arc(x,y,b.r,0,Math.PI*2);
+
+    ctx.strokeStyle="rgba(255,255,255,.55)";
+    ctx.lineWidth=1;
+
+    ctx.stroke();
+
+    ctx.fillStyle="rgba(255,255,255,.08)";
+    ctx.fill();
+  }
+}
+
+
+/* =====================================================
+   FISH BODY
+===================================================== */
+
+function fishColors(type){
+
+  if(type==="clown"){
+    return ["#ff8a18","#fff","#e74c3c"];
+  }
+
+  if(type==="tang"){
+    return ["#174dff","#0637a8","#fff"];
+  }
+
+  if(type==="gold"){
+    return ["#ffd52e","#ff9d00","#fff"];
+  }
+
+  if(type==="puffer"){
+    return ["#d5bd43","#927c1e","#fff"];
+  }
+
+  if(type==="blue"){
+    return ["#16cfff","#0878ca","#fff"];
+  }
+
+  return ["#ff91c7","#e95c9b","#fff"];
+}
+
+
+/* =====================================================
+   DRAW FISH
+===================================================== */
+
+function drawFish(f){
+
+  const x=f.x*W + cameraX;
+  const y=f.y*H + Math.sin(time*.003+f.phase)*8;
+
+  const s =
+    Math.min(W,H)*.075*f.size;
+
+  const dir=f.dir;
+
+  const c=fishColors(f.type);
+
+  ctx.save();
+
+  ctx.translate(x,y);
+
+  ctx.scale(dir,1);
+
+  /* shadow */
+
+  ctx.fillStyle="rgba(0,0,0,.16)";
+
+  ctx.beginPath();
+
+  ctx.ellipse(
+    0,
+    s*.48,
+    s*1.05,
+    s*.20,
+    0,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fill();
+
+  /* tail */
+
+  ctx.fillStyle=c[1];
+
+  ctx.beginPath();
+
+  ctx.moveTo(-s*.72,-s*.02);
+
+  ctx.lineTo(-s*1.35,-s*.50);
+
+  ctx.lineTo(-s*1.20,s*.55);
+
+  ctx.closePath();
+
+  ctx.fill();
+
+  /* body */
+
+  const body=ctx.createRadialGradient(
+    -s*.2,
+    -s*.35,
+    2,
+    0,
+    0,
+    s
+  );
+
+  body.addColorStop(0,c[0]);
+  body.addColorStop(.65,c[0]);
+  body.addColorStop(1,c[1]);
+
+  ctx.fillStyle=body;
+
+  ctx.beginPath();
+
+  ctx.ellipse(
+    0,
+    0,
+    s,
+    s*.58,
+    0,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fill();
+
+  /* stripes */
+
+  if(f.type==="clown"){
+
+    ctx.fillStyle="#fff";
+
+    ctx.fillRect(
+      -s*.45,
+      -s*.55,
+      s*.16,
+      s*1.1
+    );
+
+    ctx.fillRect(
+      s*.28,
+      -s*.52,
+      s*.14,
+      s*1.05
+    );
+  }
+
+  /* fin */
+
+  ctx.fillStyle=c[1];
+
+  ctx.beginPath();
+
+  ctx.moveTo(-s*.1,-s*.35);
+  ctx.lineTo(s*.15,-s*.85);
+  ctx.lineTo(s*.38,-s*.25);
+  ctx.closePath();
+
+  ctx.fill();
+
+  /* eye */
+
+  ctx.fillStyle="#fff";
+
+  ctx.beginPath();
+
+  ctx.arc(
+    s*.58,
+    -s*.18,
+    s*.18,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fill();
+
+  ctx.fillStyle="#111";
+
+  ctx.beginPath();
+
+  ctx.arc(
+    s*.63,
+    -s*.18,
+    s*.08,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fill();
+
+  /* mouth */
+
+  ctx.strokeStyle="#333";
+  ctx.lineWidth=1.5;
+
+  ctx.beginPath();
+
+  ctx.arc(
+    s*.72,
+    s*.08,
+    s*.12,
+    0,
+    Math.PI
+  );
+
+  ctx.stroke();
+
+  /* shine */
+
+  ctx.fillStyle="rgba(255,255,255,.45)";
+
+  ctx.beginPath();
+
+  ctx.ellipse(
+    -s*.35,
+    -s*.25,
+    s*.28,
+    s*.11,
+    -.4,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fill();
+
+  ctx.restore();
+}
+
+
+/* =====================================================
+   TURTLES
+===================================================== */
+
+function drawTurtle(t){
+
+  const x=t.x*W;
+  const y=t.y*H+
+    Math.sin(time*.002+t.phase)*5;
+
+  const s=Math.min(W,H)*.065;
+
+  ctx.save();
+
+  ctx.translate(x,y);
+  ctx.scale(t.dir,1);
+
+  /* legs */
+
+  ctx.fillStyle="#557d35";
+
+  for(const px of [-.6,.55]){
+
+    ctx.beginPath();
+
+    ctx.ellipse(
+      px*s,
+      s*.35,
+      s*.25,
+      s*.13,
+      0,
+      0,
+      Math.PI*2
+    );
+
+    ctx.fill();
+  }
+
+  /* shell */
+
+  const shell=ctx.createRadialGradient(
+    -s*.2,-s*.3,2,
+    0,0,s
+  );
+
+  shell.addColorStop(0,"#8db85b");
+  shell.addColorStop(1,"#31582d");
+
+  ctx.fillStyle=shell;
+
+  ctx.beginPath();
+
+  ctx.ellipse(
+    0,
+    0,
+    s,
+    s*.72,
+    0,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fill();
+
+  /* shell pattern */
+
+  ctx.strokeStyle="rgba(20,40,20,.6)";
+  ctx.lineWidth=2;
+
+  ctx.beginPath();
+
+  ctx.moveTo(-s*.6,0);
+  ctx.lineTo(s*.6,0);
+
+  ctx.moveTo(0,-s*.55);
+  ctx.lineTo(0,s*.55);
+
+  ctx.stroke();
+
+  /* head */
+
+  ctx.fillStyle="#709d49";
+
+  ctx.beginPath();
+
+  ctx.arc(
+    s*.95,
+    -s*.05,
+    s*.32,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fill();
+
+  ctx.restore();
+}
+
+
+/* =====================================================
+   DECORATIONS
+===================================================== */
+
+function drawCastle(x,y){
+
+  const px=x*W;
+  const py=y*H;
+
+  const s=Math.min(W,H)*.09;
+
+  ctx.save();
+
+  ctx.translate(px,py);
+
+  /* shadow */
+
+  ctx.fillStyle="rgba(0,0,0,.2)";
+
+  ctx.beginPath();
+
+  ctx.ellipse(0,s*.45,s*1.2,s*.25,0,0,Math.PI*2);
+
+  ctx.fill();
+
+  /* main */
+
+  ctx.fillStyle="#d5a85c";
+
+  ctx.fillRect(
+    -s*.75,
+    -s*.75,
+    s*1.5,
+    s*1.15
+  );
+
+  /* towers */
+
+  ctx.fillRect(
+    -s*1.05,
+    -s*1.0,
+    s*.42,
+    s*1.35
+  );
+
+  ctx.fillRect(
+    s*.63,
+    -s*1.0,
+    s*.42,
+    s*1.35
+  );
+
+  /* roofs */
+
+  ctx.fillStyle="#a94432";
+
+  for(const tx of [-.84,.84]){
+
+    ctx.beginPath();
+
+    ctx.moveTo(tx*s,-s*1.45);
+    ctx.lineTo((tx-.3)*s,-s*.98);
+    ctx.lineTo((tx+.3)*s,-s*.98);
+    ctx.closePath();
+
+    ctx.fill();
+  }
+
+  /* door */
+
+  ctx.fillStyle="#53341f";
+
+  ctx.beginPath();
+
+  ctx.arc(
+    0,
+    s*.1,
+    s*.25,
+    Math.PI,
+    0
+  );
+
+  ctx.fill();
+
+  ctx.fillRect(
+    -s*.25,
+    s*.1,
+    s*.5,
+    s*.35
+  );
+
+  ctx.restore();
+}
+
+
+function drawChest(x,y){
+
+  const px=x*W;
+  const py=y*H;
+
+  const s=Math.min(W,H)*.065;
+
+  ctx.save();
+
+  ctx.translate(px,py);
+
+  ctx.fillStyle="#74431f";
+
+  ctx.fillRect(
+    -s*.7,
+    -s*.15,
+    s*1.4,
+    s*.55
+  );
+
+  ctx.fillStyle="#a96927";
+
+  ctx.beginPath();
+
+  ctx.arc(
+    0,
+    -s*.12,
+    s*.7,
+    Math.PI,
+    0
+  );
+
+  ctx.fill();
+
+  ctx.fillStyle="#e6bd3e";
+
+  ctx.fillRect(
+    -s*.08,
+    -.05*s,
+    s*.16,
+    s*.42
+  );
+
+  ctx.restore();
+}
+
+
+function drawDecorations(){
+
+  for(const d of decorations){
+
+    if(d.type==="castle"){
+      drawCastle(d.x,d.y);
+    }
+
+    if(d.type==="chest"){
+      drawChest(d.x,d.y);
+    }
+  }
+}
+
+
+/* =====================================================
+   FOOD
+===================================================== */
+
+function drawFoods(){
+
+  for(let i=foods.length-1;i>=0;i--){
+
+    const f=foods[i];
+
+    f.y += .0025;
+
+    f.rotation += .04;
+
+    if(f.y > .82){
+
+      foods.splice(i,1);
+      continue;
+    }
+
+    ctx.save();
+
+    ctx.translate(
+      f.x*W,
+      f.y*H
+    );
+
+    ctx.rotate(f.rotation);
+
+    ctx.fillStyle="#eaa33d";
+
+    ctx.beginPath();
+
+    ctx.ellipse(
+      0,
+      0,
+      7,
+      4,
+      0,
+      0,
+      Math.PI*2
+    );
+
+    ctx.fill();
+
+    ctx.restore();
+  }
+}
+
+
+/* =====================================================
+   EGGS
+===================================================== */
+
+function drawEggs(){
+
+  for(const e of eggs){
+
+    const x=e.x*W;
+    const y=e.y*H;
+
+    ctx.fillStyle="#fff0bf";
+
+    ctx.beginPath();
+
+    ctx.ellipse(
+      x,
+      y,
+      9,
+      12,
+      0,
+      0,
+      Math.PI*2
+    );
+
+    ctx.fill();
+
+    ctx.strokeStyle="#c99d58";
+    ctx.stroke();
+  }
+}
+
+
+/* =====================================================
+   CLEAN DIRT
+===================================================== */
+
+function drawDirt(){
+
+  if(cleanliness>=100) return;
+
+  const alpha=(100-cleanliness)/300;
+
+  ctx.fillStyle=`rgba(60,50,30,${alpha})`;
+
+  for(let i=0;i<35;i++){
+
+    const x=(i*137)%W;
+    const y=H*.15+((i*83)%(H*.65));
+
+    ctx.beginPath();
+
+    ctx.arc(
+      x,
+      y,
+      1+(i%4),
+      0,
+      Math.PI*2
+    );
+
+    ctx.fill();
+  }
+}
+
+
+/* =====================================================
+   FEED
+===================================================== */
+
+function feed(){
+
+  if(foodCount<=0){
+
+    if(!spend(10)) return;
+
+    foodCount=5;
+
+    message("🍤 Beli makanan +5");
+  }
+
+  foodCount--;
+
+  for(let i=0;i<5;i++){
+
+    foods.push({
+      x:rand(.25,.75),
+      y:.16,
+      rotation:rand(0,Math.PI)
+    });
+  }
+
+  for(const f of fishes){
+
+    f.hungry=0;
+  }
+
+  message("🍤 Ikan sedang makan!");
+}
+
+
+/* =====================================================
+   SHOP
+===================================================== */
+
+function shop(){
+
+  const panel=document.getElementById("panel");
+
+  panel.innerHTML=`
+    <h2>🐟 Fish Shop</h2>
+
+    <div class="item">
+      <span>🐠 Clown Fish<br>
+      <span class="small">Cute aquarium fish</span></span>
+      <button onclick="buyFish('clown',25)">25 🪙</button>
+    </div>
+
+    <div class="item">
+      <span>🐟 Blue Tang</span>
+      <button onclick="buyFish('tang',35)">35 🪙</button>
+    </div>
+
+    <div class="item">
+      <span>✨ Gold Fish</span>
+      <button onclick="buyFish('gold',45)">45 🪙</button>
+    </div>
+
+    <div class="item">
+      <span>🐡 Puffer Fish</span>
+      <button onclick="buyFish('puffer',55)">55 🪙</button>
+    </div>
+
+    <div class="item">
+      <span>🔵 Blue Fish</span>
+      <button onclick="buyFish('blue',30)">30 🪙</button>
+    </div>
+
+    <button class="close" onclick="closePanel()">CLOSE</button>
+  `;
+
+  panel.style.display="block";
+}
+
+
+function buyFish(type,cost){
+
+  if(!spend(cost)) return;
+
+  const dir=Math.random()<.5?1:-1;
+
+  fishes.push(
+    createFish(
+      type,
+      rand(.15,.85),
+      rand(.25,.68),
+      dir
+    )
+  );
+
+  closePanel();
+
+  message("🐟 Ikan baru masuk!");
+}
+
+
+/* =====================================================
+   BREEDING
+===================================================== */
+
+function breeding(){
+
+  const panel=document.getElementById("panel");
+
+  panel.innerHTML=`
+    <h2>🥚 Breeding</h2>
+
+    <p style="text-align:center">
+      Pilih pasangan ikan untuk menghasilkan telur.
+    </p>
+
+    <div class="item">
+      <span>🐠 Clown × Clown</span>
+      <button onclick="breed('clown')">30 🪙</button>
+    </div>
+
+    <div class="item">
+      <span>🐟 Blue × Blue</span>
+      <button onclick="breed('blue')">40 🪙</button>
+    </div>
+
+    <div class="item">
+      <span>✨ Gold × Gold</span>
+      <button onclick="breed('gold')">50 🪙</button>
+    </div>
+
+    <button class="close" onclick="closePanel()">CLOSE</button>
+  `;
+
+  panel.style.display="block";
+}
+
+
+function breed(type){
+
+  if(!spend(30)) return;
+
+  eggs.push({
+    x:rand(.25,.75),
+    y:rand(.55,.72),
+    type:type
+  });
+
+  closePanel();
+
+  message("🥚 Telur baru dihasilkan!");
+
+  setTimeout(()=>{
+
+    if(eggs.length>0){
+
+      const e=eggs.shift();
+
+      fishes.push(
+        createFish(
+          e.type==="clown"?"baby":e.type,
+          e.x,
+          e.y,
+          Math.random()<.5?1:-1
+        )
+      );
+
+      message("🐣 Telur menetas!");
+    }
+
+  },5000);
+}
+
+
+/* =====================================================
+   CLEAN
+===================================================== */
+
+function cleanTank(){
+
+  cleanliness=100;
+
+  message("🧽 Aquarium sudah bersih!");
+}
+
+
+/* =====================================================
+   DECOR SHOP
+===================================================== */
+
+function decorShop(){
+
+  const panel=document.getElementById("panel");
+
+  panel.innerHTML=`
+    <h2>🏰 Decoration Shop</h2>
+
+    <div class="item">
+      <span>🏰 Castle</span>
+      <button onclick="buyDecor('castle',50)">50 🪙</button>
+    </div>
+
+    <div class="item">
+      <span>💰 Treasure Chest</span>
+      <button onclick="buyDecor('chest',40)">40 🪙</button>
+    </div>
+
+    <div class="item">
+      <span>🌿 Aquarium Plant</span>
+      <button onclick="buyPlant()">20 🪙</button>
+    </div>
+
+    <button class="close" onclick="closePanel()">CLOSE</button>
+  `;
+
+  panel.style.display="block";
+}
+
+
+function buyDecor(type,cost){
+
+  if(!spend(cost)) return;
+
+  decorations.push({
+    type:type,
+    x:rand(.15,.85),
+    y:type==="castle"?.78:.82
+  });
+
+  closePanel();
+
+  message("🏰 Decoration diletakkan!");
+}
+
+
+function buyPlant(){
+
+  if(!spend(20)) return;
+
+  plants.push({
+    x:rand(.05,.95),
+    height:rand(.12,.25),
+    width:rand(5,13),
+    phase:rand(0,10),
+    speed:rand(.7,1.3),
+    type:Math.floor(rand(0,3))
+  });
+
+  closePanel();
+
+  message("🌿 Tumbuhan baru!");
+}
+
+
+/* =====================================================
+   PANEL
+===================================================== */
+
+function closePanel(){
+
+  document.getElementById("panel").style.display="none";
+}
+
+
+/* =====================================================
+   COINS
+===================================================== */
+
+setInterval(()=>{
+
+  coins += 1;
+
+  money();
+
+},5000);
+
+
+/* =====================================================
+   FISH MOVEMENT
+===================================================== */
+
+function updateFish(){
+
+  for(const f of fishes){
+
+    f.x += f.speed*f.dir;
+
+    f.y +=
+      Math.sin(time*.0015+f.phase)*.00035;
+
+    if(f.dir>0 && f.x>1.05){
+
+      f.x=-.05;
+    }
+
+    if(f.dir<0 && f.x<-.05){
+
+      f.x=1.05;
+    }
+
+    f.hungry += .01;
+  }
+
+  for(const t of turtles){
+
+    t.x += t.speed*t.dir;
+
+    if(t.dir>0 && t.x>1.08){
+      t.x=-.08;
+    }
+
+    if(t.dir<0 && t.x<-.08){
+      t.x=1.08;
+    }
+  }
+
+  /* aquarium becomes dirty slowly */
+
+  cleanliness -= .0008;
+
+  if(cleanliness<0){
+    cleanliness=0;
+  }
+}
+
+
+/* =====================================================
+   RENDER
+===================================================== */
+
+function render(){
+
+  ctx.clearRect(0,0,W,H);
+
+  background();
+
+  /* water glass */
+
+  drawPlants();
+
+  drawRocks();
+
+  drawDecorations();
+
+  drawBubbles();
+
+  drawEggs();
+
+  drawFoods();
+
+  /* turtles behind fish */
+
+  for(const t of turtles){
+    drawTurtle(t);
+  }
+
+  /* fish */
+
+  for(const f of fishes){
+    drawFish(f);
+  }
+
+  sand();
+
+  drawDirt();
+
+  glass();
+
+  /* bottom glass reflection */
+
+  ctx.fillStyle="rgba(255,255,255,.035)";
+  ctx.fillRect(0,H*.88,W,H*.04);
+}
+
+
+/* =====================================================
+   MAIN LOOP
+===================================================== */
+
+function loop(){
+
+  time++;
+
+  updateFish();
+
+  render();
+
+  requestAnimationFrame(loop);
+}
+
+
+/* =====================================================
+   TOUCH CAMERA
+===================================================== */
+
+let touching=false;
+let touchX=0;
+
+canvas.addEventListener("touchstart",(e)=>{
+
+  touching=true;
+
+  touchX=e.touches[0].clientX;
+
+},{passive:true});
+
+
+canvas.addEventListener("touchmove",(e)=>{
+
+  if(!touching) return;
+
+  const x=e.touches[0].clientX;
+
+  const dx=x-touchX;
+
+  cameraX += dx*.25;
+
+  cameraX=clamp(
+    cameraX,
+    -W*.08,
+    W*.08
+  );
+
+  touchX=x;
+
+},{passive:true});
+
+
+canvas.addEventListener("touchend",()=>{
+
+  touching=false;
+
+});
+
+
+/* =====================================================
+   MOUSE
+===================================================== */
+
+canvas.addEventListener("mousedown",(e)=>{
+
+  dragging=true;
+  lastX=e.clientX;
+
+});
+
+window.addEventListener("mousemove",(e)=>{
+
+  if(!dragging) return;
+
+  const dx=e.clientX-lastX;
+
+  cameraX+=dx*.25;
+
+  cameraX=clamp(
+    cameraX,
+    -W*.08,
+    W*.08
+  );
+
+  lastX=e.clientX;
+
+});
+
+window.addEventListener("mouseup",()=>{
+
+  dragging=false;
+
+});
+
+
+/* =====================================================
+   START
+===================================================== */
+
+resize();
+
+createWorld();
+
+money();
+
+loop();
+
+message("🐠 Selamat datang!");
+
+</script>
+
+</body>
+</html>
