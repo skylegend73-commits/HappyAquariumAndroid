@@ -1,842 +1,603 @@
 <!DOCTYPE html>
-
 <html lang="ms">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Happy Aquarium</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+<title>Happy Aquarium 3D Guppy</title>
 
 <style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
 html,body{
-    margin:0;
-    padding:0;
-    width:100%;
-    height:100%;
-    overflow:hidden;
-    font-family:Arial,sans-serif;
-    background:#087da8;
+  width:100%;
+  min-height:100%;
+  overflow:hidden;
+  background:#061d2c;
+  font-family:Arial,sans-serif;
 }
 
 #game{
-    position:fixed;
-    inset:0;
+  position:relative;
+  width:100vw;
+  height:100vh;
+  overflow:hidden;
+  background:
+    radial-gradient(ellipse at 50% 0%,rgba(255,255,255,.35),transparent 35%),
+    linear-gradient(#79dcf5 0%,#149ac9 42%,#075b91 100%);
 }
 
-canvas{
-    position:absolute;
-    inset:0;
-    width:100%;
-    height:100%;
+/* Cahaya air */
+.light{
+  position:absolute;
+  top:-20%;
+  left:20%;
+  width:60%;
+  height:70%;
+  background:radial-gradient(
+    ellipse,
+    rgba(255,255,255,.38),
+    rgba(180,245,255,.12) 35%,
+    transparent 70%
+  );
+  transform:rotate(-8deg);
+  pointer-events:none;
 }
 
-.ui{
-    position:absolute;
-    top:12px;
-    left:12px;
-    right:12px;
-    display:flex;
-    justify-content:space-between;
-    z-index:10;
+/* Dasar aquarium */
+.sand{
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:0;
+  height:18%;
+  background:
+    radial-gradient(circle at 10% 30%,#f2dba2 0 4px,transparent 5px),
+    radial-gradient(circle at 30% 70%,#a87942 0 3px,transparent 4px),
+    radial-gradient(circle at 55% 35%,#f5dfaa 0 4px,transparent 5px),
+    radial-gradient(circle at 80% 65%,#997044 0 3px,transparent 4px),
+    linear-gradient(#e6ca8a,#a8753e);
 }
 
-.box{
-    background:rgba(0,20,35,.8);
-    color:white;
-    padding:10px 15px;
-    border-radius:20px;
-    font-weight:bold;
+/* Tanaman */
+.plant{
+  position:absolute;
+  bottom:13%;
+  width:10px;
+  height:100px;
+  border-radius:100%;
+  background:linear-gradient(
+    90deg,
+    #075a3e,
+    #37b96a,
+    #08704c
+  );
+  transform-origin:bottom;
+  filter:drop-shadow(2px 3px 2px rgba(0,0,0,.3));
 }
 
-.buttons{
-    position:absolute;
-    bottom:15px;
-    left:0;
-    right:0;
-    display:flex;
-    justify-content:center;
-    gap:8px;
-    z-index:10;
+.plant:before,
+.plant:after{
+  content:"";
+  position:absolute;
+  width:35px;
+  height:75px;
+  border-left:8px solid #31a960;
+  border-radius:70%;
+}
+
+.plant:before{
+  left:-25px;
+  bottom:20px;
+  transform:rotate(35deg);
+}
+
+.plant:after{
+  right:-25px;
+  bottom:40px;
+  transform:rotate(-35deg);
+}
+
+/* Batu */
+.rock{
+  position:absolute;
+  bottom:12%;
+  width:65px;
+  height:32px;
+  border-radius:55% 45% 40% 50%;
+  background:
+    radial-gradient(circle at 30% 20%,#ddd,#888 45%,#444 100%);
+  box-shadow:
+    inset -8px -6px 10px rgba(0,0,0,.3),
+    0 5px 8px rgba(0,0,0,.3);
+}
+
+/* =========================
+   GUPPY
+========================= */
+
+.fish{
+  position:absolute;
+  width:180px;
+  height:115px;
+  animation:swim 12s linear infinite;
+  filter:drop-shadow(0 9px 5px rgba(0,30,50,.35));
+  z-index:5;
+}
+
+/* Badan guppy */
+.body{
+  position:absolute;
+  left:45px;
+  top:35px;
+  width:105px;
+  height:58px;
+  border-radius:
+    62% 48%
+    48% 62%;
+
+  background:
+    radial-gradient(
+      ellipse at 28% 20%,
+      rgba(255,255,255,.95) 0 5%,
+      rgba(255,255,255,.3) 9%,
+      transparent 20%
+    ),
+    radial-gradient(
+      ellipse at 60% 35%,
+      #61efff 0%,
+      #139bd7 25%,
+      #2759cf 52%,
+      #4721a4 75%,
+      #160b57 100%
+    );
+
+  border:2px solid rgba(10,30,100,.8);
+
+  box-shadow:
+    inset 8px 5px 13px rgba(255,255,255,.25),
+    inset -12px -8px 15px rgba(0,0,70,.5);
+}
+
+/* Sisik */
+.body:before{
+  content:"";
+  position:absolute;
+  inset:8px 15px 8px 15px;
+
+  background:
+    repeating-linear-gradient(
+      115deg,
+      transparent 0 7px,
+      rgba(255,255,255,.16) 8px,
+      transparent 10px
+    );
+
+  border-radius:50%;
+  opacity:.8;
+}
+
+/* Kilauan badan */
+.body:after{
+  content:"";
+  position:absolute;
+  width:55px;
+  height:14px;
+  left:18px;
+  top:8px;
+  border-radius:50%;
+  background:rgba(255,255,255,.5);
+  filter:blur(4px);
+  transform:rotate(-8deg);
+}
+
+/* Ekor besar */
+.tail{
+  position:absolute;
+  left:0;
+  top:15px;
+  width:72px;
+  height:88px;
+
+  background:
+    radial-gradient(
+      circle at 65% 45%,
+      rgba(255,255,255,.65),
+      transparent 13%
+    ),
+    linear-gradient(
+      145deg,
+      #24d8ff,
+      #345eea 32%,
+      #7a27d8 58%,
+      #e92375 78%,
+      #ff6a29
+    );
+
+  clip-path:polygon(
+    100% 50%,
+    78% 4%,
+    48% 17%,
+    10% 0%,
+    27% 42%,
+    0% 65%,
+    37% 72%,
+    14% 100%,
+    53% 84%,
+    78% 96%
+  );
+
+  filter:
+    drop-shadow(0 3px 2px rgba(0,0,0,.35));
+}
+
+/* Garisan ekor */
+.tail:after{
+  content:"";
+  position:absolute;
+  inset:8px;
+
+  background:
+    repeating-linear-gradient(
+      35deg,
+      transparent 0 8px,
+      rgba(255,255,255,.25) 9px 11px
+    );
+
+  opacity:.8;
+}
+
+/* Sirip dorsal */
+.dorsal{
+  position:absolute;
+  left:82px;
+  top:10px;
+  width:52px;
+  height:38px;
+
+  background:linear-gradient(
+    145deg,
+    rgba(80,240,255,.75),
+    rgba(130,55,220,.55),
+    rgba(255,50,120,.35)
+  );
+
+  clip-path:polygon(
+    0 100%,
+    35% 0,
+    100% 75%
+  );
+
+  filter:drop-shadow(1px 2px 1px rgba(0,0,0,.25));
+}
+
+/* Sirip bawah */
+.fin{
+  position:absolute;
+  left:83px;
+  top:78px;
+  width:45px;
+  height:32px;
+
+  background:linear-gradient(
+    145deg,
+    rgba(255,105,150,.65),
+    rgba(60,210,255,.55)
+  );
+
+  clip-path:polygon(
+    0 0,
+    100% 30%,
+    55% 100%
+  );
+}
+
+/* Mata */
+.eye{
+  position:absolute;
+  left:130px;
+  top:48px;
+
+  width:13px;
+  height:13px;
+
+  border-radius:50%;
+  background:#050505;
+
+  box-shadow:
+    0 0 0 3px rgba(255,255,255,.65),
+    inset 3px 2px 0 white;
+}
+
+/* Mulut */
+.mouth{
+  position:absolute;
+  left:145px;
+  top:63px;
+  width:11px;
+  height:5px;
+  border-bottom:2px solid #122;
+  border-radius:50%;
+}
+
+/* Bubbles */
+.bubble{
+  position:absolute;
+  bottom:15%;
+  width:10px;
+  height:10px;
+  border:2px solid rgba(255,255,255,.65);
+  border-radius:50%;
+  background:rgba(255,255,255,.1);
+  animation:bubble 6s linear infinite;
+}
+
+@keyframes bubble{
+  0%{
+    transform:translateY(0) scale(.7);
+    opacity:.2;
+  }
+  30%{
+    opacity:.8;
+  }
+  100%{
+    transform:translateY(-70vh) scale(1.25);
+    opacity:0;
+  }
+}
+
+/* Renang */
+@keyframes swim{
+  0%{
+    transform:
+      translateX(-220px)
+      translateY(20px)
+      scale(.85)
+      rotate(-2deg);
+  }
+
+  25%{
+    transform:
+      translateX(20vw)
+      translateY(-20px)
+      scale(.95)
+      rotate(2deg);
+  }
+
+  50%{
+    transform:
+      translateX(50vw)
+      translateY(25px)
+      scale(1)
+      rotate(-2deg);
+  }
+
+  75%{
+    transform:
+      translateX(75vw)
+      translateY(-15px)
+      scale(1.05)
+      rotate(2deg);
+  }
+
+  100%{
+    transform:
+      translateX(110vw)
+      translateY(20px)
+      scale(.9)
+      rotate(-2deg);
+  }
+}
+
+/* UI */
+.topbar{
+  position:absolute;
+  top:12px;
+  left:12px;
+  right:12px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  z-index:20;
+}
+
+.coins{
+  padding:9px 14px;
+  border-radius:20px;
+  background:rgba(0,30,55,.55);
+  color:white;
+  font-weight:bold;
+  backdrop-filter:blur(8px);
+}
+
+.title{
+  color:white;
+  font-weight:bold;
+  font-size:18px;
+  text-shadow:0 2px 4px #003;
+}
+
+.bottom{
+  position:absolute;
+  bottom:15px;
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  gap:8px;
+  z-index:20;
 }
 
 button{
-    border:0;
-    border-radius:14px;
-    padding:12px 15px;
-    background:#087fb8;
-    color:white;
-    font-weight:bold;
-    box-shadow:0 4px 0 #034d70;
+  border:0;
+  min-width:70px;
+  padding:11px 13px;
+  border-radius:15px;
+  color:white;
+  background:rgba(0,45,75,.75);
+  font-weight:bold;
+  box-shadow:0 4px 8px rgba(0,0,0,.25);
 }
 
 button:active{
-    transform:translateY(3px);
+  transform:scale(.94);
+}
+
+@media(max-width:500px){
+  .fish{
+    transform:scale(.75);
+  }
+
+  .title{
+    font-size:15px;
+  }
+
+  button{
+    min-width:62px;
+    padding:10px 8px;
+    font-size:12px;
+  }
 }
 </style>
-
 </head>
 
 <body>
 
 <div id="game">
 
-<canvas id="canvas"></canvas>
+  <div class="light"></div>
 
-<div class="ui">
-    <div class="box">🐠 HAPPY AQUARIUM</div>
-    <div class="box">🪙 <span id="coins">100</span></div>
-</div>
+  <div class="topbar">
+    <div class="title">🐠 Happy Aquarium 3D</div>
+    <div class="coins">🪙 1,250</div>
+  </div>
 
-<div class="buttons">
-    <button onclick="feed()">🍤 FEED</button>
-    <button onclick="addFish()">🐟 BUY FISH</button>
-    <button onclick="breed()">🥚 BREED</button>
-    <button onclick="clean()">🧽 CLEAN</button>
-</div>
+  <!-- GUPPY 1 -->
+  <div class="fish" style="top:30%;animation-delay:-2s;">
+    <div class="tail"></div>
+    <div class="dorsal"></div>
+    <div class="body"></div>
+    <div class="fin"></div>
+    <div class="eye"></div>
+    <div class="mouth"></div>
+  </div>
+
+  <!-- GUPPY 2 -->
+  <div class="fish"
+       style="
+       top:52%;
+       left:-100px;
+       transform:scale(.72);
+       animation-duration:15s;
+       animation-delay:-7s;
+       ">
+    <div class="tail"
+         style="
+         background:
+         linear-gradient(
+         145deg,
+         #fff34b,
+         #ffb52b 35%,
+         #ff5a27 65%,
+         #d51c45
+         );
+         ">
+    </div>
+
+    <div class="dorsal"></div>
+
+    <div class="body"
+         style="
+         background:
+         radial-gradient(
+         ellipse at 28% 20%,
+         white 0 5%,
+         transparent 18%
+         ),
+         radial-gradient(
+         ellipse at 60% 35%,
+         #fff58b,
+         #e9c52d 35%,
+         #e67b1d 65%,
+         #8d280d
+         );
+         ">
+    </div>
+
+    <div class="fin"></div>
+    <div class="eye"></div>
+    <div class="mouth"></div>
+  </div>
+
+  <!-- Tanaman -->
+  <div class="plant"
+       style="left:8%;height:105px;transform:rotate(-7deg)">
+  </div>
+
+  <div class="plant"
+       style="left:16%;height:75px;transform:rotate(10deg)">
+  </div>
+
+  <div class="plant"
+       style="left:82%;height:115px;transform:rotate(8deg)">
+  </div>
+
+  <div class="plant"
+       style="left:88%;height:80px;transform:rotate(-10deg)">
+  </div>
+
+  <!-- Batu -->
+  <div class="rock" style="left:28%;"></div>
+  <div class="rock" style="left:67%;width:80px;"></div>
+
+  <!-- Pasir -->
+  <div class="sand"></div>
+
+  <!-- Bubble -->
+  <div class="bubble"
+       style="left:20%;animation-delay:-1s">
+  </div>
+
+  <div class="bubble"
+       style="left:25%;width:7px;height:7px;animation-delay:-3s">
+  </div>
+
+  <div class="bubble"
+       style="left:72%;width:15px;height:15px;animation-delay:-2s">
+  </div>
+
+  <div class="bubble"
+       style="left:78%;width:7px;height:7px;animation-delay:-4s">
+  </div>
+
+  <div class="bottom">
+    <button onclick="feed()">🍤 Makan</button>
+    <button onclick="breed()">❤️ Breed</button>
+    <button onclick="clean()">✨ Bersih</button>
+    <button onclick="shop()">🛒 Kedai</button>
+  </div>
 
 </div>
 
 <script>
 
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
-
-let W;
-let H;
-
-let coins = 100;
-
-let fishes = [
-    {
-        x:0.20,
-        y:0.40,
-        dx:1,
-        color:"#ff8c20"
-    },
-    {
-        x:0.50,
-        y:0.55,
-        dx:-1,
-        color:"#2878ff"
-    },
-    {
-        x:0.75,
-        y:0.35,
-        dx:1,
-        color:"#ffd42a"
-    },
-    {
-        x:0.35,
-        y:0.65,
-        dx:1,
-        color:"#ff4f70"
-    }
-];
-
-let bubbles=[];
-
-for(let i=0;i<35;i++){
-
-    bubbles.push({
-        x:Math.random(),
-        y:Math.random(),
-        size:1+Math.random()*4,
-        speed:.0005+Math.random()*.001
-    });
-
-}
-
-function resize(){
-
-    W=window.innerWidth;
-    H=window.innerHeight;
-
-    canvas.width=W;
-    canvas.height=H;
-
-}
-
-window.addEventListener("resize",resize);
-
-resize();
-
-
-/* =========================
-   BACKGROUND
-========================= */
-
-function drawBackground(){
-
-    let gradient=ctx.createLinearGradient(
-        0,
-        0,
-        0,
-        H
-    );
-
-    gradient.addColorStop(0,"#54dfff");
-    gradient.addColorStop(.35,"#078fbd");
-    gradient.addColorStop(1,"#034563");
-
-    ctx.fillStyle=gradient;
-
-    ctx.fillRect(
-        0,
-        0,
-        W,
-        H
-    );
-
-
-    /* light */
-
-    ctx.fillStyle="rgba(255,255,255,.08)";
-
-    for(let i=0;i<7;i++){
-
-        ctx.beginPath();
-
-        ctx.moveTo(
-            i*W/6,
-            0
-        );
-
-        ctx.lineTo(
-            i*W/6+W*.15,
-            H*.75
-        );
-
-        ctx.lineTo(
-            i*W/6+W*.25,
-            H*.75
-        );
-
-        ctx.lineTo(
-            i*W/6+W*.1,
-            0
-        );
-
-        ctx.fill();
-
-    }
-
-}
-
-
-/* =========================
-   SAND
-========================= */
-
-function drawSand(){
-
-    let y=H*.80;
-
-    ctx.fillStyle="#d6ad65";
-
-    ctx.beginPath();
-
-    ctx.moveTo(0,y);
-
-    for(let x=0;x<=W;x+=20){
-
-        let wave=
-            Math.sin(x*.02)*4;
-
-        ctx.lineTo(
-            x,
-            y+wave
-        );
-
-    }
-
-    ctx.lineTo(W,H);
-
-    ctx.lineTo(0,H);
-
-    ctx.closePath();
-
-    ctx.fill();
-
-
-    /* rocks */
-
-    for(let i=0;i<12;i++){
-
-        let x=(i*97)%W;
-
-        let yy=y+20+(i%4)*10;
-
-        ctx.fillStyle="#555";
-
-        ctx.beginPath();
-
-        ctx.ellipse(
-            x,
-            yy,
-            15,
-            8,
-            0,
-            0,
-            Math.PI*2
-        );
-
-        ctx.fill();
-
-    }
-
-}
-
-
-/* =========================
-   PLANTS
-========================= */
-
-function drawPlants(){
-
-    for(let i=0;i<14;i++){
-
-        let x=i*W/13;
-
-        let height=
-            H*.12+
-            Math.sin(i)*20;
-
-        ctx.strokeStyle=
-            i%2===0
-            ? "#168548"
-            : "#0d6339";
-
-        ctx.lineWidth=7;
-
-        for(let j=0;j<3;j++){
-
-            ctx.beginPath();
-
-            ctx.moveTo(
-                x,
-                H*.82
-            );
-
-            ctx.quadraticCurveTo(
-                x-15+j*15,
-                H*.82-height/2,
-                x-10+j*10,
-                H*.82-height
-            );
-
-            ctx.stroke();
-
-        }
-
-    }
-
-}
-
-
-/* =========================
-   BUBBLES
-========================= */
-
-function drawBubbles(){
-
-    for(let b of bubbles){
-
-        b.y-=b.speed;
-
-        if(b.y<0.05){
-
-            b.y=.82;
-            b.x=Math.random();
-
-        }
-
-        ctx.strokeStyle="rgba(255,255,255,.6)";
-
-        ctx.lineWidth=1;
-
-        ctx.beginPath();
-
-        ctx.arc(
-            b.x*W,
-            b.y*H,
-            b.size,
-            0,
-            Math.PI*2
-        );
-
-        ctx.stroke();
-
-    }
-
-}
-
-
-/* =========================
-   FISH
-========================= */
-
-function drawFish(f){
-
-    f.x += f.dx*.00035;
-
-    if(f.x>1.1){
-
-        f.x=-.1;
-
-    }
-
-    if(f.x<-.1){
-
-        f.x=1.1;
-
-    }
-
-    let x=f.x*W;
-
-    let y=
-        f.y*H+
-        Math.sin(Date.now()*.003+f.x*10)*8;
-
-    let size=Math.min(W,H)*.065;
-
-    ctx.save();
-
-    ctx.translate(x,y);
-
-    if(f.dx<0){
-
-        ctx.scale(-1,1);
-
-    }
-
-
-    /* tail */
-
-    ctx.fillStyle=f.color;
-
-    ctx.beginPath();
-
-    ctx.moveTo(
-        -size*.6,
-        0
-    );
-
-    ctx.lineTo(
-        -size*1.2,
-        -size*.5
-    );
-
-    ctx.lineTo(
-        -size*1.2,
-        size*.5
-    );
-
-    ctx.closePath();
-
-    ctx.fill();
-
-
-    /* body */
-
-    let g=ctx.createRadialGradient(
-        -size*.3,
-        -size*.3,
-        2,
-        0,
-        0,
-        size
-    );
-
-    g.addColorStop(
-        0,
-        "#ffffff"
-    );
-
-    g.addColorStop(
-        .25,
-        f.color
-    );
-
-    g.addColorStop(
-        1,
-        f.color
-    );
-
-    ctx.fillStyle=g;
-
-    ctx.beginPath();
-
-    ctx.ellipse(
-        0,
-        0,
-        size,
-        size*.58,
-        0,
-        0,
-        Math.PI*2
-    );
-
-    ctx.fill();
-
-
-    /* fin */
-
-    ctx.fillStyle=f.color;
-
-    ctx.beginPath();
-
-    ctx.moveTo(
-        -size*.1,
-        -size*.35
-    );
-
-    ctx.lineTo(
-        size*.15,
-        -size*.85
-    );
-
-    ctx.lineTo(
-        size*.4,
-        -size*.25
-    );
-
-    ctx.closePath();
-
-    ctx.fill();
-
-
-    /* eye */
-
-    ctx.fillStyle="white";
-
-    ctx.beginPath();
-
-    ctx.arc(
-        size*.55,
-        -size*.18,
-        size*.17,
-        0,
-        Math.PI*2
-    );
-
-    ctx.fill();
-
-    ctx.fillStyle="#111";
-
-    ctx.beginPath();
-
-    ctx.arc(
-        size*.60,
-        -size*.18,
-        size*.07,
-        0,
-        Math.PI*2
-    );
-
-    ctx.fill();
-
-
-    /* shine */
-
-    ctx.fillStyle="rgba(255,255,255,.5)";
-
-    ctx.beginPath();
-
-    ctx.ellipse(
-        -size*.3,
-        -size*.25,
-        size*.25,
-        size*.1,
-        -.3,
-        0,
-        Math.PI*2
-    );
-
-    ctx.fill();
-
-    ctx.restore();
-
-}
-
-
-/* =========================
-   CASTLE
-========================= */
-
-function drawCastle(){
-
-    let x=W*.18;
-    let y=H*.76;
-
-    let s=Math.min(W,H)*.10;
-
-    ctx.fillStyle="#c9944c";
-
-    ctx.fillRect(
-        x-s*.7,
-        y-s*.8,
-        s*1.4,
-        s
-    );
-
-    ctx.fillRect(
-        x-s*1.05,
-        y-s*1.05,
-        s*.35,
-        s*1.25
-    );
-
-    ctx.fillRect(
-        x+s*.70,
-        y-s*1.05,
-        s*.35,
-        s*1.25
-    );
-
-    ctx.fillStyle="#9e4035";
-
-    ctx.beginPath();
-
-    ctx.moveTo(
-        x-s*1.12,
-        y-s*1.05
-    );
-
-    ctx.lineTo(
-        x-s*.88,
-        y-s*1.45
-    );
-
-    ctx.lineTo(
-        x-s*.64,
-        y-s*1.05
-    );
-
-    ctx.fill();
-
-    ctx.beginPath();
-
-    ctx.moveTo(
-        x+s*.64,
-        y-s*1.05
-    );
-
-    ctx.lineTo(
-        x+s*.88,
-        y-s*1.45
-    );
-
-    ctx.lineTo(
-        x+s*1.12,
-        y-s*1.05
-    );
-
-    ctx.fill();
-
-    ctx.fillStyle="#54351f";
-
-    ctx.beginPath();
-
-    ctx.arc(
-        x,
-        y,
-        s*.23,
-        Math.PI,
-        0
-    );
-
-    ctx.fill();
-
-}
-
-
-/* =========================
-   CHEST
-========================= */
-
-function drawChest(){
-
-    let x=W*.75;
-    let y=H*.82;
-
-    let s=Math.min(W,H)*.055;
-
-    ctx.fillStyle="#70421f";
-
-    ctx.fillRect(
-        x-s,
-        y-s*.3,
-        s*2,
-        s
-    );
-
-    ctx.fillStyle="#b87328";
-
-    ctx.beginPath();
-
-    ctx.arc(
-        x,
-        y-s*.25,
-        s,
-        Math.PI,
-        0
-    );
-
-    ctx.fill();
-
-    ctx.fillStyle="#e8c044";
-
-    ctx.fillRect(
-        x-s*.1,
-        y-s*.2,
-        s*.2,
-        s*.65
-    );
-
-}
-
-
-/* =========================
-   RENDER
-========================= */
-
-function render(){
-
-    ctx.clearRect(
-        0,
-        0,
-        W,
-        H
-    );
-
-    drawBackground();
-
-    drawPlants();
-
-    drawCastle();
-
-    drawChest();
-
-    drawBubbles();
-
-    for(let f of fishes){
-
-        drawFish(f);
-
-    }
-
-    drawSand();
-
-}
-
-
-/* =========================
-   GAME LOOP
-========================= */
-
-function loop(){
-
-    render();
-
-    requestAnimationFrame(loop);
-
-}
-
-
-/* =========================
-   BUTTONS
-========================= */
-
 function feed(){
-
-    if(coins<5){
-
-        alert("Coin tak cukup!");
-
-        return;
-
-    }
-
-    coins-=5;
-
-    document.getElementById("coins").textContent=coins;
-
-    alert("🍤 Ikan dah diberi makan!");
-
+  alert("🐠 Guppy sedang makan!");
 }
-
-
-function addFish(){
-
-    if(coins<20){
-
-        alert("Coin tak cukup!");
-
-        return;
-
-    }
-
-    coins-=20;
-
-    fishes.push({
-
-        x:Math.random(),
-
-        y:.25+
-          Math.random()*.4,
-
-        dx:Math.random()<.5?1:-1,
-
-        color:[
-            "#ff6b35",
-            "#ff4fa3",
-            "#39d353",
-            "#8b5cf6",
-            "#ffd21f"
-        ][
-            Math.floor(
-                Math.random()*5
-            )
-        ]
-
-    });
-
-    document.getElementById("coins").textContent=coins;
-
-}
-
 
 function breed(){
-
-    if(coins<30){
-
-        alert("Coin tak cukup!");
-
-        return;
-
-    }
-
-    coins-=30;
-
-    document.getElementById("coins").textContent=coins;
-
-    alert("🥚 Telur ikan berjaya dihasilkan!");
-
+  alert("❤️ Pilih 2 guppy untuk breeding!");
 }
-
 
 function clean(){
-
-    alert("🧽 Aquarium sudah bersih!");
-
+  alert("✨ Aquarium sudah bersih!");
 }
 
-
-/* =========================
-   START
-========================= */
-
-loop();
+function shop(){
+  alert("🛒 Kedai aquarium akan dibuka!");
+}
 
 </script>
 
