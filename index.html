@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Happy Aquarium</title>
 
 <style>
@@ -13,7 +14,8 @@
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background: #bdefff;
+  background:
+    linear-gradient(#b9efff, #dff8ff);
   color: #123;
 }
 
@@ -23,6 +25,10 @@ body {
   padding: 12px;
 }
 
+/* =========================
+   TOP BAR
+========================= */
+
 .top {
   display: flex;
   justify-content: space-between;
@@ -31,71 +37,344 @@ body {
   padding: 12px;
   border-radius: 15px;
   margin-bottom: 10px;
+  box-shadow: 0 3px 10px rgba(0,0,0,.12);
+}
+
+.top h2 {
+  margin: 0 0 4px;
 }
 
 .coins {
-  background: #fff3a8;
-  padding: 8px 12px;
+  background: #fff0a6;
+  padding: 9px 14px;
   border-radius: 20px;
   font-weight: bold;
+  box-shadow: 0 2px 5px rgba(0,0,0,.12);
 }
 
+/* =========================
+   AQUARIUM
+========================= */
+
 .aquarium {
-  height: 360px;
+  height: 390px;
   position: relative;
   overflow: hidden;
-  border: 6px solid #5b8795;
-  border-radius: 20px;
-  background: linear-gradient(
-    #8de0f5 0%,
-    #3eb6d5 65%,
-    #16839d 100%
-  );
+
+  border: 7px solid #547d89;
+  border-radius: 22px;
+
+  background:
+    radial-gradient(
+      circle at 20% 15%,
+      rgba(255,255,255,.35),
+      transparent 20%
+    ),
+    linear-gradient(
+      to bottom,
+      #9deaff 0%,
+      #57c9e5 45%,
+      #249ebd 75%,
+      #177e9b 100%
+    );
+
+  box-shadow:
+    inset 0 0 30px rgba(0,0,0,.18),
+    0 5px 15px rgba(0,0,0,.2);
 }
+
+/* Cahaya dalam air */
+
+.aquarium::before {
+  content: "";
+  position: absolute;
+  top: -100px;
+  left: 10%;
+  width: 80%;
+  height: 180px;
+
+  background: linear-gradient(
+    110deg,
+    transparent,
+    rgba(255,255,255,.18),
+    transparent
+  );
+
+  transform: rotate(-8deg);
+  pointer-events: none;
+}
+
+/* =========================
+   BUBBLES
+========================= */
+
+.bubble {
+  position: absolute;
+  bottom: 80px;
+  width: 9px;
+  height: 9px;
+
+  border: 2px solid rgba(255,255,255,.7);
+  border-radius: 50%;
+
+  animation: bubbleUp 5s linear infinite;
+}
+
+.b1 {
+  left: 20%;
+  animation-delay: 0s;
+}
+
+.b2 {
+  left: 48%;
+  animation-delay: 2s;
+}
+
+.b3 {
+  left: 75%;
+  animation-delay: 1s;
+}
+
+.b4 {
+  left: 88%;
+  animation-delay: 3s;
+}
+
+@keyframes bubbleUp {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+
+  20% {
+    opacity: .8;
+  }
+
+  100% {
+    transform: translateY(-300px);
+    opacity: 0;
+  }
+}
+
+/* =========================
+   SAND DASAR LAUT
+========================= */
 
 .sand {
   position: absolute;
+
   bottom: 0;
+  left: 0;
+
   width: 100%;
-  height: 55px;
-  background: #e7d39a;
+  height: 75px;
+
+  background:
+
+    /* butiran pasir */
+    radial-gradient(
+      circle at 8% 30%,
+      rgba(120,90,45,.35) 0 2px,
+      transparent 3px
+    ),
+
+    radial-gradient(
+      circle at 18% 70%,
+      rgba(150,115,60,.4) 0 1.5px,
+      transparent 2.5px
+    ),
+
+    radial-gradient(
+      circle at 30% 25%,
+      rgba(120,90,45,.3) 0 2px,
+      transparent 3px
+    ),
+
+    radial-gradient(
+      circle at 42% 65%,
+      rgba(160,125,70,.4) 0 2px,
+      transparent 3px
+    ),
+
+    radial-gradient(
+      circle at 55% 35%,
+      rgba(120,90,45,.3) 0 1.5px,
+      transparent 2.5px
+    ),
+
+    radial-gradient(
+      circle at 68% 70%,
+      rgba(150,110,55,.35) 0 2px,
+      transparent 3px
+    ),
+
+    radial-gradient(
+      circle at 80% 30%,
+      rgba(120,90,45,.3) 0 2px,
+      transparent 3px
+    ),
+
+    radial-gradient(
+      circle at 92% 65%,
+      rgba(150,110,55,.35) 0 2px,
+      transparent 3px
+    ),
+
+    /* warna pasir */
+    linear-gradient(
+      to bottom,
+      #f5e3aa 0%,
+      #ead294 45%,
+      #d8bd76 100%
+    );
+
+  box-shadow:
+    inset 0 10px 12px rgba(255,255,255,.25),
+    inset 0 -8px 15px rgba(120,85,35,.2);
+
+  z-index: 3;
 }
+
+/* Tekstur pasir */
+
+.sand::before {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  background:
+    repeating-radial-gradient(
+      ellipse at 50% 100%,
+      rgba(255,255,255,.18) 0px,
+      rgba(255,255,255,.18) 2px,
+      transparent 3px,
+      transparent 13px
+    );
+
+  opacity: .55;
+}
+
+/* Batu dan kerang */
+
+.sand::after {
+  content: "🪨    🐚       🪨    🐚          🪨     🐚";
+
+  position: absolute;
+
+  bottom: 7px;
+  left: 4%;
+
+  width: 92%;
+
+  font-size: 15px;
+  letter-spacing: 5px;
+
+  opacity: .7;
+}
+
+/* =========================
+   TUMBUHAN LAUT
+========================= */
 
 .plant {
   position: absolute;
-  bottom: 38px;
-  font-size: 55px;
+
+  bottom: 60px;
+
+  font-size: 58px;
+
+  z-index: 4;
+
+  animation: plantMove 3s ease-in-out infinite;
 }
+
+.plant1 {
+  left: 3%;
+}
+
+.plant2 {
+  left: 42%;
+  animation-delay: 1s;
+}
+
+.plant3 {
+  right: 3%;
+  animation-delay: 2s;
+}
+
+@keyframes plantMove {
+  0%,100% {
+    transform: rotate(-3deg);
+  }
+
+  50% {
+    transform: rotate(3deg);
+  }
+}
+
+/* =========================
+   IKAN
+========================= */
 
 .fish {
   position: absolute;
-  font-size: 45px;
+
+  font-size: 46px;
+
   cursor: pointer;
   user-select: none;
-  transition: left 0.3s linear;
+
+  z-index: 5;
+
+  transition: left .2s linear;
 }
+
+.fish:hover {
+  transform: scale(1.15);
+}
+
+/* =========================
+   CONTROL PANEL
+========================= */
 
 .panel {
   background: white;
+
   border-radius: 15px;
+
   padding: 12px;
+
   margin-top: 10px;
+
+  box-shadow:
+    0 3px 10px rgba(0,0,0,.1);
 }
 
 .buttons {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+
+  grid-template-columns:
+    repeat(2, 1fr);
+
   gap: 8px;
 }
 
 button {
   min-height: 48px;
+
   border: 0;
+
   border-radius: 12px;
+
   background: #168db0;
+
   color: white;
+
   font-size: 16px;
+
   font-weight: bold;
+
   cursor: pointer;
 }
 
@@ -103,63 +382,107 @@ button:active {
   transform: scale(.97);
 }
 
+.message {
+  margin-top: 10px;
+
+  padding: 10px;
+
+  background: #eefaff;
+
+  border-radius: 10px;
+
+  text-align: center;
+}
+
+/* =========================
+   BREEDING
+========================= */
+
 .breed-area {
   display: none;
 }
 
 .fish-choice {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
   gap: 8px;
 }
 
 .choice {
   background: #eefaff;
+
   border: 3px solid #c5dce5;
+
   color: #123;
+
   padding: 10px;
+
+  min-height: 90px;
 }
 
 .choice.selected {
   border-color: #ff69a8;
+
   background: #ffe1ef;
 }
 
 .parent-box {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+
+  grid-template-columns:
+    1fr 1fr;
+
   gap: 10px;
+
   margin: 12px 0;
 }
 
 .parent {
   text-align: center;
+
   background: #f2fbff;
+
   padding: 12px;
+
   border-radius: 12px;
+
   font-size: 40px;
 }
 
 .egg {
   text-align: center;
+
   font-size: 60px;
+
   padding: 15px;
 }
 
-.message {
-  margin-top: 10px;
-  padding: 10px;
-  background: #eefaff;
-  border-radius: 10px;
+#breedStatus {
+  text-align: center;
+
+  font-weight: bold;
 }
 
+/* =========================
+   MOBILE
+========================= */
+
 @media (max-width: 450px) {
+
   .aquarium {
-    height: 320px;
+    height: 350px;
   }
 
   .fish-choice {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns:
+      repeat(2, 1fr);
+  }
+
+  .fish {
+    font-size: 40px;
   }
 }
 </style>
@@ -169,7 +492,10 @@ button:active {
 
 <div class="game">
 
+  <!-- TOP -->
+
   <div class="top">
+
     <div>
       <h2>🐠 Happy Aquarium</h2>
       <small>My Aquarium</small>
@@ -178,25 +504,64 @@ button:active {
     <div class="coins">
       🪙 <span id="coins">100</span>
     </div>
+
   </div>
+
+
+  <!-- AQUARIUM -->
 
   <div class="aquarium" id="aquarium">
 
-    <div class="plant" style="left:5%;">🌿</div>
-    <div class="plant" style="left:82%;">🌿</div>
-    <div class="plant" style="left:45%;">🪸</div>
+    <!-- Bubble -->
 
-    <div class="sand"></div>
+    <div class="bubble b1"></div>
+    <div class="bubble b2"></div>
+    <div class="bubble b3"></div>
+    <div class="bubble b4"></div>
 
-    <div id="fish1" class="fish" style="left:15%;top:30%;">
+
+    <!-- Plants -->
+
+    <div class="plant plant1">🌿</div>
+    <div class="plant plant2">🪸</div>
+    <div class="plant plant3">🌿</div>
+
+
+    <!-- Fish -->
+
+    <div
+      id="fish1"
+      class="fish"
+      style="left:15%;top:30%;"
+      onclick="fishClicked('Sunny')">
       🐠
     </div>
 
-    <div id="fish2" class="fish" style="left:60%;top:55%;">
+    <div
+      id="fish2"
+      class="fish"
+      style="left:60%;top:50%;"
+      onclick="fishClicked('Bluey')">
       🐟
     </div>
 
+    <div
+      id="fish3"
+      class="fish"
+      style="left:35%;top:65%;"
+      onclick="fishClicked('Puffy')">
+      🐡
+    </div>
+
+
+    <!-- Sand -->
+
+    <div class="sand"></div>
+
   </div>
+
+
+  <!-- BUTTON PANEL -->
 
   <div class="panel">
 
@@ -220,8 +585,13 @@ button:active {
 
     </div>
 
-    <div class="message" id="message">
+
+    <div
+      class="message"
+      id="message">
+
       Selamat datang ke Happy Aquarium! 🐠
+
     </div>
 
   </div>
@@ -229,87 +599,161 @@ button:active {
 
   <!-- BREEDING -->
 
-  <div class="panel breed-area" id="breeding">
+  <div
+    class="panel breed-area"
+    id="breeding">
 
-    <h2>💕 Breeding</h2>
+    <h2>💕 Breeding Centre</h2>
 
     <p>
       Pilih seekor ikan jantan dan seekor ikan betina.
     </p>
 
+
     <div class="fish-choice">
 
-      <button class="choice" onclick="selectMale(this,'🐠')">
-        🐠<br>
-        Nemo<br>
+      <button
+        class="choice"
+        onclick="selectMale(this,'🐠')">
+
+        🐠
+        <br>
+        Sunny
+        <br>
         ♂ Jantan
+
       </button>
 
-      <button class="choice" onclick="selectFemale(this,'🐟')">
-        🐟<br>
-        Blue<br>
+
+      <button
+        class="choice"
+        onclick="selectFemale(this,'🐟')">
+
+        🐟
+        <br>
+        Bluey
+        <br>
         ♀ Betina
+
       </button>
 
-      <button class="choice" onclick="selectMale(this,'🐡')">
-        🐡<br>
-        Puffy<br>
+
+      <button
+        class="choice"
+        onclick="selectMale(this,'🐡')">
+
+        🐡
+        <br>
+        Puffy
+        <br>
         ♂ Jantan
+
       </button>
 
-      <button class="choice" onclick="selectFemale(this,'🐠')">
-        🐠<br>
-        Goldie<br>
+
+      <button
+        class="choice"
+        onclick="selectFemale(this,'🐠')">
+
+        🐠
+        <br>
+        Goldie
+        <br>
         ♀ Betina
+
       </button>
 
-      <button class="choice" onclick="selectMale(this,'🐟')">
-        🐟<br>
-        Stripe<br>
+
+      <button
+        class="choice"
+        onclick="selectMale(this,'🐟')">
+
+        🐟
+        <br>
+        Stripe
+        <br>
         ♂ Jantan
+
       </button>
 
-      <button class="choice" onclick="selectFemale(this,'🐡')">
-        🐡<br>
-        Pearl<br>
+
+      <button
+        class="choice"
+        onclick="selectFemale(this,'🐡')">
+
+        🐡
+        <br>
+        Pearl
+        <br>
         ♀ Betina
+
       </button>
 
     </div>
 
 
+    <!-- Parents -->
+
     <div class="parent-box">
 
       <div class="parent">
-        <div id="male">❔</div>
-        <small>♂ Jantan</small>
+
+        <div id="male">
+          ❔
+        </div>
+
+        <small>
+          ♂ Jantan
+        </small>
+
       </div>
 
+
       <div class="parent">
-        <div id="female">❔</div>
-        <small>♀ Betina</small>
+
+        <div id="female">
+          ❔
+        </div>
+
+        <small>
+          ♀ Betina
+        </small>
+
       </div>
 
     </div>
 
 
     <button onclick="startBreeding()">
+
       💕 MULA BREEDING — 10 🪙
+
     </button>
 
 
-    <div class="egg" id="egg">
+    <div
+      class="egg"
+      id="egg">
+
       🥚
+
     </div>
 
-    <div id="breedStatus" style="text-align:center;">
+
+    <div id="breedStatus">
+
       Belum ada breeding.
+
     </div>
+
 
     <br>
 
+
     <button onclick="closeBreeding()">
+
       ← Kembali Aquarium
+
     </button>
 
   </div>
@@ -319,42 +763,71 @@ button:active {
 
 <script>
 
+/* =========================
+   GAME DATA
+========================= */
+
 let coins = 100;
 
 let male = null;
+
 let female = null;
 
 let breeding = false;
 
 
-/* COIN */
+/* =========================
+   UPDATE COINS
+========================= */
 
 function updateCoins() {
 
-  document.getElementById("coins").textContent = coins;
+  document.getElementById("coins")
+    .textContent = coins;
 
 }
 
 
-/* MESSAGE */
+/* =========================
+   MESSAGE
+========================= */
 
 function message(text) {
 
-  document.getElementById("message").textContent = text;
+  document.getElementById("message")
+    .textContent = text;
 
 }
 
 
-/* FEED */
+/* =========================
+   CLICK FISH
+========================= */
+
+function fishClicked(name) {
+
+  message(
+    "🐠 " +
+    name +
+    " suka bila hang usik dia! ❤️"
+  );
+
+}
+
+
+/* =========================
+   FEED
+========================= */
 
 function feedFish() {
 
   if (coins < 2) {
 
-    message("🪙 Coin tak cukup.");
+    message(
+      "🪙 Coin tak cukup untuk beli makanan."
+    );
 
     return;
-
   }
 
   coins -= 2;
@@ -368,40 +841,65 @@ function feedFish() {
 }
 
 
-/* BUY FISH */
+/* =========================
+   BUY FISH
+========================= */
 
 function buyFish() {
 
   if (coins < 20) {
 
-    message("🪙 Perlu 20 coin untuk beli ikan.");
+    message(
+      "🪙 Perlu 20 coin untuk beli ikan."
+    );
 
     return;
-
   }
 
   coins -= 20;
 
   updateCoins();
 
+
   let aquarium =
     document.getElementById("aquarium");
+
 
   let fish =
     document.createElement("div");
 
+
   fish.className = "fish";
 
+
+  let fishTypes = [
+    "🐠",
+    "🐟",
+    "🐡",
+    "🐠",
+    "🐟"
+  ];
+
+
   fish.textContent =
-    ["🐠","🐟","🐡"][Math.floor(Math.random()*3)];
+    fishTypes[
+      Math.floor(
+        Math.random() *
+        fishTypes.length
+      )
+    ];
+
 
   fish.style.left =
-    (10 + Math.random()*75) + "%";
+    (10 + Math.random() * 75) + "%";
+
 
   fish.style.top =
-    (20 + Math.random()*50) + "%";
+    (15 + Math.random() * 55) + "%";
+
 
   aquarium.appendChild(fish);
+
 
   message(
     "🎉 Ikan baru telah masuk aquarium!"
@@ -410,80 +908,101 @@ function buyFish() {
 }
 
 
-/* CLEAN */
+/* =========================
+   CLEAN
+========================= */
 
 function cleanTank() {
 
   message(
-    "🧽 Aquarium sudah bersih! Ikan gembira ❤️"
+    "🧽 Aquarium sudah bersih! Ikan semua gembira ❤️"
   );
 
 }
 
 
-/* OPEN BREEDING */
+/* =========================
+   BREEDING OPEN
+========================= */
 
 function openBreeding() {
 
-  document.getElementById(
-    "breeding"
-  ).style.display = "block";
+  document
+    .getElementById("breeding")
+    .style.display = "block";
 
-  document.getElementById(
-    "message"
-  ).textContent =
-    "💕 Pilih jantan dan betina.";
+
+  document
+    .getElementById("message")
+    .textContent =
+    "💕 Pilih ikan jantan dan betina.";
+
 
   window.scrollTo({
-    top: document.body.scrollHeight,
-    behavior: "smooth"
+
+    top:
+      document.body.scrollHeight,
+
+    behavior:
+      "smooth"
+
   });
 
 }
 
 
-/* CLOSE BREEDING */
+/* =========================
+   BREEDING CLOSE
+========================= */
 
 function closeBreeding() {
 
-  document.getElementById(
-    "breeding"
-  ).style.display = "none";
+  document
+    .getElementById("breeding")
+    .style.display = "none";
 
 }
 
 
-/* SELECT MALE */
+/* =========================
+   SELECT MALE
+========================= */
 
 function selectMale(button, fish) {
 
   male = fish;
 
-  document.getElementById(
-    "male"
-  ).textContent = fish;
+  document
+    .getElementById("male")
+    .textContent = fish;
+
 
   button.classList.add("selected");
 
 }
 
 
-/* SELECT FEMALE */
+/* =========================
+   SELECT FEMALE
+========================= */
 
 function selectFemale(button, fish) {
 
   female = fish;
 
-  document.getElementById(
-    "female"
-  ).textContent = fish;
+  document
+    .getElementById("female")
+    .textContent = fish;
+
 
   button.classList.add("selected");
 
 }
 
 
-/* BREEDING */
+/* =========================
+   START BREEDING
+========================= */
 
 function startBreeding() {
 
@@ -493,27 +1012,30 @@ function startBreeding() {
 
   }
 
+
   if (!male || !female) {
 
-    document.getElementById(
-      "breedStatus"
-    ).textContent =
+    document
+      .getElementById("breedStatus")
+      .textContent =
       "⚠️ Pilih JANTAN dan BETINA dahulu.";
 
     return;
 
   }
 
+
   if (coins < 10) {
 
-    document.getElementById(
-      "breedStatus"
-    ).textContent =
+    document
+      .getElementById("breedStatus")
+      .textContent =
       "🪙 Coin tak cukup.";
 
     return;
 
   }
+
 
   coins -= 10;
 
@@ -521,62 +1043,81 @@ function startBreeding() {
 
   breeding = true;
 
+
   let seconds = 10;
 
-  document.getElementById(
-    "egg"
-  ).textContent = "🥚";
 
-  document.getElementById(
-    "breedStatus"
-  ).textContent =
+  document
+    .getElementById("egg")
+    .textContent = "🥚";
+
+
+  document
+    .getElementById("breedStatus")
+    .textContent =
     "💕 Breeding berjaya! Telur sedang berkembang...";
 
-  let timer = setInterval(function() {
 
-    seconds--;
+  let timer =
+    setInterval(function() {
 
-    document.getElementById(
-      "breedStatus"
-    ).textContent =
-      "🥚 Telur menetas dalam " +
-      seconds +
-      " saat...";
+      seconds--;
 
-    if (seconds <= 0) {
 
-      clearInterval(timer);
+      document
+        .getElementById("breedStatus")
+        .textContent =
+        "🥚 Telur menetas dalam "
+        + seconds
+        + " saat...";
 
-      document.getElementById(
-        "egg"
-      ).textContent = "🐣";
 
-      document.getElementById(
-        "breedStatus"
-      ).textContent =
-        "🎉 Telur menetas! Anak ikan baru lahir! 🐠";
+      if (seconds <= 0) {
 
-      setTimeout(function() {
+        clearInterval(timer);
 
-        document.getElementById(
-          "egg"
-        ).textContent = "🐠";
 
-      }, 2000);
+        document
+          .getElementById("egg")
+          .textContent =
+          "🐣";
 
-      breeding = false;
 
-    }
+        document
+          .getElementById("breedStatus")
+          .textContent =
+          "🎉 Telur menetas! Anak ikan baru lahir! 🐠";
 
-  },1000);
+
+        setTimeout(function() {
+
+          document
+            .getElementById("egg")
+            .textContent =
+            "🐠";
+
+        }, 2000);
+
+
+        breeding = false;
+
+      }
+
+    }, 1000);
 
 }
 
 
-/* FISH MOVEMENT */
+/* =========================
+   IKAN BERGERAK
+========================= */
 
 let direction1 = 1;
+
 let direction2 = -1;
+
+let direction3 = 1;
+
 
 setInterval(function() {
 
@@ -586,34 +1127,66 @@ setInterval(function() {
   let f2 =
     document.getElementById("fish2");
 
+  let f3 =
+    document.getElementById("fish3");
+
+
   let x1 =
     parseFloat(f1.style.left);
 
   let x2 =
     parseFloat(f2.style.left);
 
-  x1 += direction1 * 0.5;
+  let x3 =
+    parseFloat(f3.style.left);
 
-  x2 += direction2 * 0.5;
 
-  if (x1 > 80 || x1 < 5) {
+  x1 += direction1 * 0.45;
+
+  x2 += direction2 * 0.35;
+
+  x3 += direction3 * 0.25;
+
+
+  if (x1 > 82 || x1 < 5) {
 
     direction1 *= -1;
 
   }
 
-  if (x2 > 80 || x2 < 5) {
+
+  if (x2 > 82 || x2 < 5) {
 
     direction2 *= -1;
 
   }
 
-  f1.style.left = x1 + "%";
 
-  f2.style.left = x2 + "%";
+  if (x3 > 82 || x3 < 5) {
 
-},100);
+    direction3 *= -1;
 
+  }
+
+
+  f1.style.left =
+    x1 + "%";
+
+
+  f2.style.left =
+    x2 + "%";
+
+
+  f3.style.left =
+    x3 + "%";
+
+
+}, 100);
+
+
+/* =========================
+   START GAME
+========================= */
 
 updateCoins();
 
