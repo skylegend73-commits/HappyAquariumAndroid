@@ -3,21 +3,22 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
-<title>Happy Aquarium 3D Guppy</title>
+<title>Happy Aquarium 3D</title>
 
 <style>
 *{
   box-sizing:border-box;
   margin:0;
   padding:0;
+  -webkit-tap-highlight-color:transparent;
 }
 
 html,body{
   width:100%;
-  min-height:100%;
+  height:100%;
   overflow:hidden;
-  background:#061d2c;
   font-family:Arial,sans-serif;
+  background:#001a2b;
 }
 
 #game{
@@ -26,440 +27,835 @@ html,body{
   height:100vh;
   overflow:hidden;
   background:
-    radial-gradient(ellipse at 50% 0%,rgba(255,255,255,.35),transparent 35%),
-    linear-gradient(#79dcf5 0%,#149ac9 42%,#075b91 100%);
+    radial-gradient(circle at 50% 12%,rgba(120,220,255,.38),transparent 28%),
+    linear-gradient(to bottom,#087ca9 0%,#075d87 35%,#034b70 70%,#012f4e 100%);
 }
 
-/* Cahaya air */
+/* ================= WATER LIGHT ================= */
+
 .light{
   position:absolute;
   top:-20%;
-  left:20%;
-  width:60%;
-  height:70%;
-  background:radial-gradient(
-    ellipse,
-    rgba(255,255,255,.38),
-    rgba(180,245,255,.12) 35%,
-    transparent 70%
-  );
-  transform:rotate(-8deg);
-  pointer-events:none;
-}
-
-/* Dasar aquarium */
-.sand{
-  position:absolute;
-  left:0;
-  right:0;
-  bottom:0;
-  height:18%;
-  background:
-    radial-gradient(circle at 10% 30%,#f2dba2 0 4px,transparent 5px),
-    radial-gradient(circle at 30% 70%,#a87942 0 3px,transparent 4px),
-    radial-gradient(circle at 55% 35%,#f5dfaa 0 4px,transparent 5px),
-    radial-gradient(circle at 80% 65%,#997044 0 3px,transparent 4px),
-    linear-gradient(#e6ca8a,#a8753e);
-}
-
-/* Tanaman */
-.plant{
-  position:absolute;
-  bottom:13%;
-  width:10px;
-  height:100px;
-  border-radius:100%;
+  width:18%;
+  height:150%;
+  opacity:.13;
   background:linear-gradient(
     90deg,
-    #075a3e,
-    #37b96a,
-    #08704c
+    transparent,
+    white,
+    transparent
   );
-  transform-origin:bottom;
-  filter:drop-shadow(2px 3px 2px rgba(0,0,0,.3));
+  transform:rotate(12deg);
+  animation:lightMove 7s infinite alternate ease-in-out;
 }
 
-.plant:before,
-.plant:after{
-  content:"";
-  position:absolute;
-  width:35px;
-  height:75px;
-  border-left:8px solid #31a960;
-  border-radius:70%;
+.l1{left:10%;animation-delay:0s}
+.l2{left:35%;animation-delay:2s}
+.l3{left:65%;animation-delay:1s}
+
+@keyframes lightMove{
+  from{transform:rotate(12deg) translateX(-40px)}
+  to{transform:rotate(12deg) translateX(70px)}
 }
 
-.plant:before{
-  left:-25px;
-  bottom:20px;
-  transform:rotate(35deg);
-}
+/* ================= WATER BUBBLES ================= */
 
-.plant:after{
-  right:-25px;
-  bottom:40px;
-  transform:rotate(-35deg);
-}
-
-/* Batu */
-.rock{
-  position:absolute;
-  bottom:12%;
-  width:65px;
-  height:32px;
-  border-radius:55% 45% 40% 50%;
-  background:
-    radial-gradient(circle at 30% 20%,#ddd,#888 45%,#444 100%);
-  box-shadow:
-    inset -8px -6px 10px rgba(0,0,0,.3),
-    0 5px 8px rgba(0,0,0,.3);
-}
-
-/* =========================
-   GUPPY
-========================= */
-
-.fish{
-  position:absolute;
-  width:180px;
-  height:115px;
-  animation:swim 12s linear infinite;
-  filter:drop-shadow(0 9px 5px rgba(0,30,50,.35));
-  z-index:5;
-}
-
-/* Badan guppy */
-.body{
-  position:absolute;
-  left:45px;
-  top:35px;
-  width:105px;
-  height:58px;
-  border-radius:
-    62% 48%
-    48% 62%;
-
-  background:
-    radial-gradient(
-      ellipse at 28% 20%,
-      rgba(255,255,255,.95) 0 5%,
-      rgba(255,255,255,.3) 9%,
-      transparent 20%
-    ),
-    radial-gradient(
-      ellipse at 60% 35%,
-      #61efff 0%,
-      #139bd7 25%,
-      #2759cf 52%,
-      #4721a4 75%,
-      #160b57 100%
-    );
-
-  border:2px solid rgba(10,30,100,.8);
-
-  box-shadow:
-    inset 8px 5px 13px rgba(255,255,255,.25),
-    inset -12px -8px 15px rgba(0,0,70,.5);
-}
-
-/* Sisik */
-.body:before{
-  content:"";
-  position:absolute;
-  inset:8px 15px 8px 15px;
-
-  background:
-    repeating-linear-gradient(
-      115deg,
-      transparent 0 7px,
-      rgba(255,255,255,.16) 8px,
-      transparent 10px
-    );
-
-  border-radius:50%;
-  opacity:.8;
-}
-
-/* Kilauan badan */
-.body:after{
-  content:"";
-  position:absolute;
-  width:55px;
-  height:14px;
-  left:18px;
-  top:8px;
-  border-radius:50%;
-  background:rgba(255,255,255,.5);
-  filter:blur(4px);
-  transform:rotate(-8deg);
-}
-
-/* Ekor besar */
-.tail{
-  position:absolute;
-  left:0;
-  top:15px;
-  width:72px;
-  height:88px;
-
-  background:
-    radial-gradient(
-      circle at 65% 45%,
-      rgba(255,255,255,.65),
-      transparent 13%
-    ),
-    linear-gradient(
-      145deg,
-      #24d8ff,
-      #345eea 32%,
-      #7a27d8 58%,
-      #e92375 78%,
-      #ff6a29
-    );
-
-  clip-path:polygon(
-    100% 50%,
-    78% 4%,
-    48% 17%,
-    10% 0%,
-    27% 42%,
-    0% 65%,
-    37% 72%,
-    14% 100%,
-    53% 84%,
-    78% 96%
-  );
-
-  filter:
-    drop-shadow(0 3px 2px rgba(0,0,0,.35));
-}
-
-/* Garisan ekor */
-.tail:after{
-  content:"";
-  position:absolute;
-  inset:8px;
-
-  background:
-    repeating-linear-gradient(
-      35deg,
-      transparent 0 8px,
-      rgba(255,255,255,.25) 9px 11px
-    );
-
-  opacity:.8;
-}
-
-/* Sirip dorsal */
-.dorsal{
-  position:absolute;
-  left:82px;
-  top:10px;
-  width:52px;
-  height:38px;
-
-  background:linear-gradient(
-    145deg,
-    rgba(80,240,255,.75),
-    rgba(130,55,220,.55),
-    rgba(255,50,120,.35)
-  );
-
-  clip-path:polygon(
-    0 100%,
-    35% 0,
-    100% 75%
-  );
-
-  filter:drop-shadow(1px 2px 1px rgba(0,0,0,.25));
-}
-
-/* Sirip bawah */
-.fin{
-  position:absolute;
-  left:83px;
-  top:78px;
-  width:45px;
-  height:32px;
-
-  background:linear-gradient(
-    145deg,
-    rgba(255,105,150,.65),
-    rgba(60,210,255,.55)
-  );
-
-  clip-path:polygon(
-    0 0,
-    100% 30%,
-    55% 100%
-  );
-}
-
-/* Mata */
-.eye{
-  position:absolute;
-  left:130px;
-  top:48px;
-
-  width:13px;
-  height:13px;
-
-  border-radius:50%;
-  background:#050505;
-
-  box-shadow:
-    0 0 0 3px rgba(255,255,255,.65),
-    inset 3px 2px 0 white;
-}
-
-/* Mulut */
-.mouth{
-  position:absolute;
-  left:145px;
-  top:63px;
-  width:11px;
-  height:5px;
-  border-bottom:2px solid #122;
-  border-radius:50%;
-}
-
-/* Bubbles */
 .bubble{
   position:absolute;
-  bottom:15%;
-  width:10px;
-  height:10px;
-  border:2px solid rgba(255,255,255,.65);
+  bottom:-30px;
   border-radius:50%;
-  background:rgba(255,255,255,.1);
-  animation:bubble 6s linear infinite;
+  border:1px solid rgba(255,255,255,.6);
+  background:rgba(255,255,255,.08);
+  animation:bubbleUp linear infinite;
 }
 
-@keyframes bubble{
+@keyframes bubbleUp{
   0%{
     transform:translateY(0) scale(.7);
-    opacity:.2;
+    opacity:0;
   }
-  30%{
-    opacity:.8;
-  }
+  15%{opacity:.8}
   100%{
-    transform:translateY(-70vh) scale(1.25);
+    transform:translateY(-110vh) scale(1.2);
     opacity:0;
   }
 }
 
-/* Renang */
-@keyframes swim{
-  0%{
-    transform:
-      translateX(-220px)
-      translateY(20px)
-      scale(.85)
-      rotate(-2deg);
-  }
+/* ================= TOP UI ================= */
 
-  25%{
-    transform:
-      translateX(20vw)
-      translateY(-20px)
-      scale(.95)
-      rotate(2deg);
-  }
-
-  50%{
-    transform:
-      translateX(50vw)
-      translateY(25px)
-      scale(1)
-      rotate(-2deg);
-  }
-
-  75%{
-    transform:
-      translateX(75vw)
-      translateY(-15px)
-      scale(1.05)
-      rotate(2deg);
-  }
-
-  100%{
-    transform:
-      translateX(110vw)
-      translateY(20px)
-      scale(.9)
-      rotate(-2deg);
-  }
+#topbar{
+  position:absolute;
+  z-index:50;
+  top:0;
+  left:0;
+  width:100%;
+  height:62px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:8px 12px;
+  background:linear-gradient(
+    rgba(0,30,55,.85),
+    rgba(0,70,105,.35)
+  );
+  border-bottom:1px solid rgba(255,255,255,.18);
 }
 
-/* UI */
-.topbar{
-  position:absolute;
-  top:12px;
-  left:12px;
-  right:12px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  z-index:20;
+.logo{
+  color:white;
+  font-size:20px;
+  font-weight:bold;
+  text-shadow:0 2px 4px #000;
 }
 
 .coins{
-  padding:9px 14px;
+  color:#ffe16a;
+  font-weight:bold;
+  background:rgba(0,0,0,.4);
+  border:1px solid rgba(255,255,255,.2);
   border-radius:20px;
-  background:rgba(0,30,55,.55);
-  color:white;
-  font-weight:bold;
-  backdrop-filter:blur(8px);
+  padding:8px 14px;
 }
 
-.title{
-  color:white;
-  font-weight:bold;
-  font-size:18px;
-  text-shadow:0 2px 4px #003;
-}
+/* ================= FLOOR ================= */
 
-.bottom{
+#sand{
   position:absolute;
-  bottom:15px;
+  z-index:5;
+  bottom:0;
+  left:-5%;
+  width:110%;
+  height:18%;
+  background:
+    radial-gradient(circle at 20% 30%,#e6c37b 0 3px,transparent 4px),
+    radial-gradient(circle at 60% 50%,#c9a866 0 2px,transparent 3px),
+    radial-gradient(circle at 80% 20%,#f1d48d 0 2px,transparent 3px),
+    linear-gradient(#d9bb76,#a87c3f);
+  box-shadow:0 -10px 25px rgba(0,0,0,.25);
+  border-radius:50% 50% 0 0;
+}
+
+/* ================= ROCKS ================= */
+
+.rock{
+  position:absolute;
+  z-index:8;
+  border-radius:50% 55% 45% 40%;
+  background:
+    radial-gradient(circle at 35% 25%,#888,#555 45%,#292929 100%);
+  box-shadow:
+    inset -8px -10px 12px rgba(0,0,0,.45),
+    inset 5px 4px 8px rgba(255,255,255,.18),
+    0 5px 8px rgba(0,0,0,.35);
+}
+
+.r1{
+  width:90px;
+  height:45px;
+  left:8%;
+  bottom:12%;
+}
+
+.r2{
+  width:65px;
+  height:34px;
+  right:10%;
+  bottom:14%;
+}
+
+.r3{
+  width:120px;
+  height:42px;
+  right:30%;
+  bottom:9%;
+}
+
+/* ================= PLANTS ================= */
+
+.plant{
+  position:absolute;
+  z-index:9;
+  bottom:10%;
+  width:80px;
+  height:180px;
+}
+
+.plant span{
+  position:absolute;
+  bottom:0;
+  width:14px;
+  height:160px;
+  border-radius:100% 0 100% 0;
+  background:linear-gradient(90deg,#064b25,#21a447,#063c20);
+  transform-origin:bottom;
+  animation:sway 3s infinite ease-in-out;
+}
+
+.plant span:nth-child(1){
+  left:35px;
+  transform:rotate(-10deg);
+}
+
+.plant span:nth-child(2){
+  left:48px;
+  height:135px;
+  transform:rotate(12deg);
+  animation-delay:.5s;
+}
+
+.plant span:nth-child(3){
+  left:20px;
+  height:115px;
+  transform:rotate(-25deg);
+  animation-delay:1s;
+}
+
+@keyframes sway{
+  0%,100%{transform:rotate(-8deg)}
+  50%{transform:rotate(10deg)}
+}
+
+.p1{left:2%}
+.p2{right:3%;transform:scaleX(-1)}
+
+/* ================================================= */
+/*                 REALISTIC CASTLE                  */
+/* ================================================= */
+
+#castle{
+  position:absolute;
+  z-index:12;
+  bottom:11%;
   left:50%;
+  width:330px;
+  height:225px;
+  transform:translateX(-50%);
+  filter:drop-shadow(0 13px 10px rgba(0,0,0,.45));
+}
+
+/* castle shadow */
+
+.castle-shadow{
+  position:absolute;
+  bottom:-8px;
+  left:5%;
+  width:90%;
+  height:30px;
+  border-radius:50%;
+  background:rgba(0,0,0,.45);
+  filter:blur(5px);
+}
+
+/* main wall */
+
+.castle-wall{
+  position:absolute;
+  left:62px;
+  bottom:0;
+  width:206px;
+  height:150px;
+
+  background:
+    repeating-linear-gradient(
+      0deg,
+      transparent 0 27px,
+      rgba(45,38,32,.5) 28px 30px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(255,255,255,.08) 0 38px,
+      transparent 39px 76px
+    ),
+    linear-gradient(
+      90deg,
+      #77716a,
+      #b0aaa0 30%,
+      #88827a 65%,
+      #59554f
+    );
+
+  border:3px solid #48443f;
+
+  box-shadow:
+    inset 10px 0 15px rgba(255,255,255,.13),
+    inset -15px 0 20px rgba(0,0,0,.3);
+}
+
+/* stone blocks */
+
+.castle-wall:before{
+  content:"";
+  position:absolute;
+  inset:0;
+
+  background:
+    repeating-linear-gradient(
+      90deg,
+      transparent 0 34px,
+      rgba(50,46,42,.35) 35px 37px,
+      transparent 38px 70px
+    );
+
+  opacity:.65;
+}
+
+/* central top */
+
+.wall-top{
+  position:absolute;
+  top:-24px;
+  left:-4px;
+  width:214px;
+  height:27px;
+
+  background:
+    linear-gradient(#b8b1a8,#6d6861);
+
+  border:3px solid #48443e;
+}
+
+.wall-top:before{
+  content:"";
+  position:absolute;
+  left:4px;
+  top:-20px;
+  width:24px;
+  height:20px;
+  background:#77716a;
+  box-shadow:
+    32px 0 #77716a,
+    64px 0 #77716a,
+    96px 0 #77716a,
+    128px 0 #77716a,
+    160px 0 #77716a;
+}
+
+/* ================= TOWERS ================= */
+
+.tower{
+  position:absolute;
+  bottom:0;
+  width:78px;
+  height:205px;
+
+  background:
+    repeating-linear-gradient(
+      0deg,
+      transparent 0 24px,
+      rgba(45,40,35,.55) 25px 27px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(255,255,255,.08) 0 32px,
+      transparent 33px 65px
+    ),
+    linear-gradient(
+      90deg,
+      #66615b,
+      #a49d93 35%,
+      #77716a 70%,
+      #4f4b46
+    );
+
+  border:3px solid #403d38;
+
+  box-shadow:
+    inset 8px 0 12px rgba(255,255,255,.12),
+    inset -10px 0 15px rgba(0,0,0,.35);
+}
+
+.tower.left{
+  left:10px;
+}
+
+.tower.right{
+  right:10px;
+}
+
+/* tower roof */
+
+.roof{
+  position:absolute;
+  left:-8px;
+  top:-32px;
+  width:88px;
+  height:34px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #55514c,
+      #9b948b 45%,
+      #45423e
+    );
+
+  clip-path:polygon(
+    0 100%,
+    50% 0,
+    100% 100%
+  );
+
+  border-bottom:3px solid #36332f;
+}
+
+/* battlements */
+
+.battlements{
+  position:absolute;
+  top:-14px;
+  left:-3px;
+  width:78px;
+  height:20px;
+  background:
+    linear-gradient(
+      90deg,
+      #77716a 0 17%,
+      transparent 17% 25%,
+      #77716a 25% 42%,
+      transparent 42% 50%,
+      #77716a 50% 67%,
+      transparent 67% 75%,
+      #77716a 75% 92%,
+      transparent 92%
+    );
+  border-top:3px solid #44403b;
+}
+
+/* tower windows */
+
+.tower-window{
+  position:absolute;
+  left:25px;
+  width:25px;
+  height:43px;
+
+  background:
+    radial-gradient(
+      ellipse at center,
+      #061b26,
+      #01090e 70%
+    );
+
+  border-radius:50% 50% 8px 8px;
+  border:4px solid #49443e;
+
+  box-shadow:
+    inset 0 0 10px #000,
+    0 2px 2px rgba(255,255,255,.1);
+}
+
+.tw1{top:48px}
+.tw2{top:112px}
+
+/* window blue reflection */
+
+.tower-window:after{
+  content:"";
+  position:absolute;
+  width:5px;
+  height:25px;
+  top:5px;
+  left:5px;
+  border-radius:50%;
+  background:rgba(100,200,220,.3);
+  transform:rotate(15deg);
+}
+
+/* ================= CASTLE GATE ================= */
+
+.gate{
+  position:absolute;
+  z-index:5;
+  left:123px;
+  bottom:0;
+  width:84px;
+  height:94px;
+
+  background:
+    radial-gradient(
+      ellipse at center top,
+      #17232a,
+      #02080b 70%
+    );
+
+  border:5px solid #47423c;
+  border-bottom:0;
+
+  border-radius:48px 48px 0 0;
+
+  box-shadow:
+    inset 0 0 18px #000,
+    0 0 4px rgba(255,255,255,.1);
+}
+
+/* gate bars */
+
+.gate:before{
+  content:"";
+  position:absolute;
+  inset:7px;
+
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(170,150,105,.45) 0 4px,
+      transparent 4px 16px
+    );
+
+  border-radius:40px 40px 0 0;
+}
+
+/* gate arch highlight */
+
+.gate:after{
+  content:"";
+  position:absolute;
+  top:-5px;
+  left:3px;
+  width:68px;
+  height:30px;
+  border-top:3px solid rgba(255,255,255,.18);
+  border-radius:50%;
+}
+
+/* ================= CASTLE MOSS ================= */
+
+.moss{
+  position:absolute;
+  z-index:20;
+  width:45px;
+  height:12px;
+  border-radius:70% 30% 60% 40%;
+  background:linear-gradient(#437f42,#174a25);
+  opacity:.8;
+  filter:blur(.2px);
+}
+
+.m1{
+  left:72px;
+  bottom:24px;
+  transform:rotate(-8deg);
+}
+
+.m2{
+  right:75px;
+  bottom:54px;
+  transform:rotate(12deg);
+}
+
+.m3{
+  left:110px;
+  bottom:2px;
+  width:55px;
+  transform:rotate(5deg);
+}
+
+/* ================= CORAL ================= */
+
+.coral{
+  position:absolute;
+  z-index:10;
+  bottom:12%;
+  width:60px;
+  height:80px;
+}
+
+.coral span{
+  position:absolute;
+  bottom:0;
+  width:9px;
+  border-radius:8px;
+  background:linear-gradient(#e96969,#8d2727);
+}
+
+.coral span:nth-child(1){
+  height:60px;
+  left:10px;
+  transform:rotate(-15deg);
+}
+
+.coral span:nth-child(2){
+  height:75px;
+  left:25px;
+}
+
+.coral span:nth-child(3){
+  height:50px;
+  left:40px;
+  transform:rotate(15deg);
+}
+
+.c1{left:15%}
+.c2{right:16%;transform:scale(.8)}
+
+/* ================================================= */
+/*                    GUPPY FISH                     */
+/* ================================================= */
+
+.fish{
+  position:absolute;
+  z-index:25;
+  width:115px;
+  height:65px;
+  animation:swimTank 12s infinite ease-in-out;
+}
+
+.fish.f2{
+  width:95px;
+  height:55px;
+  animation-duration:16s;
+  animation-delay:-5s;
+}
+
+.fish.f3{
+  width:125px;
+  height:70px;
+  animation-duration:19s;
+  animation-delay:-10s;
+}
+
+/* fish body */
+
+.body{
+  position:absolute;
+  left:22px;
+  top:16px;
+  width:63%;
+  height:58%;
+
+  border-radius:55% 48% 50% 55%;
+
+  background:
+    radial-gradient(
+      circle at 28% 25%,
+      rgba(255,255,255,.8),
+      transparent 13%
+    ),
+    repeating-linear-gradient(
+      160deg,
+      rgba(255,255,255,.15) 0 4px,
+      rgba(0,0,0,.06) 4px 8px
+    ),
+    linear-gradient(
+      145deg,
+      #ffdc55,
+      #ff8c27 42%,
+      #e73725 75%,
+      #8d1b21
+    );
+
+  box-shadow:
+    inset 7px 5px 8px rgba(255,255,255,.35),
+    inset -8px -7px 10px rgba(0,0,0,.3),
+    0 4px 8px rgba(0,0,0,.25);
+}
+
+/* tail */
+
+.tail{
+  position:absolute;
+  left:0;
+  top:8px;
+  width:58px;
+  height:52px;
+
+  background:
+    radial-gradient(
+      ellipse at 65% 50%,
+      rgba(255,255,255,.5),
+      transparent 30%
+    ),
+    linear-gradient(
+      145deg,
+      #ffec62,
+      #ff6a35 50%,
+      #d51f35
+    );
+
+  clip-path:polygon(
+    100% 50%,
+    0 0,
+    18% 50%,
+    0 100%
+  );
+
+  filter:drop-shadow(0 3px 3px rgba(0,0,0,.3));
+}
+
+/* eye */
+
+.eye{
+  position:absolute;
+  z-index:4;
+  right:27px;
+  top:22px;
+  width:11px;
+  height:11px;
+  background:white;
+  border-radius:50%;
+  box-shadow:0 0 3px #000;
+}
+
+.eye:after{
+  content:"";
+  position:absolute;
+  left:3px;
+  top:3px;
+  width:5px;
+  height:5px;
+  background:#050505;
+  border-radius:50%;
+}
+
+/* fins */
+
+.fin-top{
+  position:absolute;
+  left:47px;
+  top:5px;
+  width:35px;
+  height:25px;
+  background:rgba(255,180,90,.65);
+  clip-path:polygon(0 100%,45% 0,100% 100%);
+  transform:rotate(-15deg);
+}
+
+.fin-bottom{
+  position:absolute;
+  left:55px;
+  top:40px;
+  width:30px;
+  height:22px;
+  background:rgba(255,150,80,.55);
+  clip-path:polygon(0 0,100% 100%,20% 80%);
+}
+
+@keyframes swimTank{
+  0%{
+    left:4%;
+    transform:translateY(0) scaleX(1);
+  }
+
+  8%{
+    transform:translateY(-8px) scaleX(1);
+  }
+
+  20%{
+    transform:translateY(8px) scaleX(1);
+  }
+
+  43%{
+    left:70%;
+    transform:translateY(-5px) scaleX(1);
+  }
+
+  50%{
+    left:74%;
+    transform:translateY(0) scaleX(-1);
+  }
+
+  55%{
+    transform:translateY(-8px) scaleX(-1);
+  }
+
+  90%{
+    left:7%;
+    transform:translateY(7px) scaleX(-1);
+  }
+
+  100%{
+    left:4%;
+    transform:translateY(0) scaleX(1);
+  }
+}
+
+/* ================= BOTTOM BUTTONS ================= */
+
+#buttons{
+  position:absolute;
+  z-index:60;
+  left:50%;
+  bottom:10px;
   transform:translateX(-50%);
   display:flex;
-  gap:8px;
-  z-index:20;
+  gap:7px;
+  width:96%;
+  max-width:500px;
 }
 
-button{
+.btn{
+  flex:1;
   border:0;
-  min-width:70px;
-  padding:11px 13px;
-  border-radius:15px;
+  border-radius:13px;
+  padding:11px 5px;
   color:white;
-  background:rgba(0,45,75,.75);
+  font-size:12px;
   font-weight:bold;
-  box-shadow:0 4px 8px rgba(0,0,0,.25);
+
+  background:
+    linear-gradient(
+      rgba(255,255,255,.25),
+      rgba(255,255,255,.03)
+    ),
+    rgba(0,45,70,.85);
+
+  border:1px solid rgba(255,255,255,.3);
+
+  box-shadow:
+    0 4px 8px rgba(0,0,0,.35),
+    inset 0 1px rgba(255,255,255,.25);
 }
 
-button:active{
+.btn:active{
   transform:scale(.94);
 }
 
-@media(max-width:500px){
-  .fish{
-    transform:scale(.75);
+/* ================= RESPONSIVE ================= */
+
+@media(max-width:420px){
+
+  #castle{
+    width:290px;
+    height:200px;
   }
 
-  .title{
-    font-size:15px;
+  .castle-wall{
+    left:55px;
+    width:180px;
+    height:135px;
   }
 
-  button{
-    min-width:62px;
-    padding:10px 8px;
-    font-size:12px;
+  .wall-top{
+    width:188px;
+  }
+
+  .tower{
+    width:70px;
+    height:185px;
+  }
+
+  .tower.left{
+    left:4px;
+  }
+
+  .tower.right{
+    right:4px;
+  }
+
+  .roof{
+    width:80px;
+  }
+
+  .gate{
+    left:107px;
+    width:76px;
+  }
+
+  .logo{
+    font-size:17px;
   }
 }
+
 </style>
 </head>
 
@@ -467,136 +863,170 @@ button:active{
 
 <div id="game">
 
-  <div class="light"></div>
+  <!-- LIGHT RAYS -->
+  <div class="light l1"></div>
+  <div class="light l2"></div>
+  <div class="light l3"></div>
 
-  <div class="topbar">
-    <div class="title">🐠 Happy Aquarium 3D</div>
+  <!-- BUBBLES -->
+  <div class="bubble" style="left:8%;width:9px;height:9px;animation-duration:8s"></div>
+  <div class="bubble" style="left:17%;width:6px;height:6px;animation-duration:11s"></div>
+  <div class="bubble" style="left:31%;width:12px;height:12px;animation-duration:9s"></div>
+  <div class="bubble" style="left:48%;width:7px;height:7px;animation-duration:13s"></div>
+  <div class="bubble" style="left:63%;width:10px;height:10px;animation-duration:10s"></div>
+  <div class="bubble" style="left:79%;width:6px;height:6px;animation-duration:12s"></div>
+  <div class="bubble" style="left:91%;width:11px;height:11px;animation-duration:8s"></div>
+
+  <!-- TOP -->
+  <div id="topbar">
+    <div class="logo">🐠 Happy Aquarium 3D</div>
     <div class="coins">🪙 1,250</div>
   </div>
 
-  <!-- GUPPY 1 -->
-  <div class="fish" style="top:30%;animation-delay:-2s;">
+  <!-- PLANTS -->
+  <div class="plant p1">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+
+  <div class="plant p2">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+
+  <!-- CORALS -->
+  <div class="coral c1">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+
+  <div class="coral c2">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+
+  <!-- ROCKS -->
+  <div class="rock r1"></div>
+  <div class="rock r2"></div>
+  <div class="rock r3"></div>
+
+  <!-- ================================================= -->
+  <!-- REALISTIC CASTLE -->
+  <!-- ================================================= -->
+
+  <div id="castle">
+
+    <div class="castle-shadow"></div>
+
+    <!-- MAIN WALL -->
+    <div class="castle-wall">
+      <div class="wall-top"></div>
+    </div>
+
+    <!-- LEFT TOWER -->
+    <div class="tower left">
+
+      <div class="roof"></div>
+      <div class="battlements"></div>
+
+      <div class="tower-window tw1"></div>
+      <div class="tower-window tw2"></div>
+
+    </div>
+
+    <!-- RIGHT TOWER -->
+    <div class="tower right">
+
+      <div class="roof"></div>
+      <div class="battlements"></div>
+
+      <div class="tower-window tw1"></div>
+      <div class="tower-window tw2"></div>
+
+    </div>
+
+    <!-- MAIN GATE -->
+    <div class="gate"></div>
+
+    <!-- MOSS -->
+    <div class="moss m1"></div>
+    <div class="moss m2"></div>
+    <div class="moss m3"></div>
+
+  </div>
+
+  <!-- ================= FISH ================= -->
+
+  <div class="fish f1" style="top:28%">
     <div class="tail"></div>
-    <div class="dorsal"></div>
     <div class="body"></div>
-    <div class="fin"></div>
+    <div class="fin-top"></div>
+    <div class="fin-bottom"></div>
     <div class="eye"></div>
-    <div class="mouth"></div>
   </div>
 
-  <!-- GUPPY 2 -->
-  <div class="fish"
-       style="
-       top:52%;
-       left:-100px;
-       transform:scale(.72);
-       animation-duration:15s;
-       animation-delay:-7s;
-       ">
-    <div class="tail"
-         style="
-         background:
-         linear-gradient(
-         145deg,
-         #fff34b,
-         #ffb52b 35%,
-         #ff5a27 65%,
-         #d51c45
-         );
-         ">
-    </div>
-
-    <div class="dorsal"></div>
-
-    <div class="body"
-         style="
-         background:
-         radial-gradient(
-         ellipse at 28% 20%,
-         white 0 5%,
-         transparent 18%
-         ),
-         radial-gradient(
-         ellipse at 60% 35%,
-         #fff58b,
-         #e9c52d 35%,
-         #e67b1d 65%,
-         #8d280d
-         );
-         ">
-    </div>
-
-    <div class="fin"></div>
+  <div class="fish f2" style="top:48%">
+    <div class="tail"></div>
+    <div class="body"></div>
+    <div class="fin-top"></div>
+    <div class="fin-bottom"></div>
     <div class="eye"></div>
-    <div class="mouth"></div>
   </div>
 
-  <!-- Tanaman -->
-  <div class="plant"
-       style="left:8%;height:105px;transform:rotate(-7deg)">
+  <div class="fish f3" style="top:63%">
+    <div class="tail"></div>
+    <div class="body"></div>
+    <div class="fin-top"></div>
+    <div class="fin-bottom"></div>
+    <div class="eye"></div>
   </div>
 
-  <div class="plant"
-       style="left:16%;height:75px;transform:rotate(10deg)">
-  </div>
+  <!-- SAND -->
+  <div id="sand"></div>
 
-  <div class="plant"
-       style="left:82%;height:115px;transform:rotate(8deg)">
-  </div>
+  <!-- BUTTONS -->
+  <div id="buttons">
 
-  <div class="plant"
-       style="left:88%;height:80px;transform:rotate(-10deg)">
-  </div>
+    <button class="btn" onclick="feedFish()">
+      🍖 Makan
+    </button>
 
-  <!-- Batu -->
-  <div class="rock" style="left:28%;"></div>
-  <div class="rock" style="left:67%;width:80px;"></div>
+    <button class="btn" onclick="breedFish()">
+      ❤️ Breed
+    </button>
 
-  <!-- Pasir -->
-  <div class="sand"></div>
+    <button class="btn" onclick="cleanTank()">
+      🧽 Bersih
+    </button>
 
-  <!-- Bubble -->
-  <div class="bubble"
-       style="left:20%;animation-delay:-1s">
-  </div>
+    <button class="btn" onclick="shop()">
+      🛒 Kedai
+    </button>
 
-  <div class="bubble"
-       style="left:25%;width:7px;height:7px;animation-delay:-3s">
-  </div>
-
-  <div class="bubble"
-       style="left:72%;width:15px;height:15px;animation-delay:-2s">
-  </div>
-
-  <div class="bubble"
-       style="left:78%;width:7px;height:7px;animation-delay:-4s">
-  </div>
-
-  <div class="bottom">
-    <button onclick="feed()">🍤 Makan</button>
-    <button onclick="breed()">❤️ Breed</button>
-    <button onclick="clean()">✨ Bersih</button>
-    <button onclick="shop()">🛒 Kedai</button>
   </div>
 
 </div>
 
 <script>
 
-function feed(){
-  alert("🐠 Guppy sedang makan!");
+function feedFish(){
+  alert("🐟 Ikan sudah makan!");
 }
 
-function breed(){
-  alert("❤️ Pilih 2 guppy untuk breeding!");
+function breedFish(){
+  alert("❤️ Sistem breeding akan dibuka!");
 }
 
-function clean(){
-  alert("✨ Aquarium sudah bersih!");
+function cleanTank(){
+  alert("🧽 Aquarium sudah bersih!");
 }
 
 function shop(){
-  alert("🛒 Kedai aquarium akan dibuka!");
+  alert("🛒 Kedai aquarium dibuka!");
 }
 
 </script>
