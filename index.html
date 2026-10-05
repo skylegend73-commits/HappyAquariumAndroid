@@ -2,325 +2,500 @@
 <html lang="ms">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0,
-      maximum-scale=1.0,user-scalable=no">
-
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>Happy Aquarium 3D</title>
 
 <style>
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
+
 html,body{
-    margin:0;
-    width:100%;
-    height:100%;
-    overflow:hidden;
-    background:#071d2b;
-    font-family:Arial,sans-serif;
+  margin:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  background:#06131d;
+  font-family:Arial,sans-serif;
+}
+
+body{
+  touch-action:none;
 }
 
 #game{
-    position:fixed;
-    inset:0;
+  position:fixed;
+  inset:0;
+  overflow:hidden;
 }
 
 canvas{
-    display:block;
-    width:100%;
-    height:100%;
-    touch-action:none;
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
 }
-
-/* TOP UI */
 
 #top{
-    position:fixed;
-    top:10px;
-    left:10px;
-    right:10px;
-    z-index:20;
-
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-
-    pointer-events:none;
+  position:absolute;
+  top:10px;
+  left:10px;
+  right:10px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  z-index:10;
+  pointer-events:none;
 }
 
-.title{
-    color:white;
-    background:rgba(0,35,55,.72);
-    padding:9px 13px;
-    border-radius:14px;
-    backdrop-filter:blur(8px);
-    box-shadow:0 3px 12px #0005;
+.logo,
+.money{
+  background:rgba(0,25,42,.78);
+  border:1px solid rgba(255,255,255,.25);
+  color:white;
+  border-radius:18px;
+  padding:9px 13px;
+  box-shadow:0 5px 15px rgba(0,0,0,.35);
+  font-weight:bold;
 }
 
-.title b{
-    font-size:18px;
+#notice{
+  position:absolute;
+  top:72px;
+  left:50%;
+  transform:translateX(-50%);
+  background:rgba(0,20,30,.85);
+  color:#fff;
+  padding:9px 16px;
+  border-radius:20px;
+  opacity:0;
+  transition:.25s;
+  z-index:20;
+  white-space:nowrap;
+  pointer-events:none;
 }
 
-.title small{
-    display:block;
-    margin-top:2px;
-    opacity:.8;
+#notice.show{
+  opacity:1;
 }
 
-.coins{
-    background:#ffe36a;
-    color:#573c00;
-    padding:10px 14px;
-    border-radius:22px;
-    font-weight:bold;
-    box-shadow:0 3px 10px #0004;
+#buttons{
+  position:absolute;
+  bottom:12px;
+  left:5px;
+  right:5px;
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:7px;
+  z-index:15;
 }
 
-/* BOTTOM UI */
-
-#controls{
-    position:fixed;
-    left:10px;
-    right:10px;
-    bottom:10px;
-    z-index:20;
-
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:7px;
+button{
+  border:0;
+  border-radius:15px;
+  color:white;
+  font-weight:bold;
+  padding:11px 13px;
+  font-size:13px;
+  background:linear-gradient(#1ba7df,#076b9d);
+  box-shadow:0 4px 0 #034968,0 6px 14px rgba(0,0,0,.35);
 }
 
-.gameBtn{
-    border:0;
-    min-height:48px;
-    border-radius:14px;
-
-    background:rgba(0,55,80,.86);
-    color:white;
-
-    font-weight:bold;
-    font-size:13px;
-
-    box-shadow:0 3px 10px #0005;
+button:active{
+  transform:translateY(3px);
+  box-shadow:0 1px 0 #034968;
 }
 
-.gameBtn:active{
-    transform:scale(.94);
+#panel{
+  display:none;
+  position:absolute;
+  z-index:30;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  width:min(360px,92vw);
+  max-height:78vh;
+  overflow:auto;
+  padding:18px;
+  border-radius:22px;
+  background:rgba(4,20,31,.97);
+  border:1px solid rgba(255,255,255,.25);
+  color:white;
+  box-shadow:0 20px 60px rgba(0,0,0,.65);
 }
 
-#message{
-    position:fixed;
-    left:50%;
-    bottom:72px;
-    transform:translateX(-50%);
-
-    z-index:20;
-
-    width:max-content;
-    max-width:90%;
-
-    padding:9px 14px;
-
-    background:rgba(255,255,255,.9);
-    color:#173744;
-
-    border-radius:20px;
-
-    font-size:13px;
-    text-align:center;
-
-    box-shadow:0 3px 12px #0004;
+#panel h2{
+  text-align:center;
+  margin:0 0 14px;
 }
 
-/* BREEDING */
-
-#breeding{
-    display:none;
-
-    position:fixed;
-    inset:0;
-
-    z-index:50;
-
-    background:rgba(0,20,30,.82);
-
-    padding:15px;
+.item{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:10px;
+  margin:7px 0;
+  border-radius:14px;
+  background:rgba(255,255,255,.07);
 }
 
-.breedBox{
-    max-width:500px;
-    margin:50px auto 0;
-
-    background:white;
-    border-radius:20px;
-
-    padding:18px;
-
-    max-height:80vh;
-    overflow:auto;
+.item button{
+  padding:8px 10px;
 }
 
-.breedBox h2{
-    margin-top:0;
+.close{
+  width:100%;
+  margin-top:12px;
+  background:linear-gradient(#777,#444);
+  box-shadow:0 4px 0 #222;
 }
 
-.breedGrid{
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:8px;
-}
-
-.breedChoice{
-    border:3px solid #cde6ed;
-    background:#effaff;
-    border-radius:13px;
-    padding:12px;
-    font-size:15px;
-}
-
-.breedChoice.selected{
-    border-color:#ff6ca8;
-    background:#ffe5ef;
-}
-
-.closeBtn{
-    width:100%;
-    margin-top:12px;
-    min-height:45px;
-    border:0;
-    border-radius:12px;
-    background:#168db0;
-    color:white;
-    font-weight:bold;
-}
-
-/* MOBILE */
-
-@media(max-width:500px){
-
-    #controls{
-        grid-template-columns:repeat(4,1fr);
-    }
-
-    .gameBtn{
-        font-size:11px;
-    }
-
-    .title b{
-        font-size:15px;
-    }
-
+.small{
+  opacity:.7;
+  font-size:12px;
+  margin-top:3px;
 }
 </style>
 </head>
 
 <body>
 
-<div id="game"></div>
+<div id="game">
 
-
-<!-- TOP -->
+<canvas id="canvas"></canvas>
 
 <div id="top">
+  <div class="logo">🐠 HAPPY AQUARIUM</div>
+  <div class="money">🪙 <span id="coins">100</span></div>
+</div>
 
-    <div class="title">
+<div id="notice"></div>
 
-        <b>🐠 Happy Aquarium 3D</b>
+<div id="buttons">
+  <button onclick="feed()">🍤 FEED</button>
+  <button onclick="shop()">🐟 SHOP</button>
+  <button onclick="breeding()">🥚 BREED</button>
+  <button onclick="clean()">🧽 CLEAN</button>
+  <button onclick="decorShop()">🏰 DECOR</button>
+</div>
 
-        <small>My Aquarium</small>
-
-    </div>
-
-    <div class="coins">
-
-        🪙 <span id="coins">100</span>
-
-    </div>
+<div id="panel"></div>
 
 </div>
 
+<script>
+"use strict";
 
-<!-- MESSAGE -->
+/* =========================================================
+   HAPPY AQUARIUM 3D STYLE
+   SINGLE FILE
+   NO THREE.JS
+   NO CDN
+   NO EXTERNAL ASSET
+========================================================= */
 
-<div id="message">
-    Selamat datang ke aquarium 3D!
-</div>
+const canvas=document.getElementById("canvas");
+const ctx=canvas.getContext("2d");
+
+let W=window.innerWidth;
+let H=window.innerHeight;
+let DPR=Math.min(window.devicePixelRatio||1,2);
+
+let coins=100;
+let cleanliness=100;
+let frame=0;
+
+let fishes=[];
+let turtles=[];
+let plants=[];
+let rocks=[];
+let bubbles=[];
+let foods=[];
+let eggs=[];
+let decorations=[];
+
+let cameraX=0;
+let dragging=false;
+let lastX=0;
 
 
-<!-- CONTROLS -->
+/* =========================================================
+   BASIC
+========================================================= */
 
-<div id="controls">
+function rand(a,b){
+  return Math.random()*(b-a)+a;
+}
 
-    <button class="gameBtn"
-            onclick="feedFish()">
-        🍤 FEED
-    </button>
+function clamp(v,a,b){
+  return Math.max(a,Math.min(b,v));
+}
 
-    <button class="gameBtn"
-            onclick="buyFish()">
-        🐟 BUY
-    </button>
+function pick(a){
+  return a[Math.floor(Math.random()*a.length)];
+}
 
-    <button class="gameBtn"
-            onclick="openBreeding()">
-        💕 BREED
-    </button>
+function money(){
+  document.getElementById("coins").textContent=coins;
+}
 
-    <button class="gameBtn"
-            onclick="cleanTank()">
-        🧽 CLEAN
-    </button>
+function message(t){
 
-</div>
+  const n=document.getElementById("notice");
+
+  n.textContent=t;
+  n.classList.add("show");
+
+  clearTimeout(message.timer);
+
+  message.timer=setTimeout(()=>{
+    n.classList.remove("show");
+  },1800);
+}
+
+function spend(n){
+
+  if(coins<n){
+    message("❌ Coin tak cukup");
+    return false;
+  }
+
+  coins-=n;
+  money();
+
+  return true;
+}
 
 
-<!-- BREEDING -->
+/* =========================================================
+   RESIZE
+========================================================= */
 
-<div id="breeding">
+function resize(){
 
-    <div class="breedBox">
+  W=window.innerWidth;
+  H=window.innerHeight;
 
-        <h2>💕 Breeding Centre</h2>
+  DPR=Math.min(window.devicePixelRatio||1,2);
 
-        <p>
-            Pilih ikan jantan dan betina.
-        </p>
+  canvas.width=W*DPR;
+  canvas.height=H*DPR;
 
-        <div class="breedGrid">
+  canvas.style.width=W+"px";
+  canvas.style.height=H+"px";
 
-            <button
-                class="breedChoice"
-                onclick="chooseMale(this)">
-                🐠 Clownfish<br>
-                ♂ Jantan
-            </button>
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+}
 
-            <button
-                class="breedChoice"
-                onclick="chooseFemale(this)">
-                🐟 Blue Tang<br>
-                ♀ Betina
-            </button>
+window.addEventListener("resize",resize);
 
-            <button
-                class="breedChoice"
-                onclick="chooseMale(this)">
-                🐡 Puffer<br>
-                ♂ Jantan
-            </button>
 
-            <button
-                class="breedChoice"
-                onclick="chooseFemale(this)">
-                🐠 Goldfish<br>
-                ♀ Betina
-            </button>
+/* =========================================================
+   CREATE FISH
+========================================================= */
 
-        </div>
+function fish(type,x,y,dir){
 
-        <p id="breedText">
-            Belum pilih ikan.
-        </p>
+  return {
+    type:type,
+    x:x,
+    y:y,
+    z:rand(.1,.9),
+    dir:dir,
+    size:
+      type==="baby" ? .48 :
+      type==="puffer" ? .85 :
+      type==="gold" ? .9 : 1,
+    speed:rand(.00045,.0011),
+    phase:rand(0,100),
+    energy:100
+  };
+}
 
-        <button
-            class="closeBtn"
-            onclick="startBreeding()">
-            💕 MULA BREEDING — 10
+
+/* =========================================================
+   CREATE TURTLE
+========================================================= */
+
+function turtle(x,y){
+
+  return {
+    x:x,
+    y:y,
+    dir:Math.random()<.5?1:-1,
+    speed:.00025,
+    phase:rand(0,50)
+  };
+}
+
+
+/* =========================================================
+   WORLD
+========================================================= */
+
+function createWorld(){
+
+  fishes=[];
+  turtles=[];
+  plants=[];
+  rocks=[];
+  bubbles=[];
+  decorations=[];
+
+  fishes.push(
+    fish("clown",.22,.42,1),
+    fish("tang",.52,.54,-1),
+    fish("gold",.73,.36,1),
+    fish("puffer",.37,.67,1),
+    fish("clown",.80,.62,-1)
+  );
+
+  turtles.push(
+    turtle(.18,.73),
+    turtle(.82,.75)
+  );
+
+  for(let i=0;i<18;i++){
+
+    plants.push({
+      x:rand(.08,.92),
+      height:rand(.12,.28),
+      width:rand(5,14),
+      phase:rand(0,10),
+      speed:rand(.7,1.3),
+      type:Math.floor(rand(0,3))
+    });
+  }
+
+  for(let i=0;i<16;i++){
+
+    rocks.push({
+      x:rand(.07,.93),
+      y:rand(.84,.90),
+      size:rand(12,34),
+      rot:rand(0,Math.PI)
+    });
+  }
+
+  for(let i=0;i<40;i++){
+
+    bubbles.push({
+      x:rand(.08,.92),
+      y:rand(.18,.88),
+      r:rand(1,4),
+      speed:rand(.00008,.00025),
+      phase:rand(0,10)
+    });
+  }
+
+  decorations=[
+    {
+      type:"castle",
+      x:.21,
+      y:.80
+    },
+    {
+      type:"chest",
+      x:.72,
+      y:.81
+    }
+  ];
+}
+
+
+/* =========================================================
+   3D PROJECTION
+========================================================= */
+
+function project(x,y,z){
+
+  const scale=.78+z*.38;
+
+  return {
+    x:
+      W*.06+
+      x*W*.88+
+      cameraX+
+      (x-.5)*z*18,
+
+    y:
+      H*.13+
+      y*H*.72-
+      z*22,
+
+    scale:scale
+  };
+}
+
+
+/* =========================================================
+   BACKGROUND
+========================================================= */
+
+function background(){
+
+  const top=H*.11;
+  const bottom=H*.92;
+
+  const g=ctx.createLinearGradient(0,top,0,bottom);
+
+  g.addColorStop(0,"#5cdbff");
+  g.addColorStop(.25,"#169dcc");
+  g.addColorStop(.60,"#08729e");
+  g.addColorStop(1,"#034566");
+
+  ctx.fillStyle=g;
+  ctx.fillRect(0,0,W,H);
+
+  /* sunlight */
+
+  ctx.save();
+
+  ctx.globalAlpha=.035;
+
+  for(let i=0;i<8;i++){
+
+    const x=W*(i*.14);
+
+    ctx.beginPath();
+    ctx.moveTo(x,top);
+    ctx.lineTo(x+W*.20,bottom);
+    ctx.lineTo(x+W*.27,bottom);
+    ctx.closePath();
+
+    ctx.fillStyle="#fff";
+    ctx.fill();
+  }
+
+  ctx.restore();
+
+  /* glow */
+
+  const glow=ctx.createRadialGradient(
+    W*.5,H*.08,1,
+    W*.5,H*.2,W*.7
+  );
+
+  glow.addColorStop(0,"rgba(255,255,255,.17)");
+  glow.addColorStop(1,"rgba(255,255,255,0)");
+
+  ctx.fillStyle=glow;
+  ctx.fillRect(0,0,W,H);
+}
+
+
+/* =========================================================
+   SAND
+========================================================= */
+
+function sand(){
+
+  const y=H*.82;
+
+  const g=ctx.createLinearGradient(0,y,0,H);
+
+  g.addColorStop(0,"#edd18b");
+  g.addColorStop(.45,"#cba664");
+  g.addColorStop(1,"#8c6536");
