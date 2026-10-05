@@ -3,485 +3,252 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Happy Aquarium Mini</title>
+<title>Ocean Home Aquarium</title>
 
 <style>
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;width:100%;height:100%;overflow:hidden;font-family:Arial,sans-serif;background:#031b2b;color:#fff}
-button{font-family:inherit}
+*{box-sizing:border-box}
+html,body{
+ margin:0;width:100%;height:100%;overflow:hidden;
+ font-family:Arial,sans-serif;background:#08213b;color:white;
+}
+button{border:0;cursor:pointer;font-weight:bold}
 
 #game{
-  position:relative;
-  width:100vw;
-  height:100vh;
-  overflow:hidden;
-  background:
-    radial-gradient(circle at 50% 10%,rgba(130,230,255,.35),transparent 28%),
-    linear-gradient(#087ea9 0%,#075f88 40%,#03486b 72%,#022d49 100%);
-}
-
-/* WATER */
-.light{
-  position:absolute;
-  top:-30%;
-  width:18%;
-  height:150%;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,.25),transparent);
-  transform:rotate(13deg);
-  opacity:.3;
-  animation:lightMove 8s infinite alternate ease-in-out;
-}
-.l1{left:5%}.l2{left:38%;animation-delay:2s}.l3{left:72%;animation-delay:4s}
-@keyframes lightMove{
-  from{transform:rotate(13deg) translateX(-30px)}
-  to{transform:rotate(13deg) translateX(60px)}
+ width:100%;height:100%;
+ display:flex;flex-direction:column;
+ background:linear-gradient(#6fcde8,#087da9);
 }
 
 /* TOP */
 #top{
-  position:absolute;
-  z-index:100;
-  top:0;
-  left:0;
-  right:0;
-  height:58px;
-  padding:7px 10px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  background:rgba(0,24,42,.75);
-  border-bottom:1px solid rgba(255,255,255,.2);
+ height:68px;display:flex;align-items:center;gap:7px;
+ padding:7px;background:linear-gradient(#487da7,#244e72);
+ box-shadow:0 3px 8px #0008;z-index:10;
 }
-.title{
-  font-size:18px;
-  font-weight:bold;
-  text-shadow:0 2px 4px #000;
+.logo{
+ font-size:19px;font-weight:bold;
+ text-shadow:2px 2px #12334d;
+ white-space:nowrap;
 }
-.money{
-  background:rgba(0,0,0,.4);
-  padding:7px 12px;
-  border-radius:20px;
-  color:#ffe56b;
-  font-weight:bold;
+.stat{
+ background:#123653dd;
+ border:2px solid #8dd6f3;
+ border-radius:11px;
+ padding:4px 8px;
+ text-align:center;
+ min-width:66px;
+}
+.stat small{display:block;font-size:9px;color:#bdeaff}
+.stat b{font-size:13px}
+
+/* AQUARIUM */
+#tankArea{
+ flex:1;position:relative;padding:7px;min-height:0;
+}
+#tank{
+ position:relative;width:100%;height:100%;
+ overflow:hidden;
+ border:7px solid #9ecbe0;
+ border-radius:18px 18px 5px 5px;
+ background:
+ radial-gradient(circle at 20% 15%,#ffffff55 0 2%,transparent 3%),
+ radial-gradient(circle at 70% 25%,#ffffff25 0 1%,transparent 2%),
+ linear-gradient(#59d1ed,#1c9fc4 55%,#08698e);
+ box-shadow:inset 0 0 35px #003c5c99;
 }
 
-/* AQUARIUM FLOOR */
+#waterLight{
+ position:absolute;inset:0;pointer-events:none;
+ background:linear-gradient(110deg,#ffffff22 0 8%,transparent 18% 70%,#ffffff15 80%,transparent);
+}
+
 #sand{
-  position:absolute;
-  z-index:5;
-  left:-5%;
-  bottom:0;
-  width:110%;
-  height:18%;
-  background:
-    radial-gradient(circle at 10% 30%,#f0d38e 0 2px,transparent 3px),
-    radial-gradient(circle at 32% 55%,#b99052 0 2px,transparent 3px),
-    radial-gradient(circle at 55% 25%,#e9cb83 0 3px,transparent 4px),
-    radial-gradient(circle at 80% 50%,#b58b4e 0 2px,transparent 3px),
-    linear-gradient(#e1c17a,#a77b3c);
-  border-radius:50% 50% 0 0;
-  box-shadow:0 -8px 25px rgba(0,0,0,.25);
+ position:absolute;left:0;right:0;bottom:0;height:17%;
+ background:
+ radial-gradient(circle at 20% 40%,#b98942 0 2px,transparent 3px),
+ radial-gradient(circle at 70% 60%,#a97b39 0 2px,transparent 3px),
+ linear-gradient(#f6dc98,#bd8d45);
+ border-top:3px solid #ffe8ad;
 }
 
-/* BUBBLES */
-.bubble{
-  position:absolute;
-  z-index:15;
-  bottom:-30px;
-  border:1px solid rgba(255,255,255,.7);
-  border-radius:50%;
-  background:rgba(255,255,255,.08);
-  animation:bubble 8s linear infinite;
+/* DECOR */
+.decor{
+ position:absolute;z-index:2;
+ filter:drop-shadow(0 5px 3px #003d4d99);
 }
-@keyframes bubble{
-  0%{transform:translateY(0);opacity:0}
-  15%{opacity:.8}
-  100%{transform:translateY(-110vh);opacity:0}
-}
-
-/* PLANTS */
-.plant{
-  position:absolute;
-  z-index:8;
-  bottom:9%;
-  width:70px;
-  height:170px;
-}
-.plant i{
-  position:absolute;
-  bottom:0;
-  width:13px;
-  border-radius:100% 0 100% 0;
-  background:linear-gradient(90deg,#063d21,#27a64b,#075b2d);
-  transform-origin:bottom;
-  animation:sway 3s ease-in-out infinite;
-}
-.plant i:nth-child(1){left:28px;height:150px;transform:rotate(-12deg)}
-.plant i:nth-child(2){left:40px;height:125px;transform:rotate(12deg);animation-delay:.5s}
-.plant i:nth-child(3){left:12px;height:105px;transform:rotate(-25deg);animation-delay:1s}
-.plant1{left:2%}.plant2{right:2%;transform:scaleX(-1)}
-@keyframes sway{
-  0%,100%{transform:rotate(-10deg)}
-  50%{transform:rotate(10deg)}
-}
-
-/* ROCKS */
-.rock{
-  position:absolute;
-  z-index:9;
-  border-radius:50%;
-  background:radial-gradient(circle at 30% 25%,#999,#555 50%,#292929);
-  box-shadow:inset -8px -8px 12px #222,0 4px 8px #0006;
-}
-.r1{left:8%;bottom:12%;width:85px;height:42px}
-.r2{right:8%;bottom:14%;width:65px;height:34px}
-.r3{right:29%;bottom:9%;width:100px;height:38px}
-
-/* CASTLE */
-#castle{
-  position:absolute;
-  z-index:12;
-  left:50%;
-  bottom:11%;
-  width:300px;
-  height:205px;
-  transform:translateX(-50%);
-  filter:drop-shadow(0 10px 8px rgba(0,0,0,.5));
-}
-.castleMain{
-  position:absolute;
-  left:54px;
-  bottom:0;
-  width:192px;
-  height:135px;
-  border:3px solid #46423d;
-  background:
-    repeating-linear-gradient(0deg,transparent 0 25px,#49443e 26px 28px),
-    repeating-linear-gradient(90deg,transparent 0 36px,#514c46 37px 39px),
-    linear-gradient(90deg,#66615a,#aaa49a 35%,#79736b 70%,#4a4641);
-  box-shadow:inset 8px 0 12px #fff2,inset -12px 0 15px #0005;
-}
-.castleTop{
-  position:absolute;
-  left:-3px;
-  top:-25px;
-  width:192px;
-  height:27px;
-  background:#77716a;
-  border:3px solid #45413d;
-}
-.castleTop:after{
-  content:"";
-  position:absolute;
-  top:-19px;
-  left:5px;
-  width:23px;
-  height:19px;
-  background:#77716a;
-  box-shadow:30px 0 #77716a,60px 0 #77716a,90px 0 #77716a,120px 0 #77716a,150px 0 #77716a;
-}
-.tower{
-  position:absolute;
-  bottom:0;
-  width:70px;
-  height:185px;
-  border:3px solid #403d39;
-  background:
-    repeating-linear-gradient(0deg,transparent 0 23px,#4c4742 24px 26px),
-    repeating-linear-gradient(90deg,transparent 0 30px,#504b45 31px 33px),
-    linear-gradient(90deg,#5b5650,#a19b92 38%,#716b64 70%,#494540);
-  box-shadow:inset 7px 0 10px #fff2,inset -9px 0 13px #0005;
-}
-.tower.left{left:0}.tower.right{right:0}
-.roof{
-  position:absolute;
-  left:-8px;
-  top:-32px;
-  width:80px;
-  height:35px;
-  background:linear-gradient(135deg,#4a4742,#aaa39a,#3d3a36);
-  clip-path:polygon(0 100%,50% 0,100% 100%);
-}
-.window{
-  position:absolute;
-  left:21px;
-  width:23px;
-  height:38px;
-  border:4px solid #45413c;
-  border-radius:50% 50% 7px 7px;
-  background:radial-gradient(circle,#0c3444,#01080c 70%);
-}
-.w1{top:45px}.w2{top:110px}
-.gate{
-  position:absolute;
-  z-index:4;
-  left:111px;
-  bottom:0;
-  width:78px;
-  height:86px;
-  border:5px solid #49443e;
-  border-bottom:0;
-  border-radius:45px 45px 0 0;
-  background:radial-gradient(ellipse,#142831,#010609 70%);
-  box-shadow:inset 0 0 15px #000;
-}
-.gate:after{
-  content:"";
-  position:absolute;
-  inset:8px;
-  background:repeating-linear-gradient(90deg,#9c8350 0 4px,transparent 4px 15px);
-  opacity:.45;
-  border-radius:35px 35px 0 0;
-}
-.moss{
-  position:absolute;
-  z-index:10;
-  width:45px;
-  height:12px;
-  background:linear-gradient(#4c944d,#174823);
-  border-radius:70%;
-}
-.m1{left:48px;bottom:20px}.m2{right:45px;bottom:50px}
+.castle{left:5%;bottom:8%;font-size:72px}
+.rock{right:5%;bottom:7%;font-size:55px}
+.plant1{left:39%;bottom:7%;font-size:57px}
+.plant2{left:72%;bottom:7%;font-size:60px}
 
 /* FISH */
+#fishLayer{
+ position:absolute;inset:0;z-index:5;
+}
 .fish{
-  position:absolute;
-  z-index:30;
-  width:115px;
-  height:70px;
-  animation:swim 14s ease-in-out infinite;
+ position:absolute;
+ width:115px;height:75px;
+ transition:left .08s linear,top .08s linear;
+ filter:drop-shadow(0 4px 3px #003b50aa);
+ touch-action:none;
 }
-.fish2{animation-duration:18s;animation-delay:-6s}
-.fish3{animation-duration:20s;animation-delay:-11s}
-
-.fbody{
-  position:absolute;
-  left:29px;
-  top:15px;
-  width:68px;
-  height:42px;
-  border-radius:55% 48% 48% 55%;
-  background:
-    radial-gradient(circle at 70% 25%,#fff8 0 6%,transparent 7%),
-    repeating-linear-gradient(150deg,#ffffff18 0 4px,#0000000c 4px 8px),
-    linear-gradient(145deg,#ffe75b,#ff942d 45%,#ed3930 80%,#8e1b27);
-  box-shadow:inset 6px 4px 7px #fff5,inset -7px -6px 9px #0005;
-}
-.tail{
-  position:absolute;
-  left:0;
-  top:5px;
-  width:58px;
-  height:60px;
-  background:linear-gradient(145deg,#ffe85d,#ff7432 55%,#d51e35);
-  clip-path:polygon(100% 50%,0 0,18% 50%,0 100%);
-  filter:drop-shadow(0 3px 3px #0005);
-}
-.eye{
-  position:absolute;
-  z-index:5;
-  left:80px;
-  top:22px;
-  width:13px;
-  height:13px;
-  border-radius:50%;
-  background:#fff;
-}
-.eye:after{
-  content:"";
-  position:absolute;
-  left:4px;
-  top:4px;
-  width:6px;
-  height:6px;
-  background:#000;
-  border-radius:50%;
-}
-.fin{
-  position:absolute;
-  background:#ffbd5d99;
-}
-.finTop{
-  left:52px;
-  top:3px;
-  width:35px;
-  height:25px;
-  clip-path:polygon(0 100%,45% 0,100% 100%);
-}
-.finBottom{
-  left:58px;
-  top:48px;
-  width:30px;
-  height:20px;
-  clip-path:polygon(0 0,100% 100%,20% 80%);
-}
-@keyframes swim{
-  0%{left:4%;transform:translateY(0) scaleX(1)}
-  10%{transform:translateY(-7px) scaleX(1)}
-  45%{left:72%;transform:translateY(7px) scaleX(1)}
-  50%{left:74%;transform:scaleX(-1)}
-  90%{left:7%;transform:translateY(-6px) scaleX(-1)}
-  100%{left:4%;transform:scaleX(1)}
+.fish.selected{
+ filter:drop-shadow(0 0 10px #fff27a);
 }
 
-/* EGGS */
-.egg{
-  position:absolute;
-  z-index:28;
-  width:9px;
-  height:13px;
-  border-radius:50%;
-  background:#f4d66d;
-  box-shadow:0 0 5px #fff8;
-  animation:eggPulse 1.5s infinite alternate;
+/* bubbles */
+.bubble{
+ position:absolute;
+ border:2px solid #d9fbff88;
+ border-radius:50%;
+ background:#ffffff22;
+ animation:rise linear infinite;
+ pointer-events:none;
+ z-index:3;
 }
-@keyframes eggPulse{to{transform:scale(1.15)}}
-
-/* BABY FISH */
-.baby{
-  position:absolute;
-  z-index:29;
-  width:45px;
-  height:25px;
-  animation:babySwim 8s linear infinite;
-}
-.baby:before{
-  content:"";
-  position:absolute;
-  left:12px;
-  top:7px;
-  width:27px;
-  height:15px;
-  border-radius:50%;
-  background:linear-gradient(135deg,#ffe85c,#ff6d3b);
-}
-.baby:after{
-  content:"";
-  position:absolute;
-  left:0;
-  top:3px;
-  width:18px;
-  height:20px;
-  background:#ff9842;
-  clip-path:polygon(100% 50%,0 0,15% 50%,0 100%);
-}
-@keyframes babySwim{
-  from{left:10%;transform:translateY(0)}
-  50%{left:80%;transform:translateY(-10px)}
-  to{left:10%;transform:translateY(0)}
+@keyframes rise{
+ from{transform:translateY(20px);opacity:.1}
+ 50%{opacity:.7}
+ to{transform:translateY(-300px);opacity:0}
 }
 
-/* BOTTOM NAV */
-#nav{
-  position:absolute;
-  z-index:100;
-  left:50%;
-  bottom:8px;
-  transform:translateX(-50%);
-  width:97%;
-  max-width:520px;
-  display:grid;
-  grid-template-columns:repeat(5,1fr);
-  gap:5px;
+/* BOTTOM */
+#toolbar{
+ height:88px;
+ display:flex;
+ justify-content:center;
+ align-items:center;
+ gap:6px;
+ padding:6px;
+ background:linear-gradient(#386582,#173c59);
+ border-top:3px solid #8cc5df;
+ z-index:10;
 }
-.navBtn{
-  min-height:49px;
-  border:1px solid #ffffff44;
-  border-radius:12px;
-  color:#fff;
-  background:linear-gradient(#145e7d,#06354e);
-  box-shadow:0 3px 8px #0007;
-  font-size:11px;
-  font-weight:bold;
+.tool{
+ min-width:62px;height:70px;
+ border-radius:13px;
+ color:white;
+ background:linear-gradient(#72a8c8,#315b7b);
+ border:2px solid #a8d8ed;
+ box-shadow:0 4px 0 #102d43,inset 0 1px #fff8;
+ text-shadow:1px 2px #16364d;
 }
-.navBtn:active{transform:scale(.95)}
+.tool span{display:block;font-size:25px}
+.tool small{font-size:9px}
 
 /* MODAL */
 #modal{
-  position:absolute;
-  z-index:200;
-  inset:0;
-  display:none;
-  align-items:center;
-  justify-content:center;
-  background:#0008;
-  padding:15px;
+ display:none;
+ position:absolute;
+ z-index:50;
+ left:50%;top:50%;
+ transform:translate(-50%,-50%);
+ width:min(94%,400px);
+ max-height:82%;
+ overflow:auto;
+ color:#18364d;
+ background:linear-gradient(#effaff,#c9e9f7);
+ border:4px solid #5788a5;
+ border-radius:18px;
+ padding:14px;
+ box-shadow:0 15px 45px #000b;
 }
-#panel{
-  width:min(430px,96vw);
-  max-height:85vh;
-  overflow:auto;
-  border:1px solid #ffffff44;
-  border-radius:18px;
-  background:linear-gradient(#0a4661,#052b40);
-  box-shadow:0 15px 40px #000b;
-  padding:15px;
-}
-.panelTitle{
-  font-size:20px;
-  font-weight:bold;
-  margin-bottom:10px;
-}
+#modal h2{text-align:center;margin:2px 0 12px}
 .close{
-  float:right;
-  width:38px;
-  height:38px;
-  border:0;
-  border-radius:50%;
-  background:#0005;
-  color:#fff;
-  font-size:20px;
+ float:right;
+ width:30px;height:30px;
+ border-radius:50%;
+ background:#d9534f;color:white;
+ font-size:20px;
 }
 .card{
-  background:#ffffff0d;
-  border:1px solid #ffffff1d;
-  border-radius:13px;
-  padding:11px;
-  margin:8px 0;
+ background:#ffffffaa;
+ border:2px solid #79a6bd;
+ border-radius:11px;
+ padding:9px;
+ margin:7px 0;
 }
-.action{
-  width:100%;
-  min-height:44px;
-  margin-top:7px;
-  border:0;
-  border-radius:10px;
-  background:linear-gradient(#27a6d1,#086587);
-  color:white;
-  font-weight:bold;
+.row{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ gap:6px;
 }
-.action.gold{
-  background:linear-gradient(#e9b93f,#a8730d);
-  color:#251700;
+.buy,.blue,.red{
+ padding:9px 13px;
+ border-radius:9px;
+ color:white;
 }
-.action.red{
-  background:linear-gradient(#d85a58,#812a2a);
-}
-.small{
-  color:#b9d7e4;
-  font-size:12px;
-}
-.stat{
-  display:flex;
-  justify-content:space-between;
-  padding:4px 0;
-}
+.buy{background:#389456}
+.blue{background:#367fb4}
+.red{background:#c94b47}
+
 .progress{
-  height:8px;
-  background:#0006;
-  border-radius:10px;
-  overflow:hidden;
-  margin-top:4px;
+ height:10px;background:#728996;
+ border-radius:8px;overflow:hidden;margin:4px 0 7px;
 }
-.bar{
-  height:100%;
-  background:linear-gradient(90deg,#42d66d,#d7e94e);
+.progress i{
+ display:block;height:100%;background:#51ce69;
 }
-.notice{
-  background:#0004;
-  border-radius:10px;
-  padding:9px;
-  margin:8px 0;
-  font-size:13px;
+
+select{
+ padding:8px;
+ border-radius:8px;
+ width:100%;
+ margin-top:6px;
+}
+
+/* toast */
+#toast{
+ display:none;
+ position:absolute;
+ z-index:100;
+ left:50%;top:78px;
+ transform:translateX(-50%);
+ background:#102c45ee;
+ border:2px solid #8ad8fa;
+ border-radius:12px;
+ padding:9px 15px;
+ box-shadow:0 4px 15px #0007;
+}
+
+/* START */
+#start{
+ position:absolute;
+ z-index:200;
+ inset:0;
+ display:flex;
+ justify-content:center;
+ align-items:center;
+ text-align:center;
+ background:linear-gradient(#278db9,#08243e);
+}
+.startBox{
+ width:min(90%,390px);
+ padding:25px;
+ border:4px solid #a6e2fa;
+ border-radius:25px;
+ background:#153f61ee;
+ box-shadow:0 15px 50px #0009;
+}
+.startBox h1{font-size:32px;margin:5px}
+.startBox p{color:#cef3ff;line-height:1.5}
+.startBtn{
+ padding:15px 30px;
+ border-radius:14px;
+ background:#f4c94b;
+ color:#523800;
+ font-size:18px;
+ box-shadow:0 4px #8e6810;
+}
+
+@media(max-width:600px){
+ #top{height:62px}
+ .logo{font-size:14px}
+ .stat{min-width:55px;padding:3px 5px}
+ .stat b{font-size:11px}
+ .tool{min-width:51px;height:67px}
+ .tool span{font-size:23px}
 }
 </style>
 </head>
@@ -490,906 +257,1444 @@ button{font-family:inherit}
 
 <div id="game">
 
-  <div class="light l1"></div>
-  <div class="light l2"></div>
-  <div class="light l3"></div>
+<!-- TOP -->
+<div id="top">
+ <div class="logo">🐠 Ocean Home</div>
 
-  <div class="bubble" style="left:8%;width:8px;height:8px;animation-duration:8s"></div>
-  <div class="bubble" style="left:19%;width:6px;height:6px;animation-duration:11s"></div>
-  <div class="bubble" style="left:34%;width:10px;height:10px;animation-duration:9s"></div>
-  <div class="bubble" style="left:55%;width:7px;height:7px;animation-duration:12s"></div>
-  <div class="bubble" style="left:72%;width:9px;height:9px;animation-duration:10s"></div>
-  <div class="bubble" style="left:90%;width:6px;height:6px;animation-duration:13s"></div>
+ <div class="stat">
+  <small>💰 COINS</small>
+  <b id="coins">500</b>
+ </div>
 
-  <div id="top">
-    <div class="title">🐠 Happy Aquarium</div>
-    <div class="money">🪙 <span id="coins">500</span></div>
-  </div>
+ <div class="stat">
+  <small>🍖 FOOD</small>
+  <b id="food">30</b>
+ </div>
 
-  <div class="plant plant1">
-    <i></i><i></i><i></i>
-  </div>
+ <div class="stat">
+  <small>⭐ LEVEL</small>
+  <b id="level">1</b>
+ </div>
 
-  <div class="plant plant2">
-    <i></i><i></i><i></i>
-  </div>
+ <div class="stat">
+  <small>🐟 FISH</small>
+  <b id="fishCount">0/12</b>
+ </div>
+</div>
 
-  <div class="rock r1"></div>
-  <div class="rock r2"></div>
-  <div class="rock r3"></div>
+<!-- TANK -->
+<div id="tankArea">
 
-  <!-- CASTLE -->
-  <div id="castle">
-    <div class="castleMain">
-      <div class="castleTop"></div>
-    </div>
+ <div id="tank">
 
-    <div class="tower left">
-      <div class="roof"></div>
-      <div class="window w1"></div>
-      <div class="window w2"></div>
-    </div>
-
-    <div class="tower right">
-      <div class="roof"></div>
-      <div class="window w1"></div>
-      <div class="window w2"></div>
-    </div>
-
-    <div class="gate"></div>
-    <div class="moss m1"></div>
-    <div class="moss m2"></div>
-  </div>
-
-  <!-- FISH -->
-  <div class="fish fish1" style="top:25%">
-    <div class="tail"></div>
-    <div class="fbody"></div>
-    <div class="fin finTop"></div>
-    <div class="fin finBottom"></div>
-    <div class="eye"></div>
-  </div>
-
-  <div class="fish fish2" style="top:43%">
-    <div class="tail"></div>
-    <div class="fbody"></div>
-    <div class="fin finTop"></div>
-    <div class="fin finBottom"></div>
-    <div class="eye"></div>
-  </div>
-
-  <div class="fish fish3" style="top:62%">
-    <div class="tail"></div>
-    <div class="fbody"></div>
-    <div class="fin finTop"></div>
-    <div class="fin finBottom"></div>
-    <div class="eye"></div>
-  </div>
+  <div id="waterLight"></div>
 
   <div id="sand"></div>
 
-  <!-- NAV -->
-  <div id="nav">
-    <button class="navBtn" id="feedBtn">🍖<br>Makan</button>
-    <button class="navBtn" id="breedBtn">❤️<br>Breed</button>
-    <button class="navBtn" id="shopBtn">🛒<br>Kedai</button>
-    <button class="navBtn" id="sellBtn">💰<br>Jual</button>
-    <button class="navBtn" id="cleanBtn">🧽<br>Bersih</button>
-  </div>
+  <div class="decor castle">🏰</div>
+  <div class="decor rock">🪨</div>
+  <div class="decor plant1">🌿</div>
+  <div class="decor plant2">🌿</div>
 
-  <!-- MODAL -->
-  <div id="modal">
-    <div id="panel"></div>
-  </div>
+  <div id="fishLayer"></div>
+
+ </div>
 
 </div>
 
+<!-- TOOLBAR -->
+<div id="toolbar">
+
+ <button class="tool" onclick="feedAll()">
+  <span>🍖</span>
+  <small>FEED</small>
+ </button>
+
+ <button class="tool" onclick="breedMenu()">
+  <span>🥚</span>
+  <small>BREED</small>
+ </button>
+
+ <button class="tool" onclick="shop()">
+  <span>🏪</span>
+  <small>SHOP</small>
+ </button>
+
+ <button class="tool" onclick="myFish()">
+  <span>🐟</span>
+  <small>MY FISH</small>
+ </button>
+
+ <button class="tool" onclick="cleanTank()">
+  <span>🧽</span>
+  <small>CLEAN</small>
+ </button>
+
+ <button class="tool" onclick="saveGame();toast('💾 Game disimpan')">
+  <span>💾</span>
+  <small>SAVE</small>
+ </button>
+
+</div>
+</div>
+
+<div id="toast"></div>
+<div id="modal"></div>
+
+<!-- START -->
+<div id="start">
+ <div class="startBox">
+
+  <h1>🐠 Ocean Home</h1>
+
+  <p>
+   Bina akuarium sendiri.<br>
+   Bela ikan, bagi makan, breeding,
+   tetaskan telur, jual ikan,
+   beli ikan dan hias akuarium.
+  </p>
+
+  <button class="startBtn" onclick="startGame()">
+   MASUK AKUARIUM
+  </button>
+
+ </div>
+</div>
+
 <script>
-"use strict";
 
-/* ================= GAME DATA ================= */
+/* =========================
+   DATA IKAN
+========================= */
 
-const SAVE_KEY = "happy_aquarium_mini_v1";
+const TYPES=[
+ {
+  name:"Guppy Merah",
+  body:"#ef5962",
+  fin:"#ffb34d",
+  price:80
+ },
+ {
+  name:"Guppy Biru",
+  body:"#36a8e6",
+  fin:"#a8efff",
+  price:90
+ },
+ {
+  name:"Guppy Ungu",
+  body:"#a66be7",
+  fin:"#efb7ff",
+  price:120
+ },
+ {
+  name:"Guppy Emas",
+  body:"#f0ad2e",
+  fin:"#fff0a0",
+  price:160
+ },
+ {
+  name:"Tropical Hijau",
+  body:"#43c57b",
+  fin:"#b8ff9c",
+  price:140
+ }
+];
 
-const defaultState = {
-  coins: 500,
-  food: 8,
-  cleanliness: 100,
-  fish: [
-    {
-      id: 1,
-      name: "Guppy Merah",
-      gender: "Jantan",
-      age: 12,
-      hunger: 85,
-      health: 100,
-      value: 80
-    },
-    {
-      id: 2,
-      name: "Guppy Emas",
-      gender: "Betina",
-      age: 15,
-      hunger: 80,
-      health: 100,
-      value: 100
-    },
-    {
-      id: 3,
-      name: "Guppy Biru",
-      gender: "Betina",
-      age: 10,
-      hunger: 90,
-      health: 100,
-      value: 120
-    }
-  ],
-  eggs: [],
-  babies: [],
-  nextId: 4,
-  lastSave: Date.now()
+
+/* =========================
+   SAVE DATA
+========================= */
+
+let game =
+JSON.parse(localStorage.getItem("OceanHomeSave")) ||
+{
+ coins:500,
+ food:30,
+ level:1,
+ xp:0,
+ nextId:4,
+
+ fish:[
+  {
+   id:1,
+   type:0,
+   sex:"F",
+   hunger:85,
+   health:100,
+   age:100,
+   x:25,
+   y:30,
+   vx:.42,
+   vy:.10
+  },
+
+  {
+   id:2,
+   type:1,
+   sex:"M",
+   hunger:80,
+   health:100,
+   age:100,
+   x:60,
+   y:46,
+   vx:-.38,
+   vy:.12
+  },
+
+  {
+   id:3,
+   type:3,
+   sex:"F",
+   hunger:90,
+   health:100,
+   age:100,
+   x:43,
+   y:60,
+   vx:.32,
+   vy:-.08
+  }
+ ],
+
+ eggs:[]
 };
 
-let state = loadGame();
 
-/* ================= SAVE ================= */
+let running=false;
+let selectedFish=null;
+let lastTime=performance.now();
 
-function loadGame(){
-  try{
-    const raw = localStorage.getItem(SAVE_KEY);
 
-    if(!raw){
-      return structuredClone(defaultState);
-    }
+/* =========================
+   START
+========================= */
 
-    const data = JSON.parse(raw);
+function startGame(){
 
-    return {
-      ...structuredClone(defaultState),
-      ...data,
-      fish:Array.isArray(data.fish) ? data.fish : structuredClone(defaultState.fish),
-      eggs:Array.isArray(data.eggs) ? data.eggs : [],
-      babies:Array.isArray(data.babies) ? data.babies : []
-    };
-  }catch(e){
-    return structuredClone(defaultState);
-  }
+ document.getElementById("start").style.display="none";
+
+ running=true;
+
+ createBubbles();
+
+ renderFish();
+
+ updateHUD();
+
+ requestAnimationFrame(loop);
+
+ toast("🐠 Selamat datang!");
+
 }
+
+
+/* =========================
+   SAVE
+========================= */
 
 function saveGame(){
-  state.lastSave = Date.now();
-  localStorage.setItem(SAVE_KEY,JSON.stringify(state));
+
+ localStorage.setItem(
+  "OceanHomeSave",
+  JSON.stringify(game)
+ );
+
 }
 
-/* ================= BASIC UI ================= */
 
-const modal = document.getElementById("modal");
-const panel = document.getElementById("panel");
-const coinsEl = document.getElementById("coins");
+/* =========================
+   HUD
+========================= */
 
-function updateUI(){
-  coinsEl.textContent = Math.max(0,Math.floor(state.coins));
+function updateHUD(){
+
+ document.getElementById("coins").textContent=
+ game.coins;
+
+ document.getElementById("food").textContent=
+ game.food;
+
+ document.getElementById("level").textContent=
+ game.level;
+
+ document.getElementById("fishCount").textContent=
+ game.fish.length+"/12";
+
 }
 
-function openPanel(title,html){
-  panel.innerHTML = `
-    <button class="close" id="closePanel">×</button>
-    <div class="panelTitle">${title}</div>
-    ${html}
-  `;
 
-  modal.style.display = "flex";
+/* =========================
+   FISH SVG
+========================= */
 
-  document
-    .getElementById("closePanel")
-    .addEventListener("click",closePanel);
+function fishSVG(f){
+
+ const t=TYPES[f.type];
+
+ const flip=f.vx<0 ? -1 : 1;
+
+ return `
+
+ <svg viewBox="0 0 120 78">
+
+ <g transform="
+ translate(${flip<0?120:0} 0)
+ scale(${flip} 1)
+ ">
+
+ <!-- tail -->
+
+ <path
+ d="M35 38
+ C10 10 5 15 7 38
+ C5 61 14 68 35 39"
+ fill="${t.fin}"
+ stroke="#164c65"
+ stroke-width="2"
+ />
+
+ <!-- body -->
+
+ <ellipse
+ cx="63"
+ cy="39"
+ rx="35"
+ ry="24"
+ fill="${t.body}"
+ stroke="#164c65"
+ stroke-width="2"
+ />
+
+ <!-- top fin -->
+
+ <path
+ d="M57 18
+ Q70 3 80 20
+ Q68 25 57 18"
+ fill="${t.fin}"
+ />
+
+ <!-- bottom fin -->
+
+ <path
+ d="M58 59
+ Q72 75 80 57
+ Q68 54 58 59"
+ fill="${t.fin}"
+ />
+
+ <!-- body shine -->
+
+ <path
+ d="M56 28 Q72 20 84 29"
+ fill="none"
+ stroke="#ffffff77"
+ stroke-width="5"
+ />
+
+ <!-- eye -->
+
+ <circle
+ cx="83"
+ cy="32"
+ r="7"
+ fill="white"
+ />
+
+ <circle
+ cx="85"
+ cy="32"
+ r="3"
+ fill="#111"
+ />
+
+ <!-- mouth -->
+
+ <path
+ d="M99 38 Q108 40 99 44"
+ fill="none"
+ stroke="#164c65"
+ stroke-width="2"
+ />
+
+ </g>
+
+ </svg>
+
+ `;
+
 }
 
-function closePanel(){
-  modal.style.display = "none";
+
+/* =========================
+   RENDER
+========================= */
+
+function renderFish(){
+
+ const layer=document.getElementById("fishLayer");
+
+ layer.innerHTML="";
+
+ game.fish.forEach(f=>{
+
+  const el=document.createElement("div");
+
+  el.className=
+   "fish"+
+   (selectedFish===f.id?" selected":"");
+
+  el.id="fish-"+f.id;
+
+  el.style.left=f.x+"%";
+  el.style.top=f.y+"%";
+
+  el.innerHTML=fishSVG(f);
+
+  el.onclick=function(){
+
+   selectFish(f.id);
+
+  };
+
+  layer.appendChild(el);
+
+ });
+
 }
 
-modal.addEventListener("click",function(e){
-  if(e.target === modal) closePanel();
-});
 
-/* ================= FISH STATUS ================= */
+/* =========================
+   GAME LOOP
+========================= */
 
-function averageHealth(){
-  if(!state.fish.length) return 0;
+function loop(now){
 
-  return Math.round(
-    state.fish.reduce((sum,f)=>sum + Number(f.health || 0),0)
-    / state.fish.length
-  );
-}
+ if(!running)return;
 
-function hungerStatus(value){
-  if(value >= 70) return "Kenyang";
-  if(value >= 40) return "Ok";
-  if(value >= 20) return "Lapar";
-  return "Sangat lapar";
-}
+ let dt=Math.min(40,now-lastTime);
 
-/* ================= FEED ================= */
+ lastTime=now;
 
-document.getElementById("feedBtn").addEventListener("click",feedMenu);
 
-function feedMenu(){
+ game.fish.forEach(f=>{
 
-  if(!state.fish.length){
-    openPanel("🍖 Makan","<div class='notice'>Tiada ikan dalam aquarium.</div>");
-    return;
+  f.x += f.vx*dt/16;
+  f.y += f.vy*dt/16;
+
+
+  if(f.x<3){
+
+   f.x=3;
+   f.vx=Math.abs(f.vx);
+
   }
 
-  openPanel("🍖 Bagi Makan",`
-    <div class="card">
-      <div class="stat">
-        <span>Makanan</span>
-        <b>${state.food}</b>
-      </div>
-      <div class="small">
-        1 makanan = semua ikan mendapat makanan.
-      </div>
-    </div>
+  if(f.x>82){
 
-    <button class="action" id="giveFood">
-      🍖 Beri Makan Semua
-    </button>
-  `);
+   f.x=82;
+   f.vx=-Math.abs(f.vx);
 
-  document.getElementById("giveFood").addEventListener("click",()=>{
-    if(state.food <= 0){
-      alert("Makanan habis. Beli makanan di Kedai.");
-      return;
-    }
+  }
 
-    state.food--;
+  if(f.y<8){
 
-    state.fish.forEach(f=>{
-      f.hunger = Math.min(100,f.hunger + 25);
-      f.health = Math.min(100,f.health + 3);
-    });
+   f.y=8;
+   f.vy=Math.abs(f.vy);
 
-    state.cleanliness = Math.max(0,state.cleanliness - 2);
+  }
 
-    saveGame();
-    updateUI();
-    feedMenu();
-  });
+  if(f.y>72){
+
+   f.y=72;
+   f.vy=-Math.abs(f.vy);
+
+  }
+
+
+  /* hunger */
+
+  f.hunger -= dt/1000/40;
+
+  if(f.hunger<0)
+   f.hunger=0;
+
+
+  /* health */
+
+  if(f.hunger<15){
+
+   f.health -= dt/1000/30;
+
+   if(f.health<0)
+    f.health=0;
+
+  }
+  else{
+
+   if(f.health<100)
+    f.health += dt/1000/80;
+
+   if(f.health>100)
+    f.health=100;
+
+  }
+
+
+  /* age */
+
+  f.age += dt/1000/1200;
+
+ });
+
+
+ /* eggs */
+
+ game.eggs.forEach(e=>{
+
+  e.time -= dt/1000;
+
+ });
+
+
+ const ready=
+ game.eggs.filter(e=>e.time<=0);
+
+
+ ready.forEach(e=>{
+
+  hatchEgg(e);
+
+ });
+
+
+ game.eggs=
+ game.eggs.filter(e=>e.time>0);
+
+
+ /* update positions */
+
+ game.fish.forEach(f=>{
+
+  const el=document.getElementById("fish-"+f.id);
+
+  if(el){
+
+   el.style.left=f.x+"%";
+   el.style.top=f.y+"%";
+
+   el.innerHTML=fishSVG(f);
+
+  }
+
+ });
+
+
+ requestAnimationFrame(loop);
+
 }
 
-/* ================= BREED ================= */
 
-document.getElementById("breedBtn").addEventListener("click",breedMenu);
+/* =========================
+   SELECT FISH
+========================= */
+
+function selectFish(id){
+
+ selectedFish=id;
+
+ renderFish();
+
+ const f=
+ game.fish.find(x=>x.id===id);
+
+ if(!f)return;
+
+ const t=TYPES[f.type];
+
+ openModal(`
+
+ <button class="close"
+ onclick="closeModal()">×</button>
+
+ <h2>🐟 ${t.name}</h2>
+
+ <div class="card">
+
+ <b>Jantina:</b>
+ ${f.sex==="M"?"♂ Jantan":"♀ Betina"}
+
+ <br><br>
+
+ <b>Umur:</b>
+ ${Math.floor(f.age)}%
+
+ <br><br>
+
+ <b>Hunger:</b>
+ ${Math.floor(f.hunger)}%
+
+ <div class="progress">
+  <i style="width:${f.hunger}%"></i>
+ </div>
+
+ <b>Health:</b>
+ ${Math.floor(f.health)}%
+
+ <div class="progress">
+  <i style="width:${f.health}%"></i>
+ </div>
+
+ </div>
+
+ <div class="row">
+
+ <button class="blue"
+ onclick="feedFish(${id})">
+ 🍖 BAGI MAKAN
+ </button>
+
+ <button class="red"
+ onclick="sellFish(${id})">
+ 💰 JUAL
+ </button>
+
+ </div>
+
+ `);
+
+}
+
+
+/* =========================
+   FEED ALL
+========================= */
+
+function feedAll(){
+
+ if(game.food<=0){
+
+  toast("🍖 Food habis!");
+
+  return;
+
+ }
+
+ game.food--;
+
+ game.fish.forEach(f=>{
+
+  f.hunger=Math.min(
+   100,
+   f.hunger+20
+  );
+
+  f.health=Math.min(
+   100,
+   f.health+5
+  );
+
+ });
+
+ addXP(8);
+
+ saveGame();
+
+ updateHUD();
+
+ toast("🍖 Semua ikan dah makan!");
+
+}
+
+
+/* =========================
+   FEED SINGLE
+========================= */
+
+function feedFish(id){
+
+ if(game.food<=0){
+
+  toast("🍖 Food habis!");
+
+  return;
+
+ }
+
+ const f=
+ game.fish.find(x=>x.id===id);
+
+ if(!f)return;
+
+ game.food--;
+
+ f.hunger=
+ Math.min(100,f.hunger+35);
+
+ f.health=
+ Math.min(100,f.health+8);
+
+ addXP(5);
+
+ saveGame();
+
+ updateHUD();
+
+ selectFish(id);
+
+ toast("🍖 Ikan dah kenyang!");
+
+}
+
+
+/* =========================
+   SELL
+========================= */
+
+function sellFish(id){
+
+ if(game.fish.length<=1){
+
+  toast("Simpan sekurang-kurangnya 1 ikan.");
+
+  return;
+
+ }
+
+ const index=
+ game.fish.findIndex(f=>f.id===id);
+
+ const f=game.fish[index];
+
+ const money=
+ TYPES[f.type].price+
+ Math.floor(f.age);
+
+ game.coins+=money;
+
+ game.fish.splice(index,1);
+
+ selectedFish=null;
+
+ addXP(12);
+
+ saveGame();
+
+ updateHUD();
+
+ closeModal();
+
+ renderFish();
+
+ toast("💰 +"+money+" coins");
+
+}
+
+
+/* =========================
+   BREED MENU
+========================= */
 
 function breedMenu(){
 
-  const males = state.fish.filter(f=>f.gender==="Jantan");
-  const females = state.fish.filter(f=>f.gender==="Betina");
+ const males=
+ game.fish.filter(f=>f.sex==="M");
 
-  let html = `
-    <div class="card">
-      <div class="stat"><span>Jantan</span><b>${males.length}</b></div>
-      <div class="stat"><span>Betina</span><b>${females.length}</b></div>
-      <div class="stat"><span>Telur</span><b>${state.eggs.length}</b></div>
-    </div>
-  `;
+ const females=
+ game.fish.filter(f=>f.sex==="F");
 
-  if(males.length && females.length){
 
-    html += `
-      <div class="notice">
-        ❤️ Pilih pasangan untuk menghasilkan telur.
-        <br>
-        Kos breeding: 🪙 20
-      </div>
+ if(!males.length ||
+    !females.length){
 
-      <button class="action" id="startBreed">
-        ❤️ Breed Sekarang
-      </button>
-    `;
+  openModal(`
 
-  }else{
+  <button class="close"
+  onclick="closeModal()">×</button>
 
-    html += `
-      <div class="notice">
-        ⚠️ Perlukan sekurang-kurangnya
-        1 ikan jantan dan 1 ikan betina.
-      </div>
-    `;
-  }
+  <h2>🥚 Breeding</h2>
 
-  if(state.eggs.length){
+  <div class="card">
+   Perlu sekurang-kurangnya
+   <b>1 jantan + 1 betina</b>.
+  </div>
 
-    html += `<h3>🥚 Telur</h3>`;
-
-    state.eggs.forEach((egg,index)=>{
-
-      const remaining = Math.max(
-        0,
-        Math.ceil((egg.hatchAt-Date.now())/1000)
-      );
-
-      html += `
-        <div class="card">
-          🥚 Telur #${index+1}
-          <br>
-          <span class="small">
-            ${remaining > 0
-              ? "Menetas dalam " + remaining + " saat"
-              : "Sedia menetas!"}
-          </span>
-          <button class="action gold" data-hatch="${egg.id}">
-            🐟 ${remaining > 0 ? "Tunggu" : "Tetaskan"}
-          </button>
-        </div>
-      `;
-    });
-  }
-
-  openPanel("❤️ Breeding",html);
-
-  const breedBtn = document.getElementById("startBreed");
-
-  if(breedBtn){
-
-    breedBtn.addEventListener("click",()=>{
-
-      if(state.coins < 20){
-        alert("Coin tak cukup.");
-        return;
-      }
-
-      const males = state.fish.filter(f=>f.gender==="Jantan");
-      const females = state.fish.filter(f=>f.gender==="Betina");
-
-      if(!males.length || !females.length){
-        alert("Perlukan ikan jantan dan betina.");
-        return;
-      }
-
-      state.coins -= 20;
-
-      const eggCount = 3 + Math.floor(Math.random()*4);
-
-      for(let i=0;i<eggCount;i++){
-
-        state.eggs.push({
-          id:state.nextId++,
-          hatchAt:Date.now() + 30000 + Math.random()*15000
-        });
-      }
-
-      saveGame();
-      updateUI();
-
-      alert(
-        "❤️ Breeding berjaya!\n" +
-        "🥚 " + eggCount + " telur dihasilkan."
-      );
-
-      breedMenu();
-    });
-  }
-
-  panel.querySelectorAll("[data-hatch]").forEach(btn=>{
-
-    btn.addEventListener("click",()=>{
-
-      const id = Number(btn.dataset.hatch);
-
-      const egg = state.eggs.find(e=>e.id===id);
-
-      if(!egg) return;
-
-      if(Date.now() < egg.hatchAt){
-        alert("🥚 Telur belum menetas lagi.");
-        return;
-      }
-
-      state.eggs = state.eggs.filter(e=>e.id!==id);
-
-      state.babies.push({
-        id:state.nextId++,
-        bornAt:Date.now(),
-        growAt:Date.now()+60000,
-        name:"Anak Guppy"
-      });
-
-      saveGame();
-
-      updateUI();
-
-      breedMenu();
-    });
-  });
-}
-
-/* ================= SHOP ================= */
-
-document.getElementById("shopBtn").addEventListener("click",shopMenu);
-
-function shopMenu(){
-
-  openPanel("🛒 Kedai Aquarium",`
-
-    <div class="card">
-      <b>🍖 Makanan Ikan</b>
-      <div class="small">5 makanan — 🪙 25</div>
-      <button class="action" id="buyFood">Beli</button>
-    </div>
-
-    <div class="card">
-      <b>🐠 Guppy Jantan</b>
-      <div class="small">Harga — 🪙 100</div>
-      <button class="action" id="buyMale">Beli Ikan</button>
-    </div>
-
-    <div class="card">
-      <b>🐠 Guppy Betina</b>
-      <div class="small">Harga — 🪙 120</div>
-      <button class="action" id="buyFemale">Beli Ikan</button>
-    </div>
-
-    <div class="card">
-      <b>🏰 Castle</b>
-      <div class="small">Dekor aquarium — 🪙 300</div>
-      <button class="action gold" id="buyCastle">Castle Sudah Dipasang</button>
-    </div>
   `);
 
-  document.getElementById("buyFood").addEventListener("click",()=>{
+  return;
 
-    if(state.coins < 25){
-      alert("Coin tak cukup.");
-      return;
-    }
+ }
 
-    state.coins -= 25;
-    state.food += 5;
 
-    saveGame();
-    updateUI();
-    shopMenu();
-  });
+ openModal(`
 
-  document.getElementById("buyMale").addEventListener("click",()=>{
+ <button class="close"
+ onclick="closeModal()">×</button>
 
-    buyFish("Jantan",100);
-  });
+ <h2>🥚 BREEDING</h2>
 
-  document.getElementById("buyFemale").addEventListener("click",()=>{
+ <div class="card">
 
-    buyFish("Betina",120);
-  });
+ <b>♂ Pilih Jantan</b>
 
-  document.getElementById("buyCastle").addEventListener("click",()=>{
+ <select id="maleSelect">
 
-    alert("🏰 Castle sudah ada dalam aquarium.");
-  });
+ ${males.map(f=>`
+
+ <option value="${f.id}">
+ ${TYPES[f.type].name} #${f.id}
+ </option>
+
+ `).join("")}
+
+ </select>
+
+ </div>
+
+
+ <div class="card">
+
+ <b>♀ Pilih Betina</b>
+
+ <select id="femaleSelect">
+
+ ${females.map(f=>`
+
+ <option value="${f.id}">
+ ${TYPES[f.type].name} #${f.id}
+ </option>
+
+ `).join("")}
+
+ </select>
+
+ </div>
+
+
+ <button class="buy"
+ onclick="breed()">
+
+ 🥚 BREED — 50 COINS
+
+ </button>
+
+
+ <div class="card">
+
+ <b>🥚 Telur:</b>
+
+ ${game.eggs.length}
+
+ <br><br>
+
+ ${
+ game.eggs.length
+ ?
+ game.eggs.map(e=>
+ "🥚 "+Math.ceil(e.time)+" saat"
+ ).join("<br>")
+ :
+ "Tiada telur"
+ }
+
+ </div>
+
+ `);
+
 }
 
-function buyFish(gender,price){
 
-  if(state.coins < price){
-    alert("Coin tak cukup.");
-    return;
-  }
+/* =========================
+   BREED
+========================= */
 
-  state.coins -= price;
+function breed(){
 
-  const colors = [
-    "Guppy Merah",
-    "Guppy Emas",
-    "Guppy Biru",
-    "Guppy Rainbow"
-  ];
+ if(game.coins<50){
 
-  state.fish.push({
-    id:state.nextId++,
-    name:colors[Math.floor(Math.random()*colors.length)],
-    gender:gender,
-    age:1,
-    hunger:100,
-    health:100,
-    value:price
-  });
+  toast("💰 Coins tak cukup.");
 
-  saveGame();
-  updateUI();
+  return;
 
-  alert(
-    "🐠 Ikan baru dibeli!\n" +
-    gender
+ }
+
+ if(game.fish.length>=12){
+
+  toast("🐟 Akuarium penuh.");
+
+  return;
+
+ }
+
+ const m=
+ game.fish.find(
+  f=>f.id==document.getElementById("maleSelect").value
+ );
+
+ const f=
+ game.fish.find(
+  f=>f.id==document.getElementById("femaleSelect").value
+ );
+
+
+ if(!m||!f)return;
+
+
+ if(m.hunger<30 ||
+    f.hunger<30){
+
+  toast("🍖 Ikan terlalu lapar.");
+
+  return;
+
+ }
+
+
+ game.coins-=50;
+
+ m.hunger-=15;
+ f.hunger-=15;
+
+
+ const babyType=
+ Math.random()<.5
+ ?m.type
+ :f.type;
+
+
+ game.eggs.push({
+
+  time:20,
+
+  type:babyType,
+
+  sex:
+   Math.random()<.5
+   ?"M"
+   :"F"
+
+ });
+
+
+ addXP(25);
+
+ saveGame();
+
+ updateHUD();
+
+ breedMenu();
+
+ toast("🥚 Telur berjaya dihasilkan!");
+
+}
+
+
+/* =========================
+   HATCH
+========================= */
+
+function hatchEgg(e){
+
+ if(game.fish.length>=12){
+
+  return;
+
+ }
+
+
+ game.fish.push({
+
+  id:game.nextId++,
+
+  type:e.type,
+
+  sex:e.sex,
+
+  hunger:100,
+
+  health:100,
+
+  age:5,
+
+  x:20+Math.random()*55,
+
+  y:20+Math.random()*45,
+
+  vx:
+   (Math.random()<.5?-1:1)*.3,
+
+  vy:
+   (Math.random()<.5?-1:1)*.12
+
+ });
+
+
+ addXP(20);
+
+ saveGame();
+
+ updateHUD();
+
+ renderFish();
+
+ toast("🥚➡️🐟 Telur menetas!");
+
+}
+
+
+/* =========================
+   SHOP
+========================= */
+
+function shop(){
+
+ openModal(`
+
+ <button class="close"
+ onclick="closeModal()">×</button>
+
+ <h2>🏪 AQUARIUM SHOP</h2>
+
+
+ <div class="card">
+
+ <div class="row">
+
+ <b>🍖 Food ×10</b>
+
+ <b>30 coins</b>
+
+ </div>
+
+ <br>
+
+ <button class="buy"
+ onclick="buyFood()">
+
+ BELI
+
+ </button>
+
+ </div>
+
+
+ ${TYPES.map((t,i)=>`
+
+ <div class="card">
+
+ <div class="row">
+
+ <b>🐟 ${t.name}</b>
+
+ <b>${t.price}</b>
+
+ </div>
+
+ <br>
+
+ <button class="buy"
+ onclick="buyFish(${i})">
+
+ BELI IKAN
+
+ </button>
+
+ </div>
+
+ `).join("")}
+
+
+ <div class="card">
+
+ <b>🏰 Dekorasi Aquarium</b>
+
+ <p>
+ Tambah dekorasi unik dalam aquarium.
+ </p>
+
+ <button class="buy"
+ onclick="buyDecor()">
+
+ 🪸 BELI — 100
+
+ </button>
+
+ </div>
+
+ `);
+
+}
+
+
+/* =========================
+   BUY FOOD
+========================= */
+
+function buyFood(){
+
+ if(game.coins<30){
+
+  toast("💰 Coins tak cukup.");
+
+  return;
+
+ }
+
+ game.coins-=30;
+
+ game.food+=10;
+
+ saveGame();
+
+ updateHUD();
+
+ shop();
+
+ toast("🍖 Food +10");
+
+}
+
+
+/* =========================
+   BUY FISH
+========================= */
+
+function buyFish(type){
+
+ if(game.fish.length>=12){
+
+  toast("🐟 Aquarium penuh.");
+
+  return;
+
+ }
+
+
+ if(game.coins<TYPES[type].price){
+
+  toast("💰 Coins tak cukup.");
+
+  return;
+
+ }
+
+
+ game.coins-=TYPES[type].price;
+
+
+ game.fish.push({
+
+  id:game.nextId++,
+
+  type:type,
+
+  sex:
+   Math.random()<.5
+   ?"M"
+   :"F",
+
+  hunger:100,
+
+  health:100,
+
+  age:100,
+
+  x:15+Math.random()*60,
+
+  y:15+Math.random()*50,
+
+  vx:
+   (Math.random()<.5?-1:1)*.35,
+
+  vy:.1
+
+ });
+
+
+ addXP(10);
+
+ saveGame();
+
+ updateHUD();
+
+ renderFish();
+
+ shop();
+
+ toast("🐟 Ikan baru masuk!");
+
+}
+
+
+/* =========================
+   DECOR
+========================= */
+
+function buyDecor(){
+
+ if(game.coins<100){
+
+  toast("💰 Coins tak cukup.");
+
+  return;
+
+ }
+
+ game.coins-=100;
+
+ const decor=
+ document.createElement("div");
+
+ decor.className="decor";
+
+ decor.textContent=
+ Math.random()<.5
+ ?"🪸"
+ :"🪵";
+
+ decor.style.left=
+ (10+Math.random()*75)+"%";
+
+ decor.style.bottom="7%";
+
+ decor.style.fontSize="55px";
+
+ document.getElementById("tank")
+ .appendChild(decor);
+
+ saveGame();
+
+ updateHUD();
+
+ toast("✨ Dekorasi baru!");
+
+}
+
+
+/* =========================
+   MY FISH
+========================= */
+
+function myFish(){
+
+ const list=
+ game.fish.map(f=>`
+
+ <div class="card">
+
+ <div class="row">
+
+ <b>
+ 🐟 ${TYPES[f.type].name}
+ </b>
+
+ <b>
+ ${f.sex==="M"?"♂":"♀"}
+ </b>
+
+ </div>
+
+ Hunger: ${Math.floor(f.hunger)}%
+
+ <br>
+
+ Health: ${Math.floor(f.health)}%
+
+ <br><br>
+
+ <button class="blue"
+ onclick="selectFish(${f.id})">
+
+ LIHAT
+
+ </button>
+
+ </div>
+
+ `).join("");
+
+
+ openModal(`
+
+ <button class="close"
+ onclick="closeModal()">×</button>
+
+ <h2>🐟 IKAN SAYA</h2>
+
+ ${list}
+
+ `);
+
+}
+
+
+/* =========================
+   CLEAN
+========================= */
+
+function cleanTank(){
+
+ game.fish.forEach(f=>{
+
+  f.health=
+  Math.min(100,f.health+10);
+
+ });
+
+
+ addXP(10);
+
+ saveGame();
+
+ toast("🧽 Aquarium dah bersih!");
+
+}
+
+
+/* =========================
+   XP
+========================= */
+
+function addXP(amount){
+
+ game.xp+=amount;
+
+ const needed=
+ 100+(game.level*60);
+
+
+ if(game.xp>=needed){
+
+  game.xp-=needed;
+
+  game.level++;
+
+  game.coins+=100;
+
+  toast(
+   "🎉 LEVEL "+
+   game.level+
+   "! +100 coins"
   );
 
-  shopMenu();
+ }
+
+ updateHUD();
+
 }
 
-/* ================= SELL ================= */
 
-document.getElementById("sellBtn").addEventListener("click",sellMenu);
+/* =========================
+   MODAL
+========================= */
 
-function sellMenu(){
+function openModal(content){
 
-  let html = `
-    <div class="notice">
-      Jual ikan untuk dapatkan coin.
-      <br>
-      Telur juga boleh dijual.
-    </div>
-  `;
+ const modal=
+ document.getElementById("modal");
 
-  if(state.fish.length){
+ modal.innerHTML=content;
 
-    html += `<h3>🐠 Ikan</h3>`;
+ modal.style.display="block";
 
-    state.fish.forEach(f=>{
-
-      html += `
-        <div class="card">
-          <b>${f.name}</b>
-          <br>
-          <span class="small">
-            ${f.gender} · ❤️ ${Math.round(f.health)} · 🪙 ${f.value}
-          </span>
-          <button class="action gold" data-sell-fish="${f.id}">
-            💰 Jual 🪙 ${f.value}
-          </button>
-        </div>
-      `;
-    });
-  }
-
-  if(state.eggs.length){
-
-    html += `<h3>🥚 Telur</h3>`;
-
-    state.eggs.forEach(e=>{
-
-      html += `
-        <div class="card">
-          🥚 Telur
-          <br>
-          <span class="small">Harga jual 🪙 25</span>
-          <button class="action gold" data-sell-egg="${e.id}">
-            💰 Jual 🪙 25
-          </button>
-        </div>
-      `;
-    });
-  }
-
-  if(!state.fish.length && !state.eggs.length){
-    html += `<div class="notice">Tiada apa untuk dijual.</div>`;
-  }
-
-  openPanel("💰 Jual Aquarium",html);
-
-  panel.querySelectorAll("[data-sell-fish]").forEach(btn=>{
-
-    btn.addEventListener("click",()=>{
-
-      if(state.fish.length <= 1){
-        alert("Kena simpan sekurang-kurangnya 1 ikan.");
-        return;
-      }
-
-      const id = Number(btn.dataset.sellFish);
-
-      const fish = state.fish.find(f=>f.id===id);
-
-      if(!fish) return;
-
-      state.coins += fish.value;
-
-      state.fish = state.fish.filter(f=>f.id!==id);
-
-      saveGame();
-      updateUI();
-
-      sellMenu();
-    });
-  });
-
-  panel.querySelectorAll("[data-sell-egg]").forEach(btn=>{
-
-    btn.addEventListener("click",()=>{
-
-      const id = Number(btn.dataset.sellEgg);
-
-      state.eggs = state.eggs.filter(e=>e.id!==id);
-
-      state.coins += 25;
-
-      saveGame();
-      updateUI();
-
-      sellMenu();
-    });
-  });
 }
 
-/* ================= CLEAN ================= */
 
-document.getElementById("cleanBtn").addEventListener("click",cleanMenu);
+function closeModal(){
 
-function cleanMenu(){
+ document.getElementById("modal")
+ .style.display="none";
 
-  openPanel("🧽 Aquarium",`
+ selectedFish=null;
 
-    <div class="card">
+ renderFish();
 
-      <div class="stat">
-        <span>Kebersihan</span>
-        <b>${Math.round(state.cleanliness)}%</b>
-      </div>
-
-      <div class="progress">
-        <div class="bar" style="width:${state.cleanliness}%"></div>
-      </div>
-
-      <br>
-
-      <div class="small">
-        Aquarium kotor boleh menyebabkan kesihatan ikan menurun.
-      </div>
-
-    </div>
-
-    <button class="action" id="cleanNow">
-      🧽 Bersihkan Aquarium
-    </button>
-  `);
-
-  document.getElementById("cleanNow").addEventListener("click",()=>{
-
-    state.cleanliness = 100;
-
-    state.fish.forEach(f=>{
-      f.health = Math.min(100,f.health+5);
-    });
-
-    saveGame();
-
-    cleanMenu();
-  });
 }
 
-/* ================= STATUS / INVENTORY ================= */
 
-function statusMenu(){
+/* =========================
+   TOAST
+========================= */
 
-  let html = `
-    <div class="card">
-      <div class="stat"><span>🪙 Coin</span><b>${state.coins}</b></div>
-      <div class="stat"><span>🍖 Makanan</span><b>${state.food}</b></div>
-      <div class="stat"><span>🐠 Ikan</span><b>${state.fish.length}</b></div>
-      <div class="stat"><span>🥚 Telur</span><b>${state.eggs.length}</b></div>
-      <div class="stat"><span>🐟 Anak ikan</span><b>${state.babies.length}</b></div>
-      <div class="stat"><span>❤️ Kesihatan</span><b>${averageHealth()}%</b></div>
-      <div class="stat"><span>🧽 Kebersihan</span><b>${Math.round(state.cleanliness)}%</b></div>
-    </div>
-  `;
+let toastTimer;
 
-  state.fish.forEach(f=>{
+function toast(message){
 
-    html += `
-      <div class="card">
+ const t=
+ document.getElementById("toast");
 
-        <b>🐠 ${f.name}</b>
+ t.textContent=message;
 
-        <div class="stat">
-          <span>Jantina</span>
-          <span>${f.gender}</span>
-        </div>
+ t.style.display="block";
 
-        <div class="stat">
-          <span>Umur</span>
-          <span>${f.age} hari</span>
-        </div>
+ clearTimeout(toastTimer);
 
-        <div class="stat">
-          <span>Lapar</span>
-          <span>${hungerStatus(f.hunger)}</span>
-        </div>
+ toastTimer=
+ setTimeout(()=>{
 
-        <div class="stat">
-          <span>❤️ Kesihatan</span>
-          <span>${Math.round(f.health)}%</span>
-        </div>
+  t.style.display="none";
 
-        <div class="progress">
-          <div class="bar" style="width:${f.health}%"></div>
-        </div>
+ },1800);
 
-      </div>
-    `;
-  });
-
-  openPanel("📦 Aquarium Saya",html);
 }
 
-/* ================= ADD STATUS BUTTON ================= */
 
-const statusButton = document.createElement("button");
+/* =========================
+   BUBBLES
+========================= */
 
-statusButton.className = "navBtn";
-statusButton.innerHTML = "📦<br>Info";
+function createBubbles(){
 
-statusButton.addEventListener("click",statusMenu);
+ const tank=
+ document.getElementById("tank");
 
-/*
-  Tukar nav kepada 6 butang pada skrin kecil.
-*/
-document.getElementById("nav").appendChild(statusButton);
+ for(let i=0;i<25;i++){
 
-document.getElementById("nav").style.gridTemplateColumns =
-  "repeat(6,1fr)";
+  const b=
+  document.createElement("i");
 
-/* ================= BABY DISPLAY ================= */
+  b.className="bubble";
 
-function renderBabies(){
+  const size=
+  4+Math.random()*12;
 
-  document.querySelectorAll(".baby").forEach(x=>x.remove());
+  b.style.width=size+"px";
+  b.style.height=size+"px";
 
-  state.babies.forEach((baby,index)=>{
+  b.style.left=
+  Math.random()*96+"%";
 
-    const el = document.createElement("div");
+  b.style.bottom=
+  (8+Math.random()*25)+"%";
 
-    el.className = "baby";
+  b.style.animationDuration=
+  (4+Math.random()*7)+"s";
 
-    el.style.top = (35 + (index % 4)*9) + "%";
+  b.style.animationDelay=
+  (-Math.random()*8)+"s";
 
-    document.getElementById("game").appendChild(el);
-  });
+  tank.appendChild(b);
+
+ }
+
 }
 
-/* ================= EGG DISPLAY ================= */
 
-function renderEggs(){
+/* =========================
+   AUTO SAVE
+========================= */
 
-  document.querySelectorAll(".egg").forEach(x=>x.remove());
+setInterval(()=>{
 
-  state.eggs.forEach((egg,index)=>{
+ saveGame();
 
-    const el = document.createElement("div");
+},15000);
 
-    el.className = "egg";
 
-    el.style.left = (20 + (index*11)%60) + "%";
-    el.style.bottom = (13 + (index%3)*3) + "%";
+/* =========================
+   INIT
+========================= */
 
-    document.getElementById("game").appendChild(el);
-  });
-}
-
-/* ================= GAME TICK ================= */
-
-let lastTick = Date.now();
-
-function gameTick(){
-
-  const now = Date.now();
-
-  /*
-    Kira perubahan masa.
-  */
-
-  if(now-lastTick >= 10000){
-
-    lastTick = now;
-
-    state.fish.forEach(f=>{
-
-      /*
-        Ikan perlahan-lahan lapar.
-      */
-      f.hunger = Math.max(0,f.hunger-1);
-
-      /*
-        Kalau lapar sangat, health turun.
-      */
-      if(f.hunger < 20){
-        f.health = Math.max(0,f.health-1);
-      }
-
-      /*
-        Aquarium kotor juga memberi kesan.
-      */
-      if(state.cleanliness < 30){
-        f.health = Math.max(0,f.health-.5);
-      }
-
-      /*
-        Umur.
-      */
-      f.age += .01;
-    });
-
-    state.cleanliness = Math.max(
-      0,
-      state.cleanliness-.15
-    );
-
-    /*
-      Telur tamat masa.
-      */
-    const readyEggs = state.eggs.filter(
-      e=>now >= e.hatchAt
-    );
-
-    if(readyEggs.length){
-
-      readyEggs.forEach(egg=>{
-
-        state.babies.push({
-          id:state.nextId++,
-          bornAt:now,
-          growAt:now+60000,
-          name:"Anak Guppy"
-        });
-      });
-
-      state.eggs = state.eggs.filter(
-        e=>now < e.hatchAt
-      );
-    }
-
-    /*
-      Anak ikan membesar.
-    */
-    const grown = state.babies.filter(
-      b=>now >= b.growAt
-    );
-
-    if(grown.length){
-
-      grown.forEach(b=>{
-
-        const gender =
-          Math.random() > .5
-          ? "Jantan"
-          : "Betina";
-
-        state.fish.push({
-          id:state.nextId++,
-          name:"Guppy Anak",
-          gender:gender,
-          age:1,
-          hunger:100,
-          health:100,
-          value:60
-        });
-      });
-
-      state.babies = state.babies.filter(
-        b=>now < b.growAt
-      );
-    }
-
-    saveGame();
-
-    updateUI();
-    renderBabies();
-    renderEggs();
-  }
-
-  requestAnimationFrame(gameTick);
-}
-
-/* ================= START ================= */
-
-updateUI();
-renderBabies();
-renderEggs();
-gameTick();
-
-/*
-  Auto-save setiap 15 saat.
-*/
-setInterval(saveGame,15000);
+updateHUD();
 
 </script>
 
